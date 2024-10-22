@@ -1,0 +1,24 @@
+body {
+    background-image: url('https://images.unsplash.com/photo-1521747116042-5a810fda9664');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+}
+.form-control:focus {
+    box-shadow: none;
+    border-color: #007bff;
+}
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
