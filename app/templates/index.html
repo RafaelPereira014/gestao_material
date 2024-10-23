@@ -6,7 +6,6 @@
     <title>Material Management Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
-    
 </head>
 <body>
     <!-- Topbar -->
@@ -28,16 +27,16 @@
     <div id="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#">Dashboard</a>
+                <a class="nav-link active" href="#" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Inventory</a>
+                <a class="nav-link" href="#" title="Inventory"><i class="fas fa-box"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Reports</a>
+                <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
+                <a class="nav-link" href="#" title="Settings"><i class="fas fa-cog"></i></a>
             </li>
         </ul>
     </div>
@@ -51,7 +50,7 @@
         <!-- Panels -->
         <div class="row">
             <div class="col-md-4">
-                <div class="card bg-primary text-white mb-3 full-height">
+                <div class="card bg-primary text-white mb-3 ">
                     <div class="card-header">Items in Stock</div>
                     <div class="card-body">
                         <h5 class="card-title">150</h5>
@@ -60,7 +59,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-success text-white mb-3 full-height">
+                <div class="card bg-success text-white mb-3 ">
                     <div class="card-header">Recent Orders</div>
                     <div class="card-body">
                         <h5 class="card-title">25</h5>
@@ -69,7 +68,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-warning text-white mb-3 full-height">
+                <div class="card bg-warning text-white mb-3 ">
                     <div class="card-header">Low Stock</div>
                     <div class="card-body">
                         <h5 class="card-title">10</h5>
@@ -78,9 +77,28 @@
                 </div>
             </div>
         </div>
+
+        <!-- Graphic Panels -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card panel-graphic bg-info">
+                    <div class="card-body">
+                        <i class="fas fa-chart-pie"></i> Stock Distribution
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card panel-graphic bg-danger">
+                    <div class="card-body">
+                        <i class="fas fa-exclamation-triangle"></i> Alerts
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 </body>
 </html>
