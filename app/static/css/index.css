@@ -1,8 +1,4 @@
-body, html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-}
+
 
 /* Topbar */
 .navbar {
@@ -32,7 +28,7 @@ body, html {
 #sidebar .nav-link {
     color: white;
     font-weight: bold;
-    text-align: center; /* Center icons */
+    text-align: center;
     padding: 10px 0; /* Vertical padding */
 }
 
@@ -60,17 +56,13 @@ body, html {
     transform: translateY(-5px);
 }
 
-.full-height {
-    height: calc(100vh - 56px); /* Adjust for navbar height */
-}
-
 /* Graphic Panels */
 .panel-graphic {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 200px; /* Height for graphic panels */
+    height: 200px;
     border-radius: 10px;
     color: white;
-    font-size: 24px; /* Adjust font size for graphics */
+    font-size: 24px;
 }

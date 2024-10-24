@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Management Dashboard</title>
+    <title>Add Equipment</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_equip.css')}}">
 </head>
 <body>
     <!-- Topbar 
@@ -54,58 +54,26 @@
 
     <!-- Main content -->
     <div id="main-content">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
-        </div>
-
-        <!-- Panels -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-primary text-white mb-3">
-                    <div class="card-header">Items in Stock</div>
-                    <div class="card-body">
-                        <h5 class="card-title">150</h5>
-                        <p class="card-text">Total items available in stock.</p>
-                    </div>
-                </div>
+        <h1>Add Equipment</h1>
+        <form>
+            <div class="form-group">
+                <label for="itemName">Item Name</label>
+                <input type="text" class="form-control" id="itemName" placeholder="Enter item name" required>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-success text-white mb-3">
-                    <div class="card-header">Recent Orders</div>
-                    <div class="card-body">
-                        <h5 class="card-title">25</h5>
-                        <p class="card-text">Items ordered recently.</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select class="form-control" id="location" required>
+                    <option>School A</option>
+                    <option>School B</option>
+                    <option>School C</option>
+                </select>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-warning text-white mb-3">
-                    <div class="card-header">Low Stock</div>
-                    <div class="card-body">
-                        <h5 class="card-title">10</h5>
-                        <p class="card-text">Items with low stock levels.</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="assignedTo">Assigned To</label>
+                <input type="text" class="form-control" id="assignedTo" placeholder="Enter name of the assignee" required>
             </div>
-        </div>
-
-        <!-- Graphic Panels -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-info">
-                    <div class="card-body">
-                        <i class="fas fa-chart-pie"></i> Stock Distribution
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-danger">
-                    <div class="card-body">
-                        <i class="fas fa-exclamation-triangle"></i> Alerts
-                    </div>
-                </div>
-            </div>
-        </div>
+            <button type="submit" class="btn btn-primary">Add Equipment</button>
+        </form>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

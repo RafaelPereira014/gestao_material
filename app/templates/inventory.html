@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Management Dashboard</title>
+    <title>Inventory</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventory.css')}}">
 </head>
 <body>
     <!-- Topbar 
@@ -54,58 +54,33 @@
 
     <!-- Main content -->
     <div id="main-content">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
-        </div>
-
-        <!-- Panels -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-primary text-white mb-3">
-                    <div class="card-header">Items in Stock</div>
-                    <div class="card-body">
-                        <h5 class="card-title">150</h5>
-                        <p class="card-text">Total items available in stock.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-success text-white mb-3">
-                    <div class="card-header">Recent Orders</div>
-                    <div class="card-body">
-                        <h5 class="card-title">25</h5>
-                        <p class="card-text">Items ordered recently.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-warning text-white mb-3">
-                    <div class="card-header">Low Stock</div>
-                    <div class="card-body">
-                        <h5 class="card-title">10</h5>
-                        <p class="card-text">Items with low stock levels.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Graphic Panels -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-info">
-                    <div class="card-body">
-                        <i class="fas fa-chart-pie"></i> Stock Distribution
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-danger">
-                    <div class="card-body">
-                        <i class="fas fa-exclamation-triangle"></i> Alerts
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h1>Inventory</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Assigned To</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Tablet</td>
+                    <td>John Doe</td>
+                    <td>School A</td>
+                    <td>In Use</td>
+                    <td>
+                        <button class="btn btn-warning">Transfer</button>
+                        <button class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

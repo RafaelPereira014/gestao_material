@@ -11,5 +11,20 @@ def login():
 def index():
     return render_template('index.html')
 
+
+@app.route('/inventory')
+def inventory():
+    return render_template('inventory.html')
+
+
+@app.route('/adicionar_equipamento')
+def add_equip():
+    return render_template('add_equipment.html')
+
+@app.route('/transferir_equipamento')
+def transfer_equip():
+    return render_template('transfer_equipment.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

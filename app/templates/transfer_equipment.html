@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Equipment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/transfer_equip.css')}}">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/index" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory" title="Inventory"><i class="fas fa-box"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/transferir_equipamento" title="Transfer Equipment"><i class="fas fa-exchange-alt"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" title="Settings"><i class="fas fa-cog"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content">
+        <h1>Transfer Equipment</h1>
+        <form action="/transferir_equipamento" method="POST">
+            <div class="form-group">
+                <label for="item">Select Equipment</label>
+                <select class="form-control" id="item" name="item" required>
+                    <option value="1">Tablet - 001</option>
+                    <option value="2">Laptop - 002</option>
+                    <!-- Add equipment options dynamically here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="fromLocation">Current Location</label>
+                <select class="form-control" id="fromLocation" name="fromLocation" disabled>
+                    <option>School A</option>
+                    <option>School B</option>
+                    <!-- Populate based on selected equipment -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="toLocation">New Location</label>
+                <select class="form-control" id="toLocation" name="toLocation" required>
+                    <option value="school_a">School A</option>
+                    <option value="school_b">School B</option>
+                    <option value="school_c">School C</option>
+                    <!-- Add school options dynamically here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="assignedTo">Assigned To (Optional)</label>
+                <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Enter name of the assignee">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Transfer Equipment</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+</body>
+</html>

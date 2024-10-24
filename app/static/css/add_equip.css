@@ -1,0 +1,56 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Sidebar */
+#sidebar {
+    background-color: #343a40;
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    z-index: 1;
+}
+
+#sidebar .nav-link {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 0;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+/* Main content */
+#main-content {
+    margin-left: 60px;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Table */
+.table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.btn {
+    margin: 0 5px;
+}
