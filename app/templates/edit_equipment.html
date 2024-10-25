@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Equipment</title>
+    <title>Editar Equipamento</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/transfer_equip.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_equip.css')}}">
 </head>
 <body>
 
@@ -22,9 +22,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/transferir_equipamento" title="Transfer Equipment"><i class="fas fa-exchange-alt"></i></a>
-            </li>
+           
             <li class="nav-item">
                 <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
             </li>
@@ -39,10 +37,10 @@
 
     <!-- Main content -->
     <div id="main-content">
-        <h1>Transfer Equipment</h1>
-        <form action="/transferir_equipamento" method="POST">
+        <h1>Editar Equipamento</h1>
+        <form action="/transferir_equipamento" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="item">Select Equipment</label>
+                <label for="item">Selecionar Equipamento</label>
                 <select class="form-control" id="item" name="item" required>
                     <option value="1">Tablet - 001</option>
                     <option value="2">Laptop - 002</option>
@@ -51,7 +49,7 @@
             </div>
 
             <div class="form-group">
-                <label for="fromLocation">Current Location</label>
+                <label for="fromLocation">Pertencente a:</label>
                 <select class="form-control" id="fromLocation" name="fromLocation" disabled>
                     <option>School A</option>
                     <option>School B</option>
@@ -60,7 +58,7 @@
             </div>
 
             <div class="form-group">
-                <label for="toLocation">New Location</label>
+                <label for="toLocation">Cedido a:</label>
                 <select class="form-control" id="toLocation" name="toLocation" required>
                     <option value="school_a">School A</option>
                     <option value="school_b">School B</option>
@@ -70,11 +68,17 @@
             </div>
 
             <div class="form-group">
-                <label for="assignedTo">Assigned To (Optional)</label>
-                <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Enter name of the assignee">
+                <label for="assignedTo">Atribuido a (Optional,em caso de mudar de aluno)</label>
+                <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduza o CC do aluno.">
             </div>
 
-            <button type="submit" class="btn btn-primary">Transfer Equipment</button>
+            <!-- Document Upload Field -->
+            <div class="form-group">
+                <label for="document">Upload Documento</label>
+                <input type="file" class="form-control-file" id="document" name="document">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Editar Equipamento</button>
         </form>
     </div>
 

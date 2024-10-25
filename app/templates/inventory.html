@@ -9,22 +9,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventory.css')}}">
 </head>
 <body>
-    <!-- Topbar 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <a class="navbar-brand" href="#">Material Management</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
--->
-
     <!-- Sidebar -->
     <div id="sidebar">
         <ul class="nav flex-column">
@@ -37,9 +21,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/transferir_equipamento" title="Transfer Equipment"><i class="fas fa-exchange-alt"></i></a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
             </li>
@@ -54,31 +36,57 @@
 
     <!-- Main content -->
     <div id="main-content">
-        <h1>Inventory</h1>
+        <h1>Inventário</h1>
+        
+        <!-- Search Bar -->
+        <div class="mb-3">
+            <input type="text" id="searchSerial" class="form-control" placeholder="Search by Serial No." onkeyup="filterTable()">
+        </div>
+
+        <!-- Equipment Table -->
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Item</th>
-                    <th>Assigned To</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Serial No.</th>
+                    <th>Equipamento</th>
+                    <th>Atribuido a</th>
+                    <th>Pertencente a</th>
+                    <th>Estado</th>
+                    <th>Cedido a</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Tablet</td>
-                    <td>John Doe</td>
-                    <td>School A</td>
-                    <td>In Use</td>
-                    <td>
-                        <button class="btn btn-warning">Transfer</button>
-                        <button class="btn btn-danger">Remove</button>
-                    </td>
-                </tr>
-                <!-- Add more rows as needed -->
+            <tbody id="inventoryTable">
+                {% for equipamento in equipamentos %}
+                    <tr>
+                        <td>{{ equipamento[8] }}</td>  <!-- Serial Number -->
+                        <td>{{ equipamento[2] }}</td>  <!-- Equipment Type -->
+                        <td>{{ equipamento[3] if equipamento[3] else 'N/A' }}</td>  <!-- Assigned to -->
+                        <td>{{ equipamento[4] }}</td>  <!-- School ID -->
+                        <td>
+                            {% if equipamento[2] == 'Em uso' %}
+                                <span class="badge badge-success rounded-pill">Em uso</span>
+                            {% elif equipamento[2] == 'Extraviado' %}
+                                <span class="badge badge-danger rounded-pill">Extraviado</span>
+                            {% elif equipamento[2] == 'Em manutenção' %}
+                                <span class="badge badge-warning rounded-pill">Em manutenção</span>
+                            {% elif equipamento[2] == 'Disponivel' %}
+                                <span class="badge badge-info rounded-pill">Disponível</span>
+                            {% else %}
+                                <span class="badge badge-secondary rounded-pill">Unknown</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ equipamento[7] if equipamento[7] else 'N/A' }}</td>  <!-- Cedido a -->
+                        <td>
+                            <button class="btn btn-warning">Editar</button>
+                            <button class="btn btn-danger">Remover</button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No equipment found.</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -86,5 +94,21 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+
+    <script>
+        // JavaScript function to filter table rows based on serial number input
+        function filterTable() {
+            const searchValue = document.getElementById("searchSerial").value.toLowerCase();
+            const rows = document.getElementById("inventoryTable").getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                const serialCell = rows[i].getElementsByTagName("td")[0];
+                if (serialCell) {
+                    const serialNumber = serialCell.textContent || serialCell.innerText;
+                    rows[i].style.display = serialNumber.toLowerCase().includes(searchValue) ? "" : "none";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
