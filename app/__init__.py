@@ -18,7 +18,8 @@ def login():
 
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    year = datetime.now().year
+    return render_template('index.html',year=year)
 
 
 @app.route('/inventory')
@@ -72,14 +73,24 @@ def add_equip():
 
 @app.route('/editar_equipamento')
 def edit_equip():
-    serial_number = request.args.get('serial_number')
     all_schools = get_escolas()
+    serial_number = request.args.get('serial_number')
+    
+    
+    
     
     # Fetch the equipment data based on serial_number
     equipment_data = get_equipment_by_serial(serial_number)
     print(equipment_data)  # Check if the data is loaded correctly
 
     return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools)
+
+@app.route('/item_page')
+def item_page():
+    serial_number = request.args.get('serial_number')
+    # Retrieve equipment details by ID
+    equipment = get_equipment_by_serial(serial_number)
+    return render_template('item_page.html', equipment=equipment)
 
 
 if __name__ == '__main__':

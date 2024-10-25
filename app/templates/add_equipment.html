@@ -7,9 +7,41 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/add_equip.css')}}">
+    <style>
+        /* Snackbar styling */
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            font-size: 17px;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div id="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
@@ -73,29 +105,27 @@
         </form>
     </div>
 
+    <!-- Snackbar for notifications -->
+    <div id="snackbar">Equipamento adicionado com sucesso!</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
     <script>
         function toggleAssignedFields() {
             const assignedFields = document.getElementById("assignedFields");
             const assignCheckbox = document.getElementById("assignCheckbox");
-
             assignedFields.style.display = assignCheckbox.checked ? "block" : "none";
         }
-    </script>
-    <script>
-        <div id="snackbar">Equipamento adicionado com sucesso!</div>
 
         function showSnackbar() {
             const snackbar = document.getElementById("snackbar");
-            snackbar.style.visibility = "visible"; // Show the snackbar
-            setTimeout(function () { snackbar.style.visibility = "hidden"; }, 3000); // Hide after 3 seconds
+            snackbar.className = "show";
+            setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
         }
-    
-        // Call showSnackbar() when the equipment is successfully added
+
+        // Call showSnackbar() when equipment is successfully added
         {% if success %}
             showSnackbar();
         {% endif %}

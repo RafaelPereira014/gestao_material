@@ -59,7 +59,11 @@
             <tbody id="inventoryTable">
                 {% for equipamento in equipamentos %}
                     <tr>
-                        <td>{{ equipamento.serial_number }}</td>  <!-- Serial Number -->
+                        <td>
+                            <a href="{{ url_for('item_page', serial_number=equipamento.serial_number) }}">
+                                {{ equipamento.serial_number }}
+                            </a>
+                        </td>
                         <td>{{ equipamento.tipo }}</td>  <!-- Equipment Type -->
                         <td>{{ equipamento.aluno_CC if equipamento.aluno_CC else '-' }}</td>  <!-- Assigned to -->
                         <td>{{ equipamento.escola_id }}</td>  <!-- School ID -->

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/index" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory" title="Inventory"><i class="fas fa-box"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" title="Settings"><i class="fas fa-cog"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="container">
+            <h1 class="mt-4">Equipment Details</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Serial No.: {{ equipment.serial_number }}</h5>
+                    <p><strong>Equipment Type:</strong> {{ equipment.tipo }}</p>
+                    <p><strong>Status:</strong> {{ equipment.status }}</p>
+                    <p><strong>Assigned to:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
+                    <p><strong>Location:</strong> {{ equipment.escola_nome }}</p>
+                    <p><strong>Acquisition Date:</strong> {{ equipment.data_aquisicao }}</p>
+                    <p><strong>Last Movement Date:</strong> {{ equipment.data_ultimo_movimento }}</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="/inventory" class="btn btn-secondary">Back to Inventory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+</body>
+</html>
