@@ -59,26 +59,26 @@
             <tbody id="inventoryTable">
                 {% for equipamento in equipamentos %}
                     <tr>
-                        <td>{{ equipamento[8] }}</td>  <!-- Serial Number -->
-                        <td>{{ equipamento[2] }}</td>  <!-- Equipment Type -->
-                        <td>{{ equipamento[3] if equipamento[3] else 'N/A' }}</td>  <!-- Assigned to -->
-                        <td>{{ equipamento[4] }}</td>  <!-- School ID -->
+                        <td>{{ equipamento.serial_number }}</td>  <!-- Serial Number -->
+                        <td>{{ equipamento.tipo }}</td>  <!-- Equipment Type -->
+                        <td>{{ equipamento.aluno_CC if equipamento.aluno_CC else '-' }}</td>  <!-- Assigned to -->
+                        <td>{{ equipamento.escola_id }}</td>  <!-- School ID -->
                         <td>
-                            {% if equipamento[2] == 'Em uso' %}
+                            {% if equipamento.status == 'Em uso' %}
                                 <span class="badge badge-success rounded-pill">Em uso</span>
-                            {% elif equipamento[2] == 'Extraviado' %}
+                            {% elif equipamento.status == 'Extraviado' %}
                                 <span class="badge badge-danger rounded-pill">Extraviado</span>
-                            {% elif equipamento[2] == 'Em manutenção' %}
+                            {% elif equipamento.status == 'Em manutenção' %}
                                 <span class="badge badge-warning rounded-pill">Em manutenção</span>
-                            {% elif equipamento[2] == 'Disponivel' %}
+                            {% elif equipamento.status == 'Disponivel' %}
                                 <span class="badge badge-info rounded-pill">Disponível</span>
                             {% else %}
                                 <span class="badge badge-secondary rounded-pill">Unknown</span>
                             {% endif %}
                         </td>
-                        <td>{{ equipamento[7] if equipamento[7] else 'N/A' }}</td>  <!-- Cedido a -->
+                        <td>{{ equipamento.cedido_a_escola if equipamento.cedido_a_escola else '-' }}</td>  <!-- Cedido a -->
                         <td>
-                            <button class="btn btn-warning">Editar</button>
+                            <a href="{{ url_for('edit_equip', serial_number=equipamento.serial_number) }}" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger">Remover</button>
                         </td>
                     </tr>

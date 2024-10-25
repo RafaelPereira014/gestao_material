@@ -31,12 +31,26 @@ def get_all_equip():
     cursor = connection.cursor()
     
     try:
-        # Execute the query to fetch all equipment records
         cursor.execute("SELECT * FROM equipamentos")
-        # Fetch all results
         equipamentos = cursor.fetchall()
         
-        return equipamentos  # Return the raw list of tuples
+        # Create a list of dictionaries
+        equipment_list = [
+            {
+                "id": equipamento[0],
+                "tipo": equipamento[1],
+                "status": equipamento[2],
+                "aluno_CC": equipamento[3],
+                "escola_id": equipamento[4],
+                "data_aquisicao": equipamento[5],
+                "data_ultimo_movimento": equipamento[6],
+                "cedido_a_escola": equipamento[7],
+                "serial_number": equipamento[8]
+            }
+            for equipamento in equipamentos
+        ]
+        
+        return equipment_list
     except Exception as e:
         print(f"An error occurred: {e}")
         return []

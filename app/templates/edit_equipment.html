@@ -38,46 +38,53 @@
     <!-- Main content -->
     <div id="main-content">
         <h1>Editar Equipamento</h1>
-        <form action="/transferir_equipamento" method="POST" enctype="multipart/form-data">
+        <form action="/editar_equipamento" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="item">Selecionar Equipamento</label>
-                <select class="form-control" id="item" name="item" required>
-                    <option value="1">Tablet - 001</option>
-                    <option value="2">Laptop - 002</option>
-                    <!-- Add equipment options dynamically here -->
+                <label for="SerialNo">Serial No.:</label>
+                <select class="form-control" id="SerialNo" name="SerialNo" disabled>
+                    <option>{{ equipment['serial_number'] }}</option> <!-- Current location -->
                 </select>
             </div>
-
+            <div class="form-group">
+                <label for="item">Equipamento</label>
+                <select class="form-control" id="item" name="item" >
+                    <option>{{ equipment['tipo'] }}</option> <!-- Current location -->
+                </select>
+            </div>
+        
             <div class="form-group">
                 <label for="fromLocation">Pertencente a:</label>
-                <select class="form-control" id="fromLocation" name="fromLocation" disabled>
-                    <option>School A</option>
-                    <option>School B</option>
-                    <!-- Populate based on selected equipment -->
+                <select class="form-control" id="fromLocation" name="fromLocation" >
+                    <option>{{ equipment['escola_id'] }}</option> <!-- Current location -->
                 </select>
             </div>
-
+        
             <div class="form-group">
                 <label for="toLocation">Cedido a:</label>
                 <select class="form-control" id="toLocation" name="toLocation" required>
-                    <option value="school_a">School A</option>
-                    <option value="school_b">School B</option>
-                    <option value="school_c">School C</option>
-                    <!-- Add school options dynamically here -->
+                    <option value="">Selecione a escola...</option>
+                    <!-- Dynamically add school options -->
+                    {% for school in all_schools %}
+                        <option>{{ school.nome }}</option>
+                    {% endfor %}
                 </select>
             </div>
-
+        
             <div class="form-group">
-                <label for="assignedTo">Atribuido a (Optional,em caso de mudar de aluno)</label>
+                <label for="status">Estado</label>
+                <input type="text" class="form-control" id="status" name="status" value="{{ equipment['status'] }}" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="assignedTo">Atribuido a (Opcional, em caso de mudar de aluno)</label>
                 <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduza o CC do aluno.">
             </div>
-
-            <!-- Document Upload Field -->
+        
             <div class="form-group">
                 <label for="document">Upload Documento</label>
                 <input type="file" class="form-control-file" id="document" name="document">
             </div>
-
+        
             <button type="submit" class="btn btn-primary">Editar Equipamento</button>
         </form>
     </div>

@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, flash, render_template, redirect, url_for, request
 import mysql.connector
+from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
 from config import DB_CONFIG
 
@@ -23,7 +24,6 @@ def index():
 @app.route('/inventory')
 def inventory():
     equipamentos = get_all_equip()
-    print(equipamentos)
     
     return render_template('inventory.html',equipamentos=equipamentos)
 
@@ -31,6 +31,8 @@ def inventory():
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
     escolas = get_escolas()  # Ensure this function returns a list of school objects
+    success = False
+
     if request.method == 'POST':
         numero_serie = request.form['itemSerialNo']
         tipo = request.form['itemName']
@@ -56,6 +58,7 @@ def add_equip():
             connection.commit()  # Commit changes to the database
             flash("Equipment added successfully", "success")
             print("Equipment inserted successfully!")  # Debugging print
+            success = True  # Set this based on your actual success condition
         except mysql.connector.Error as e:
             flash(f"An error occurred: {e}", "danger")
             print(f"Error: {e}")  # Print error for debugging
@@ -65,11 +68,18 @@ def add_equip():
 
         return redirect(url_for('add_equip'))
 
-    return render_template('add_equipment.html', escolas=escolas)
+    return render_template('add_equipment.html', escolas=escolas,sucess=success)
 
 @app.route('/editar_equipamento')
 def edit_equip():
-    return render_template('edit_equipment.html')
+    serial_number = request.args.get('serial_number')
+    all_schools = get_escolas()
+    
+    # Fetch the equipment data based on serial_number
+    equipment_data = get_equipment_by_serial(serial_number)
+    print(equipment_data)  # Check if the data is loaded correctly
+
+    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools)
 
 
 if __name__ == '__main__':

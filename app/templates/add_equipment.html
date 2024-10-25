@@ -73,6 +73,7 @@
         </form>
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
@@ -84,6 +85,20 @@
 
             assignedFields.style.display = assignCheckbox.checked ? "block" : "none";
         }
+    </script>
+    <script>
+        <div id="snackbar">Equipamento adicionado com sucesso!</div>
+
+        function showSnackbar() {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.style.visibility = "visible"; // Show the snackbar
+            setTimeout(function () { snackbar.style.visibility = "hidden"; }, 3000); // Hide after 3 seconds
+        }
+    
+        // Call showSnackbar() when the equipment is successfully added
+        {% if success %}
+            showSnackbar();
+        {% endif %}
     </script>
 </body>
 </html>
