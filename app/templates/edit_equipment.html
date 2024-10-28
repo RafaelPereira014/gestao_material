@@ -40,7 +40,7 @@
         <form action="/editar_equipamento" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="SerialNo">Serial No.:</label>
-                <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }}" required>
+                <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }} "style="background-color: #f0f8ff;" required>
             </div>
             <div class="form-group">
                 <label for="item">Equipamento:</label>
@@ -48,9 +48,7 @@
             </div>
             <div class="form-group">
                 <label for="fromLocation">Pertencente a:</label>
-                <select class="form-control" id="fromLocation" name="fromLocation">
-                    <option>{{ equipment['escola_id'] }}</option> <!-- Current location -->
-                </select>
+                <input type="text" class="form-control" id="fromLocation" name="fromLocation" value="{{ escola_nome }}" style="background-color: #f0f8ff;" required>
             </div>
             
             
@@ -68,14 +66,14 @@
             <div class="form-group">
                 <label for="assignedTo">Atribuido a:</label>
                 <input type="text" class="form-control" id="assignedTo" name="assignedTo" 
-                value="{{ equipment['aluno_CC'] if equipment['aluno_CC'] is not none else '' }}" 
-                placeholder="Introduza o CC do aluno">            
+                    value="{{ equipment['aluno_CC'] if equipment['aluno_CC'] is not none else '' }}" 
+                    placeholder="Introduza o CC do aluno" required>
             </div>
 
             <!-- Checkbox to Show "Cedido a" and "Upload Documento" Fields -->
             <div class="form-group">
                 <input type="checkbox" id="returned" name="returned" >
-                <label for="returned">Equipamento voltou para a unidade organica de origem?</label>
+                <label for="returned">Equipamento voltou para a unidade organica de origem e/ou foi devolvido?</label>
             </div>
 
             <!-- Checkbox to Show "Cedido a" and "Upload Documento" Fields -->

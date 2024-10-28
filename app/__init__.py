@@ -1,4 +1,6 @@
+import csv
 from datetime import datetime
+from io import TextIOWrapper
 from flask import Flask, flash, render_template, redirect, url_for, request
 import mysql.connector
 from app.db_operations.edit_equip import *
@@ -41,41 +43,103 @@ def add_equip():
     success = False
 
     if request.method == 'POST':
-        numero_serie = request.form['itemSerialNo']
-        tipo = request.form['itemName']
-        escola_id = request.form['location']
-        #user_id = request.form['assignedTo'] if request.form.get('assignedTo') else None
-        cc_aluno = request.form['assignedTo'] if request.form.get('assignedTo') else None
-        data_aquisicao = datetime.now().date()  # Get the current date
-        data_ultimo_movimento = data_aquisicao
-        status = 'Em uso' if cc_aluno else 'Disponivel'
+        entry_mode = request.form.get('entryMode', 'single')
+        print("Entry Mode Selected:", entry_mode)  # Debugging print
 
-        # Insert equipment into the database
-        try:
-            connection = connect_to_database()
-            cursor = connection.cursor()
-            print("Preparing to insert equipment...")  # Debugging print
-            cursor.execute(
-                """
-                INSERT INTO equipamentos (serial_number, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                """,
-                (numero_serie, tipo, status, cc_aluno, escola_id, data_aquisicao, data_ultimo_movimento)
-            )
-            connection.commit()  # Commit changes to the database
-            flash("Equipment added successfully", "success")
-            print("Equipment inserted successfully!")  # Debugging print
-            success = True  # Set this based on your actual success condition
-        except mysql.connector.Error as e:
-            flash(f"An error occurred: {e}", "danger")
-            print(f"Error: {e}")  # Print error for debugging
-        finally:
-            cursor.close()  # Close cursor
-            connection.close()  # Close connection
+        # If single entry mode is selected
+        if entry_mode == 'single':
+            try:
+                numero_serie = request.form['itemSerialNo']
+                tipo = request.form['itemName']
+                escola_nome = request.form['location']
+                cc_aluno = request.form.get('assignedTo', None)
+                data_aquisicao = datetime.now().date()
+                data_ultimo_movimento = data_aquisicao
+                status = 'Em uso' if cc_aluno else 'Disponivel'
+                escola_id= get_school_id_by_name(escola_nome)
+
+                print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+
+                # Insert single equipment into the database
+                connection = connect_to_database()
+                cursor = connection.cursor()
+                cursor.execute(
+                    """
+                    INSERT INTO equipamentos (serial_number, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (numero_serie, tipo, status, cc_aluno, escola_id, data_aquisicao, data_ultimo_movimento)
+                )
+                connection.commit()
+                flash("Equipment added successfully", "success")
+                print("Single equipment added successfully.")  # Debugging print
+                success = True
+
+            except Exception as e:
+                flash(f"An error occurred: {e}", "danger")
+                print(f"Error adding single equipment: {e}")  # Debugging print
+                connection.rollback()
+            finally:
+                cursor.close()
+                connection.close()
+
+        # If bulk entry mode is selected
+        elif entry_mode == 'bulk' and 'csvFile' in request.files:
+            csv_file = request.files['csvFile']
+            print("Processing bulk CSV file...")  # Debugging print
+
+            try:
+                connection = connect_to_database()
+                cursor = connection.cursor()
+                
+                # Use delimiter=':' to handle colon-separated values
+                csv_reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'), delimiter=';')
+
+                # Skip header row if present
+                next(csv_reader, None)
+
+                row_count = 0  # Track number of rows processed
+                for row in csv_reader:
+                    if len(row) < 3 or not all(row[:3]):  # Check if required fields are filled
+                        print(f"Skipping incomplete row: {row}")  # Debugging print for invalid rows
+                        continue
+                    
+                    numero_serie = row[0]
+                    tipo = row[1]
+                    escola_id = row[2]
+                    cc_aluno = row[3] if len(row) > 3 and row[3] else None  # Optional field
+                    data_aquisicao = datetime.now().date()
+                    data_ultimo_movimento = data_aquisicao
+                    status = 'Em uso' if cc_aluno else 'Disponivel'
+
+                    print(f"Inserting bulk equipment row: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+
+                    # Insert bulk equipment data into the database
+                    cursor.execute(
+                        """
+                        INSERT INTO equipamentos (serial_number, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        (numero_serie, tipo, status, cc_aluno, escola_id, data_aquisicao, data_ultimo_movimento)
+                    )
+                    row_count += 1
+
+                connection.commit()
+                flash(f"{row_count} equipment entries added successfully in bulk!", "success")
+                print(f"Bulk equipment insertion complete. Rows added: {row_count}")  # Debugging print
+                success = True
+
+            except Exception as e:
+                flash(f"An error occurred during bulk upload: {e}", "danger")
+                print(f"Error during bulk equipment addition: {e}")  # Debugging print
+                connection.rollback()
+            finally:
+                cursor.close()
+                connection.close()
 
         return redirect(url_for('add_equip'))
 
-    return render_template('add_equipment.html', escolas=escolas,sucess=success)
+    return render_template('add_equipment.html', escolas=escolas, success=success)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
@@ -90,9 +154,14 @@ def edit_equip():
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
         
+        
+        
         # Check if the "returned" checkbox is checked
         if request.form.get('returned'):
             id_escola = None  # Set cedido_a_escola to NULL
+            assigned_to = None
+            status = 'Disponivel'
+            
         else:
             to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
             id_escola = get_school_id_by_name(to_location)
@@ -104,7 +173,7 @@ def edit_equip():
             document.save(document_path)  # Save the uploaded document to a specified path
         else:
             document_path = None
-
+            
         # Call a function to update the equipment in the database
         update_equipment(serial_number,equipment_type,status,assigned_to,datetime.now(),id_escola)
 
@@ -116,15 +185,18 @@ def edit_equip():
     all_schools = get_escolas()
     serial_number = request.args.get('serial_number')
     equipment_data = get_equipment_by_serial(serial_number)
+    escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     
-    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools)
+    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools,escola_nome=escola_nome)
 
 @app.route('/item_page')
 def item_page():
     serial_number = request.args.get('serial_number')
     # Retrieve equipment details by ID
     equipment = get_equipment_by_serial(serial_number)
-    return render_template('item_page.html', equipment=equipment)
+    school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
+    escola_nome = get_school_name_by_id(school_id)
+    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome)
 
 
 if __name__ == '__main__':
