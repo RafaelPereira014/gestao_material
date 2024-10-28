@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Details</title>
+    <title>Detalhes do equipamento</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
@@ -37,19 +37,31 @@
     <!-- Main Content -->
     <div id="main-content">
         <div class="container">
-            <h1 class="mt-4">Equipment Details</h1>
+            <h1 class="mt-4">Detalhes do equipamento</h1>
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Serial No.: {{ equipment.serial_number }}</h5>
-                    <p><strong>Equipment Type:</strong> {{ equipment.tipo }}</p>
-                    <p><strong>Status:</strong> {{ equipment.status }}</p>
-                    <p><strong>Assigned to:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
-                    <p><strong>Location:</strong> {{ equipment.escola_nome }}</p>
-                    <p><strong>Acquisition Date:</strong> {{ equipment.data_aquisicao }}</p>
-                    <p><strong>Last Movement Date:</strong> {{ equipment.data_ultimo_movimento }}</p>
+                    <p><strong>Tipo de equipamento:</strong> {{ equipment.tipo }}</p>
+                    <p><strong>Estado:</strong>
+                        {% if equipment.status == 'Em uso' %}
+                            <span class="badge badge-success rounded-pill">Em uso</span>
+                        {% elif equipment.status == 'Extraviado' %}
+                            <span class="badge badge-danger rounded-pill">Extraviado</span>
+                        {% elif equipment.status == 'Em manutenção' %}
+                            <span class="badge badge-warning rounded-pill">Em manutenção</span>
+                        {% elif equipment.status == 'Disponivel' %}
+                            <span class="badge badge-info rounded-pill">Disponível</span>
+                        {% else %}
+                            <span class="badge badge-secondary rounded-pill">Unknown</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Atribuido a:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
+                    <p><strong>Localização:</strong> {{ equipment.escola_id }}</p>
+                    <p><strong>Data de aquisição:</strong> {{ equipment.data_aquisicao }}</p>
+                    <p><strong>Data da ultima alteração:</strong> {{ equipment.data_ultimo_movimento }}</p>
                 </div>
                 <div class="card-footer text-right">
-                    <a href="/inventory" class="btn btn-secondary">Back to Inventory</a>
+                    <a href="/inventory" class="btn btn-secondary">Voltar para o inventario</a>
                 </div>
             </div>
         </div>

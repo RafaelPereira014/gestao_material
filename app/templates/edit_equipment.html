@@ -40,7 +40,7 @@
         <form action="/editar_equipamento" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="SerialNo">Serial No.:</label>
-                <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }}" disabled>
+                <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }}" required>
             </div>
             <div class="form-group">
                 <label for="item">Equipamento:</label>
@@ -67,7 +67,15 @@
 
             <div class="form-group">
                 <label for="assignedTo">Atribuido a:</label>
-                <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduza o CC do aluno.">
+                <input type="text" class="form-control" id="assignedTo" name="assignedTo" 
+                value="{{ equipment['aluno_CC'] if equipment['aluno_CC'] is not none else '' }}" 
+                placeholder="Introduza o CC do aluno">            
+            </div>
+
+            <!-- Checkbox to Show "Cedido a" and "Upload Documento" Fields -->
+            <div class="form-group">
+                <input type="checkbox" id="returned" name="returned" >
+                <label for="returned">Equipamento voltou para a unidade organica de origem?</label>
             </div>
 
             <!-- Checkbox to Show "Cedido a" and "Upload Documento" Fields -->

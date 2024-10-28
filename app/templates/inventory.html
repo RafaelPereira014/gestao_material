@@ -93,6 +93,34 @@
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-center mt-4">
+            <nav>
+                <ul class="pagination">
+                    {% if page > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('inventory', page=page - 1) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Anterior</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for p in range(1, total_pages + 1) %}
+                        <li class="page-item {% if p == page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('inventory', page=p) }}">{{ p }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page < total_pages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('inventory', page=page + 1) }}" aria-label="Next">
+                                <span aria-hidden="true">Próximo &raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

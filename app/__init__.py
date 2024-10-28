@@ -25,9 +25,15 @@ def index():
 @app.route('/inventory')
 def inventory():
     equipamentos = get_all_equip()
+    per_page = 10  # Number of items per page
+    page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
     
-    return render_template('inventory.html',equipamentos=equipamentos)
+    total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
+    start = (page - 1) * per_page
+    end = start + per_page
+    equipamentos_paginated = equipamentos[start:end]  # Slice the equipment list for the current page
 
+    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages)
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
@@ -71,18 +77,46 @@ def add_equip():
 
     return render_template('add_equipment.html', escolas=escolas,sucess=success)
 
-@app.route('/editar_equipamento')
+@app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
+    if request.method == 'POST':
+        # Capture form data
+        serial_number = request.form.get('SerialNo')
+        equipment_type = request.form.get('item')
+        from_location = request.form.get('fromLocation')
+        status = request.form.get('status')
+        assigned_to = request.form.get('assignedTo')
+        to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
+        id_escola = get_school_id_by_name(to_location)
+        document = request.files.get('document')
+        
+        # Check if the "returned" checkbox is checked
+        if request.form.get('returned'):
+            id_escola = None  # Set cedido_a_escola to NULL
+        else:
+            to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
+            id_escola = get_school_id_by_name(to_location)
+
+
+        # Process the document file if provided
+        if document:
+            document_path = f'static/uploads/{document.filename}'
+            document.save(document_path)  # Save the uploaded document to a specified path
+        else:
+            document_path = None
+
+        # Call a function to update the equipment in the database
+        update_equipment(serial_number,equipment_type,status,assigned_to,datetime.now(),id_escola)
+
+        
+        
+        return redirect(url_for('inventory'))
+    
+    # GET request: Render the edit form with the existing equipment data
     all_schools = get_escolas()
     serial_number = request.args.get('serial_number')
-    
-    
-    
-    
-    # Fetch the equipment data based on serial_number
     equipment_data = get_equipment_by_serial(serial_number)
-    print(equipment_data)  # Check if the data is loaded correctly
-
+    
     return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools)
 
 @app.route('/item_page')
