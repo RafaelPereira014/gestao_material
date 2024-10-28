@@ -69,8 +69,8 @@
     <!-- Main content -->
     <div id="main-content">
         <h1>Adicionar Equipamento</h1>
-        <form enctype="multipart/form-data" action="{{ url_for('add_equip') }}" method="post">
-            <div class="form-group">
+        <form enctype="multipart/form-data" action="{{ url_for('add_equip') }}" method="post" onsubmit="return confirmAdd()">         
+        <div class="form-group">
                 <div class="form-check">
                     <input type="radio" class="form-check-input" name="entryMode" id="singleEntry" value="single" checked onclick="toggleEntryMode()">
                     <label class="form-check-label" for="singleEntry">Introdução unitaria</label>
@@ -125,6 +125,10 @@
         
                 singleEntryFields.style.display = isBulk ? "none" : "block";
                 bulkEntryFields.style.display = isBulk ? "block" : "none";
+            }
+            function confirmAdd() {
+                alert("Equipamento adicionado com sucesso!");
+                return true; // Allow form submission
             }
         </script>
 </body>
