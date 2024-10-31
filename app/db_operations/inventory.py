@@ -1,3 +1,4 @@
+from collections import namedtuple
 import mysql.connector
 from config import DB_CONFIG
 
@@ -32,25 +33,13 @@ def get_all_equip():
     
     try:
         cursor.execute("SELECT * FROM equipamentos")
-        equipamentos = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]  # Get column names
+        Equipamento = namedtuple('Equipamento', columns)  # Create a namedtuple class
         
-        # Create a list of dictionaries
-        equipment_list = [
-            {
-                "id": equipamento[0],
-                "tipo": equipamento[1],
-                "status": equipamento[2],
-                "aluno_CC": equipamento[3],
-                "escola_id": equipamento[4],
-                "data_aquisicao": equipamento[5],
-                "data_ultimo_movimento": equipamento[6],
-                "cedido_a_escola": equipamento[7],
-                "serial_number": equipamento[8]
-            }
-            for equipamento in equipamentos
-        ]
+        # Use a list comprehension to convert rows to named tuples
+        equipamentos = [Equipamento(*row) for row in cursor.fetchall()]
         
-        return equipment_list
+        return equipamentos
     except Exception as e:
         print(f"An error occurred: {e}")
         return []

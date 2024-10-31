@@ -8,18 +8,18 @@ def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return mysql.connector.connect(**DB_CONFIG)
 
+from collections import namedtuple
+
 def get_equipment_by_serial(serial_number):
     connection = connect_to_database()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)  # Enable dictionary cursor
     
     try:
         cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s", (serial_number,))
         row = cursor.fetchone()
+        
         if row:
-            # Assuming row is structured as (id, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento, cedido_a_escola, serial_number)
-            keys = ['id', 'tipo', 'status', 'aluno_CC', 'escola_id', 'data_aquisicao', 'data_ultimo_movimento', 'cedido_a_escola', 'serial_number']
-            equipment_data = dict(zip(keys, row))
-            return equipment_data
+            return row  # Directly return the row as a dictionary
         else:
             return None
     except Exception as e:
@@ -32,8 +32,17 @@ def get_equipment_by_serial(serial_number):
 def update_equipment(serial_number, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()
     cursor = connection.cursor()
-    
+
     try:
+        serial_number = serial_number.strip()  # Remove any leading/trailing spaces
+
+        # Check if the equipment exists
+        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s", (serial_number,))
+        existing_equipment = cursor.fetchone()
+        if not existing_equipment:
+            print(f"No equipment found with serial_number: {serial_number}")
+            return False
+
         # Start constructing the SQL statement
         sql = "UPDATE equipamentos SET "
         params = []
@@ -42,12 +51,11 @@ def update_equipment(serial_number, tipo=None, status=None, aluno_CC=None, data_
         if tipo is not None:
             sql += "tipo = %s, "
             params.append(tipo)
-        
+
         if status is not None:
             sql += "status = %s, "
             params.append(status)
-        
-        
+
         sql += "aluno_CC = %s, "
         params.append(aluno_CC)
 

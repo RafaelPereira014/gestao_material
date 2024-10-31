@@ -24,9 +24,18 @@ def index():
     return render_template('index.html',year=year)
 
 
+@app.route('/adicionar_utilizador')
+def add_user():
+    return render_template('add_user.html')
+
+@app.route('/perfil')
+def user_profile():
+    return render_template('user_profile.html')
+
 @app.route('/inventory')
 def inventory():
     equipamentos = get_all_equip()
+    
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
     
@@ -34,7 +43,7 @@ def inventory():
     start = (page - 1) * per_page
     end = start + per_page
     equipamentos_paginated = equipamentos[start:end]  # Slice the equipment list for the current page
-
+    
     return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages)
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
@@ -64,12 +73,12 @@ def add_equip():
                 connection = connect_to_database()
                 cursor = connection.cursor()
                 cursor.execute(
-                    """
-                    INSERT INTO equipamentos (serial_number, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """,
-                    (numero_serie, tipo, status, cc_aluno, escola_id, data_aquisicao, data_ultimo_movimento)
-                )
+                        """
+                        INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,numero_serie,cc_aluno)
+                    )
                 connection.commit()
                 flash("Equipment added successfully", "success")
                 print("Single equipment added successfully.")  # Debugging print
@@ -117,10 +126,10 @@ def add_equip():
                     # Insert bulk equipment data into the database
                     cursor.execute(
                         """
-                        INSERT INTO equipamentos (serial_number, tipo, status, aluno_CC, escola_id, data_aquisicao, data_ultimo_movimento)
+                        INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                         """,
-                        (numero_serie, tipo, status, cc_aluno, escola_id, data_aquisicao, data_ultimo_movimento)
+                        ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,numero_serie,cc_aluno)
                     )
                     row_count += 1
 

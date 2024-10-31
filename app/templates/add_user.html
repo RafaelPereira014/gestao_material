@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do equipamento</title>
+    <title>Adicionar Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_user.css') }}">
 </head>
 <body>
 
@@ -43,31 +43,38 @@
     <!-- Main Content -->
     <div id="main-content">
         <div class="container">
-            <h1 class="mt-4">Detalhes do equipamento</h1>
+            <h1 class="mt-4">Adicionar utilizador</h1>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Serial No.: {{ equipment.serial_number }}</h5>
-                    <p><strong>Tipo de equipamento:</strong> {{ equipment.tipo }}</p>
-                    <p><strong>Estado:</strong>
-                        {% if equipment.status == 'Em uso' %}
-                            <span class="badge badge-success rounded-pill">Em uso</span>
-                        {% elif equipment.status == 'Extraviado' %}
-                            <span class="badge badge-danger rounded-pill">Extraviado</span>
-                        {% elif equipment.status == 'Em manutenção' %}
-                            <span class="badge badge-warning rounded-pill">Em manutenção</span>
-                        {% elif equipment.status == 'Disponivel' %}
-                            <span class="badge badge-info rounded-pill">Disponível</span>
-                        {% else %}
-                            <span class="badge badge-secondary rounded-pill">Unknown</span>
-                        {% endif %}
-                    </p>
-                    <p><strong>Atribuido a:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
-                    <p><strong>Localização:</strong> {{ escola_nome }}</p>
-                    <p><strong>Data de aquisição:</strong> {{ equipment.data_aquisicao }}</p>
-                    <p><strong>Data da ultima alteração:</strong> {{ equipment.data_ultimo_movimento }}</p>
-                </div>
-                <div class="card-footer text-right">
-                    <a href="/inventory" class="btn btn-secondary">Voltar para o inventario</a>
+                    <form action="/add_user" method="POST">
+                        <div class="form-group">
+                            <label for="username">Nome de utilizador:</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Insira o nome de utilizador" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail:</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Insira o e-mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="escola">Escola:</label>
+                            <select class="form-control" id="escola" name="escola" required>
+                                <option value="">Selecione a escola...</option>
+                                
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="role">Função:</label>
+                            <select class="form-control" id="role" name="role" required>
+                                <option value="">Selecione a função...</option>
+                                <option value="admin">Administrador</option>
+                                <option value="user">Usuário</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Adicionar utilizador</button>
+                        <a href="/index" class="btn btn-secondary">Cancelar</a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -75,6 +82,6 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
