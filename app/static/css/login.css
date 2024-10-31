@@ -1,5 +1,5 @@
 body {
-    background-image: url('https://images.unsplash.com/photo-1521747116042-5a810fda9664');
+    background-image: url('/static/images/17973908.jpg');
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -8,7 +8,7 @@ body {
     align-items: center;
 }
 .card {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
 }
 .form-control:focus {
@@ -21,4 +21,9 @@ body {
 }
 .btn-primary:hover {
     background-color: #0056b3;
+}
+
+.forgot_password{
+    text-decoration: underline;
+    text-align: center;
 }

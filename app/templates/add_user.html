@@ -59,7 +59,9 @@
                             <label for="escola">Escola:</label>
                             <select class="form-control" id="escola" name="escola" required>
                                 <option value="">Selecione a escola...</option>
-                                
+                                {% for escola in escolas %}
+                                    <option value="{{ escola }}">{{ escola }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         
@@ -68,7 +70,9 @@
                             <select class="form-control" id="role" name="role" required>
                                 <option value="">Selecione a função...</option>
                                 <option value="admin">Administrador</option>
-                                <option value="user">Usuário</option>
+                                <option value="tec">Técnico</option>
+                                <option value="focal">Ponto focal</option>
+
                             </select>
                         </div>
 

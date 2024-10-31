@@ -26,7 +26,8 @@ def index():
 
 @app.route('/adicionar_utilizador')
 def add_user():
-    return render_template('add_user.html')
+    escolas = get_escolas()
+    return render_template('add_user.html',escolas=escolas)
 
 @app.route('/perfil')
 def user_profile():
