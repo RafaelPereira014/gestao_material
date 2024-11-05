@@ -18,6 +18,8 @@ def connect_to_database():
 def login():
     return render_template('login.html')
 
+
+
 @app.route('/index')
 def index():
     year = datetime.now().year
@@ -35,17 +37,22 @@ def user_profile():
 
 @app.route('/inventory')
 def inventory():
-    equipamentos = get_all_equip()
-    
+    search_query = request.args.get('search', '')  # Get the search query from the request
+    equipamentos = get_all_equip()  # Fetch all equipment data
+
+    # Filter the equipment based on the search query
+    if search_query:
+        equipamentos = [e for e in equipamentos if search_query.lower() in e.serial_number.lower()]
+
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
-    
+
     total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
     start = (page - 1) * per_page
     end = start + per_page
     equipamentos_paginated = equipamentos[start:end]  # Slice the equipment list for the current page
-    
-    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages)
+
+    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages, search_query=search_query)
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():

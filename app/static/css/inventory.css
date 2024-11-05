@@ -15,6 +15,9 @@ body, html {
     width: 60px;
     z-index: 1;
 }
+.nav-link:hover {
+    color: #adb5bd !important;
+}
 
 #sidebar .nav-link {
     color: white;

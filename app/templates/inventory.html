@@ -21,12 +21,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" title="Reports"><i class="fas fa-chart-line"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" title="Settings"><i class="fas fa-cog"></i></a>
-            </li>
+           
             <li class="nav-item">
                 <a class="nav-link" href="/perfil" title="Perfil utilizador"><i class="fas fa-user"></i></a> 
             </li>
@@ -45,8 +40,18 @@
         
         <!-- Search Bar -->
         <div class="mb-3">
-            <input type="text" id="searchSerial" class="form-control" placeholder="Search by Serial No." onkeyup="filterTable()">
+            <form method="GET" action="{{ url_for('inventory') }}">
+                <div class="input-group">
+                    <input type="text" name="search" id="searchSerial" class="form-control" placeholder="Search by Serial No." value="{{ search_query }}">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Procurar</button>
+                        <a href="{{ url_for('inventory') }}" class="btn btn-secondary">Limpar</a> <!-- Clear button -->
+                    </div>
+                </div>
+            </form>
         </div>
+
+        
 
         <!-- Equipment Table -->
         <table class="table table-striped">
@@ -104,21 +109,21 @@
                 <ul class="pagination">
                     {% if page > 1 %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=page - 1) }}" aria-label="Previous">
+                            <a class="page-link" href="{{ url_for('inventory', page=page - 1, search=search_query) }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo; Anterior</span>
                             </a>
                         </li>
                     {% endif %}
-
+                
                     {% for p in range(1, total_pages + 1) %}
                         <li class="page-item {% if p == page %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('inventory', page=p) }}">{{ p }}</a>
+                            <a class="page-link" href="{{ url_for('inventory', page=p, search=search_query) }}">{{ p }}</a>
                         </li>
                     {% endfor %}
-
+                
                     {% if page < total_pages %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=page + 1) }}" aria-label="Next">
+                            <a class="page-link" href="{{ url_for('inventory', page=page + 1, search=search_query) }}" aria-label="Next">
                                 <span aria-hidden="true">Próximo &raquo;</span>
                             </a>
                         </li>
@@ -133,17 +138,34 @@
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 
     <script>
-        // JavaScript function to filter table rows based on serial number input
         function filterTable() {
             const searchValue = document.getElementById("searchSerial").value.toLowerCase();
             const rows = document.getElementById("inventoryTable").getElementsByTagName("tr");
-
+        
+            let hasVisibleRow = false; // Track if any row is visible
+        
             for (let i = 0; i < rows.length; i++) {
-                const serialCell = rows[i].getElementsByTagName("td")[0];
+                const serialCell = rows[i].getElementsByTagName("td")[0]; // Get the first cell (Serial No.)
+                
+                // Only filter out actual data rows (not the "No equipment found" row)
                 if (serialCell) {
                     const serialNumber = serialCell.textContent || serialCell.innerText;
-                    rows[i].style.display = serialNumber.toLowerCase().includes(searchValue) ? "" : "none";
+                    // Check if the serial number matches the search query
+                    if (serialNumber.toLowerCase().includes(searchValue)) {
+                        rows[i].style.display = ""; // Show row
+                        hasVisibleRow = true; // At least one row is visible
+                    } else {
+                        rows[i].style.display = "none"; // Hide row
+                    }
                 }
+            }
+        
+            // If no rows match, ensure "No equipment found" is visible
+            const noEquipmentRow = document.querySelector("#inventoryTable tr.no-equipment-row");
+            if (!hasVisibleRow && noEquipmentRow) {
+                noEquipmentRow.style.display = ""; // Show "No equipment found"
+            } else if (noEquipmentRow) {
+                noEquipmentRow.style.display = "none"; // Hide "No equipment found" if there are visible rows
             }
         }
     </script>

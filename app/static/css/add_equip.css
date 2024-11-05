@@ -70,3 +70,6 @@ h1 {
     bottom: 30px; /* 30px from the bottom */
     font-size: 17px; /* Text size */
 }
+.nav-link:hover {
+    color: #adb5bd !important;
+}

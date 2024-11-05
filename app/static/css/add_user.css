@@ -102,3 +102,6 @@ h1 {
         margin-left: 60px;
     }
 } 
+.nav-link:hover {
+    color: #adb5bd !important;
+}
