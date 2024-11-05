@@ -27,18 +27,21 @@ This project is a web application built with Flask, designed for managing equipm
 
    ```bash
    git clone https://github.com/RafaelPereira014/gestao_material
+   
 
 2.	Navigate to the project directory:
 
+	```bash
 	cd gestao_material
 
 
 3.	Set up a virtual environment:
-
+	```bash
 	python -m venv venv
 
 
 4.	Activate the virtual environment:
+
 	•	On Windows:
 
 	venv\Scripts\activate
