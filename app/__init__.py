@@ -74,7 +74,7 @@ def index():
     if 'user_id' not in session:
         return redirect(url_for('login')) 
     year = datetime.now().year
-    return render_template('index.html',year=year)
+    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']))
 
 
 @app.route('/adicionar_utilizador', methods=['GET', 'POST'])
@@ -119,17 +119,19 @@ def add_user():
         flash('User added successfully', 'success')
         return redirect(url_for('index'))  # Redirect to a success page or dashboard
 
-    return render_template('add_user.html', escolas=escolas)
+    return render_template('add_user.html', escolas=escolas,is_admin=is_admin(session['user_id']))
 
 @app.route('/perfil')
 def user_profile():
     if 'user_id' not in session:
         return redirect(url_for('login')) 
     
+    
+    
     user_data = get_user_fields(session['user_id'])
     
         
-    return render_template('user_profile.html',user_data=user_data)
+    return render_template('user_profile.html',user_data=user_data,is_admin=is_admin(session['user_id']))
 
 @app.route('/inventory')
 def inventory():
@@ -168,7 +170,7 @@ def inventory():
     end = start + per_page
     equipamentos_paginated = equipamentos[start:end]  # Slice the equipment list for the current page
 
-    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages, search_query=search_query)
+    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages, search_query=search_query,is_admin=is_admin(session['user_id']))
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
@@ -272,7 +274,7 @@ def add_equip():
 
         return redirect(url_for('add_equip'))
 
-    return render_template('add_equipment.html', escolas=escolas, success=success)
+    return render_template('add_equipment.html', escolas=escolas, success=success,is_admin=is_admin(session['user_id']))
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
@@ -320,7 +322,7 @@ def edit_equip():
     equipment_data = get_equipment_by_serial(serial_number)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     
-    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools,escola_nome=escola_nome)
+    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
 
 @app.route('/item_page')
 def item_page():
@@ -329,7 +331,7 @@ def item_page():
     equipment = get_equipment_by_serial(serial_number)
     school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
     escola_nome = get_school_name_by_id(school_id)
-    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome)
+    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
 
 
 if __name__ == '__main__':

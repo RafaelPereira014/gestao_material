@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do equipamento</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
@@ -26,9 +28,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="/perfil" title="Perfil utilizador"><i class="fas fa-user"></i></a> 
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/adicionar_utilizador" title="Add User"><i class="fas fa-user-plus"></i></a> 
-            </li>
+            {% if is_admin %}  <!-- Only show this item if the user is an admin -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Add User"><i class="fas fa-user-plus"></i></a> 
+                </li>
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
             </li>
