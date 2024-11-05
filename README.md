@@ -28,45 +28,45 @@ This project is a web application built with Flask, designed for managing equipm
    ```bash
    git clone https://github.com/RafaelPereira014/gestao_material
 
-	2.	Navigate to the project directory:
+2.	Navigate to the project directory:
 
-cd gestao_material
-
-
-	3.	Set up a virtual environment:
-
-python -m venv venv
+	cd gestao_material
 
 
-	4.	Activate the virtual environment:
+3.	Set up a virtual environment:
+
+	python -m venv venv
+
+
+4.	Activate the virtual environment:
 	•	On Windows:
 
-venv\Scripts\activate
+	venv\Scripts\activate
 
 
 	•	On macOS/Linux:
 
-source venv/bin/activate
+	source venv/bin/activate
 
 
-	5.	Install the required packages:
+5.	Install the required packages:
 
-pip install -r requirements.txt
-
-
-	6.	Set up your MySQL database and update the database connection settings in your application.
-	7.	Run the application:
-
-pythton3 run.py
+	pip install -r requirements.txt
 
 
-	8.	Open your browser and go to http://127.0.0.1:5000 to access the application.
+6.	Set up your MySQL database and update the database connection settings in your application.
+7.	Run the application:
+
+	pythton3 run.py
+
+
+8.	Open your browser and go to http://127.0.0.1:5000 to access the application.
 
 Usage
 
-	•	Navigate to the dashboard to view equipment and user accounts.
-	•	Use the inventory section to manage equipment.
-	•	Admin users can add new users and manage roles.
+•	Navigate to the dashboard to view equipment and user accounts.
+•	Use the inventory section to manage equipment.	
+•	Admin users can add new users and manage roles.
 
 Contributing
 
