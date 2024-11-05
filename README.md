@@ -41,7 +41,7 @@ This project is a web application built with Flask, designed for managing equipm
 
 
 4.	Activate the virtual environment:
-
+	```bash
 	•	On Windows:
 
 	venv\Scripts\activate
@@ -53,23 +53,23 @@ This project is a web application built with Flask, designed for managing equipm
 
 
 5.	Install the required packages:
-
+	```bash
 	pip install -r requirements.txt
 
 
 6.	Set up your MySQL database and update the database connection settings in your application.
 7.	Run the application:
-
+	```bash
 	pythton3 run.py
 
 
 8.	Open your browser and go to http://127.0.0.1:5000 to access the application.
-
-Usage
-
-•	Navigate to the dashboard to view equipment and user accounts.
-•	Use the inventory section to manage equipment.	
-•	Admin users can add new users and manage roles.
+	```bash
+	Usage
+	
+	•	Navigate to the dashboard to view equipment and user accounts.
+	•	Use the inventory section to manage equipment.	
+	•	Admin users can add new users and manage roles.
 
 Contributing
 
