@@ -1,6 +1,5 @@
-Here’s the complete README.md content in Markdown format:
 
-# Project Name
+# Gestor de Material
 
 ## Description
 
