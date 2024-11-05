@@ -1,44 +1,160 @@
 import csv
 from datetime import datetime
 from io import TextIOWrapper
-from flask import Flask, flash, render_template, redirect, url_for, request
+import bcrypt
+from flask import Flask, flash, render_template, redirect, session, url_for, request
+from flask_limiter import Limiter
 import mysql.connector
 from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
+from app.db_operations.profile import *
 from config import DB_CONFIG
+from flask_limiter.util import get_remote_address
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+# Initialize Rate Limiter
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    #storage_uri="redis://localhost:6379/0",  # Redis connection URI
+    default_limits=["5 per minute"]  # Default rate limit for the entire app
+)
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return mysql.connector.connect(**DB_CONFIG)
 
-@app.route('/')
-def login():
-    return render_template('login.html')
 
+
+@app.route('/', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")  # Apply a custom rate limit specifically for the login route
+def login():
+    error = None
+    if request.method == 'POST':
+        email = request.form.get('username')
+        password = request.form.get('password')
+        
+        if not email or not password:
+            error = 'Username and password are required'
+            return render_template('login.html', error=error)
+
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id,password,role FROM users WHERE email = %s", (email,))
+        user_data = cursor.fetchone()
+        cursor.close()
+
+        
+        if user_data:
+            stored_password = user_data[1].encode('utf-8')
+            
+            if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+                session['user_id'] = user_data[0]  # Store user ID in session
+                session['user_type'] = user_data[2]  # Store user type in session
+                session.permanent = True
+                return redirect('/index')  # Redirect to dashboard on success
+            else:
+                error = 'Invalid username or password'
+        else:
+            error = 'Invalid username or password'
+
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.clear()  # Clear session data
+    return redirect(url_for('login'))  # Redirect to homepage after logout
 
 
 @app.route('/index')
 def index():
+    if 'user_id' not in session:
+        return redirect(url_for('login')) 
     year = datetime.now().year
     return render_template('index.html',year=year)
 
 
-@app.route('/adicionar_utilizador')
+@app.route('/adicionar_utilizador', methods=['GET', 'POST'])
 def add_user():
-    escolas = get_escolas()
-    return render_template('add_user.html',escolas=escolas)
+    escolas = get_escolas()  # Retrieve available schools for selection
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        escola = request.form.get('escola')
+        escola_id = get_school_id_by_name(escola)
+        role = request.form.get('role')
+        password = request.form.get('password')
+        print(username)
+
+        if not username or not email or not role or not password:
+            flash('Todos os campos são obrigatórios.', 'danger')
+            return render_template('add_user.html', escolas=escolas)
+
+        # Hash the password
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        conn = connect_to_database()
+        cursor = conn.cursor()
+
+        # Check if the email already exists
+        cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
+        if cursor.fetchone():
+            flash('O email já se encontra registado na plataforma.', 'danger')
+            cursor.close()
+            conn.close()
+            return render_template('add_user.html', escolas=escolas)
+
+        # Insert the new user
+        cursor.execute(
+            "INSERT INTO users (username, email, escola_id, role, password) VALUES (%s, %s, %s, %s, %s)",
+            (username, email, escola_id, role, hashed_password)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash('User added successfully', 'success')
+        return redirect(url_for('index'))  # Redirect to a success page or dashboard
+
+    return render_template('add_user.html', escolas=escolas)
 
 @app.route('/perfil')
 def user_profile():
-    return render_template('user_profile.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login')) 
+    
+    user_data = get_user_fields(session['user_id'])
+    
+        
+    return render_template('user_profile.html',user_data=user_data)
 
 @app.route('/inventory')
 def inventory():
+    user_id = session.get('user_id')  # Get the user_id from session
+    if user_id is None:
+        return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
+
     search_query = request.args.get('search', '')  # Get the search query from the request
-    equipamentos = get_all_equip()  # Fetch all equipment data
+    
+    if is_admin(user_id):
+        equipamentos = get_all_equip()  # Fetch all equipment data
+    else:
+        # Fetch the user's escola_id and get equipment based on that
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("SELECT escola_id FROM users WHERE id = %s", (user_id,))
+        escola_id = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if escola_id:
+            equipamentos = get_equip_by_escola(escola_id[0])  # Create this function to fetch equipment by escola_id
+            
+        else:
+            equipamentos = []  # No equipment found if escola_id is not found
 
     # Filter the equipment based on the search query
     if search_query:
@@ -46,7 +162,8 @@ def inventory():
 
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
-
+    
+    print(equipamentos)
     total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
     start = (page - 1) * per_page
     end = start + per_page

@@ -45,9 +45,11 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <h5 class="card-title">Detalhes da Conta</h5>
-                    <p><strong>Nome:</strong> João Silva</p>
-                    <p><strong>Email:</strong> joao.silva@example.com</p>
-                    <p><strong>Escola:</strong> Escola A</p>
+                    <p><strong>Nome:</strong> {{ user_data['username'] }}</p>
+                    <p><strong>Email:</strong> {{ user_data['email'] }}</p>
+                    <p><strong>Escola:</strong> {{ user_data['escola_id'] }}</p>
+                    <p><strong>Função:</strong> {{ user_data['role'] }}</p>
+                    
                     <button class="btn btn-primary" onclick="togglePasswordReset()">Alterar password</button>
                 </div>
             </div>

@@ -41,7 +41,7 @@
             <h1 class="mt-4">Adicionar utilizador</h1>
             <div class="card">
                 <div class="card-body">
-                    <form action="/add_user" method="POST">
+                    <form action="/adicionar_utilizador" method="POST">
                         <div class="form-group">
                             <label for="username">Nome de utilizador:</label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="Insira o nome de utilizador" required>
@@ -50,9 +50,11 @@
                             <label for="email">E-mail:</label>
                             <input type="email" class="form-control" id="email" name="email" placeholder="Insira o e-mail" required>
                         </div>
-                        <div class="form-group">
+                        
+                        <!-- Escola Field (Conditional Display) -->
+                        <div class="form-group" id="escola-group">
                             <label for="escola">Escola:</label>
-                            <select class="form-control" id="escola" name="escola" required>
+                            <select class="form-control" id="escola" name="escola">
                                 <option value="">Selecione a escola...</option>
                                 {% for escola in escolas %}
                                     <option value="{{ escola }}">{{ escola }}</option>
@@ -62,13 +64,15 @@
                         
                         <div class="form-group">
                             <label for="role">Função:</label>
-                            <select class="form-control" id="role" name="role" required>
+                            <select class="form-control" id="role" name="role" required onchange="toggleEscola()">
                                 <option value="">Selecione a função...</option>
                                 <option value="admin">Administrador</option>
-                                <option value="tec">Técnico</option>
-                                <option value="focal">Ponto focal</option>
-
+                                <option value="user">Utilizador</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Adicionar utilizador</button>
@@ -82,5 +86,26 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <!-- JavaScript to Show/Hide Escola Field Based on Role Selection -->
+    <script>
+        function toggleEscola() {
+            const role = document.getElementById('role').value;
+            const escolaGroup = document.getElementById('escola-group');
+            const escolaSelect = document.getElementById('escola');
+
+            if (role === 'admin') {
+                escolaGroup.style.display = 'none';
+                escolaSelect.removeAttribute('required'); // Make it optional
+                escolaSelect.value = ''; // Clear selection
+            } else {
+                escolaGroup.style.display = 'block';
+                escolaSelect.setAttribute('required', 'required'); // Make it required
+            }
+        }
+
+        // Initialize the display state on page load
+        document.addEventListener('DOMContentLoaded', toggleEscola);
+    </script>
 </body>
 </html>
