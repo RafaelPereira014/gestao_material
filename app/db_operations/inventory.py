@@ -51,9 +51,20 @@ def get_equip_by_escola(escola_id):
     """Fetches equipment associated with a specific escola_id."""
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM equipamentos WHERE escola_id = %s", (escola_id,))
-    equipamentos = cursor.fetchall()  # Change this if you're using an ORM or need specific attributes
-    cursor.close()
-    conn.close()
-    return equipamentos
+    
+    try:
+        cursor.execute("SELECT * FROM equipamentos WHERE escola_id = %s", (escola_id,))
+        columns = [column[0] for column in cursor.description]  # Get column names
+        Equipamento = namedtuple('Equipamento', columns)  # Create a namedtuple class
+        
+        # Use a list comprehension to convert rows to named tuples
+        equipamentos = [Equipamento(*row) for row in cursor.fetchall()]
+        
+        return equipamentos
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        cursor.close()
+        conn.close()
     

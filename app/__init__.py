@@ -20,7 +20,7 @@ limiter = Limiter(
     key_func=get_remote_address,
     app=app,
     #storage_uri="redis://localhost:6379/0",  # Redis connection URI
-    default_limits=["5 per minute"]  # Default rate limit for the entire app
+    default_limits=["100 per minute"]  # Default rate limit for the entire app
 )
 
 def connect_to_database():
@@ -163,7 +163,6 @@ def inventory():
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
     
-    print(equipamentos)
     total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
     start = (page - 1) * per_page
     end = start + per_page
