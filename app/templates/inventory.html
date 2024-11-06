@@ -96,7 +96,7 @@
                         </td>
                         <td>{{ equipamento.cedido_a_escola if equipamento.cedido_a_escola else '-' }}</td>  <!-- Cedido a -->
                         <td>
-                            <a href="{{ url_for('edit_equip', serial_number=equipamento.serial_number) }}" class="btn btn-warning">Editar</a>
+                            <a href="{{ url_for('edit_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger">Remover</button>
                         </td>
                     </tr>

@@ -30,7 +30,7 @@ def get_equipment_by_serial(serial_number,escola_id):
         cursor.close()
         connection.close()
         
-def update_equipment(serial_number, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
+def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -38,7 +38,7 @@ def update_equipment(serial_number, tipo=None, status=None, aluno_CC=None, data_
         serial_number = serial_number.strip()  # Remove any leading/trailing spaces
 
         # Check if the equipment exists
-        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s", (serial_number,))
+        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s and escola_id=%s ", (serial_number,escola_id,))
         existing_equipment = cursor.fetchone()
         if not existing_equipment:
             print(f"No equipment found with serial_number: {serial_number}")

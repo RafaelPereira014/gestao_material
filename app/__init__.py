@@ -283,6 +283,7 @@ def edit_equip():
         serial_number = request.form.get('SerialNo')
         equipment_type = request.form.get('item')
         from_location = request.form.get('fromLocation')
+        escola_id = get_school_id_by_name(from_location)
         status = request.form.get('status')
         assigned_to = request.form.get('assignedTo')
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
@@ -310,7 +311,7 @@ def edit_equip():
             document_path = None
             
         # Call a function to update the equipment in the database
-        update_equipment(serial_number,equipment_type,status,assigned_to,datetime.now(),id_escola)
+        update_equipment(serial_number,escola_id,equipment_type,status,assigned_to,datetime.now(),id_escola)
 
         
         
@@ -319,7 +320,8 @@ def edit_equip():
     # GET request: Render the edit form with the existing equipment data
     all_schools = get_escolas()
     serial_number = request.args.get('serial_number')
-    equipment_data = get_equipment_by_serial(serial_number)
+    id_escola = request.args.get('escola_id')
+    equipment_data = get_equipment_by_serial(serial_number,id_escola)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     
     return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
