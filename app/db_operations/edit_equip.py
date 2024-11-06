@@ -1,6 +1,7 @@
 from datetime import datetime
 import mysql.connector
 from config import DB_CONFIG
+from collections import namedtuple
 
 
 
@@ -8,14 +9,14 @@ def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return mysql.connector.connect(**DB_CONFIG)
 
-from collections import namedtuple
 
-def get_equipment_by_serial(serial_number):
+
+def get_equipment_by_serial(serial_number,escola_id):
     connection = connect_to_database()
     cursor = connection.cursor(dictionary=True)  # Enable dictionary cursor
     
     try:
-        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s", (serial_number,))
+        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s and escola_id=%s", (serial_number,escola_id,))
         row = cursor.fetchone()
         
         if row:

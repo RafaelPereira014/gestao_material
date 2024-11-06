@@ -327,8 +327,10 @@ def edit_equip():
 @app.route('/item_page')
 def item_page():
     serial_number = request.args.get('serial_number')
+    id_escola = request.args.get('escola_id')
     # Retrieve equipment details by ID
-    equipment = get_equipment_by_serial(serial_number)
+    equipment = get_equipment_by_serial(serial_number,id_escola)
+    
     school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
     escola_nome = get_school_name_by_id(school_id)
     return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))

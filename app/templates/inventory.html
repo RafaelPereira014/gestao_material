@@ -74,7 +74,7 @@
                 {% for equipamento in equipamentos %}
                     <tr>
                         <td>
-                            <a href="{{ url_for('item_page', serial_number=equipamento.serial_number) }}">
+                            <a href="{{ url_for('item_page', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}">
                                 {{ equipamento.serial_number }}
                             </a>
                         </td>
