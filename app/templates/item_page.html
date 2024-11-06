@@ -9,32 +9,50 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
 </head>
 <body>
 
-    <!-- Sidebar -->
     <div id="sidebar">
+        <!-- Sidebar Icon/Logo -->
+        <div class="sidebar-icon">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
+        </div>
+
+        <!-- Navigation Items -->
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="/index" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+                <a class="nav-link active" href="/index" title="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/inventory" title="Inventory"><i class="fas fa-box"></i></a>
+                <a class="nav-link" href="/inventory" title="Inventory">
+                    <i class="fas fa-box"></i> Inventário
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
+                    <i class="fas fa-plus"></i> Adicionar equipamento
+                </a>
             </li>
-           
             <li class="nav-item">
-                <a class="nav-link" href="/perfil" title="Perfil utilizador"><i class="fas fa-user"></i></a> 
+                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
             </li>
-            {% if is_admin %}  <!-- Only show this item if the user is an admin -->
+            {% if is_admin %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_utilizador" title="Add User"><i class="fas fa-user-plus"></i></a> 
+                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                        <i class="fas fa-user-plus"></i> Adicionar utilizador
+                    </a>
                 </li>
             {% endif %}
+            
             <li class="nav-item">
-                <a class="nav-link" href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                <a class="nav-link" href="/logout" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </li>
         </ul>
     </div>

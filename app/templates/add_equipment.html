@@ -8,85 +8,108 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/add_equip.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
     
 </head>
 <body>
     <div id="sidebar">
+        <!-- Sidebar Icon/Logo -->
+        <div class="sidebar-icon">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
+        </div>
+
+        
+        
+        <!-- Navigation Items -->
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="/index" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+                <a class="nav-link active" href="/index" title="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/inventory" title="Inventory"><i class="fas fa-box"></i></a>
+                <a class="nav-link" href="/inventory" title="Inventory">
+                    <i class="fas fa-box"></i> Inventário
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment"><i class="fas fa-plus"></i></a>
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
+                    <i class="fas fa-plus"></i> Adicionar equipamento
+                </a>
             </li>
-           
             <li class="nav-item">
-                <a class="nav-link" href="/perfil" title="Perfil utilizador"><i class="fas fa-user"></i></a> 
+                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
             </li>
-            {% if is_admin %}  <!-- Only show this item if the user is an admin -->
+            {% if is_admin %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_utilizador" title="Add User"><i class="fas fa-user-plus"></i></a> 
+                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                        <i class="fas fa-user-plus"></i> Adicionar utilizador
+                    </a>
                 </li>
             {% endif %}
+            
             <li class="nav-item">
-                <a class="nav-link" href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                <a class="nav-link" href="/logout" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </li>
         </ul>
     </div>
 
     <!-- Main content -->
     <div id="main-content">
-        <h1>Adicionar Equipamento</h1>
-        <form enctype="multipart/form-data" action="{{ url_for('add_equip') }}" method="post" onsubmit="return confirmAdd()">         
-        <div class="form-group">
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" name="entryMode" id="singleEntry" value="single" checked onclick="toggleEntryMode()">
-                    <label class="form-check-label" for="singleEntry">Introdução unitaria</label>
-                </div>
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" name="entryMode" id="bulkEntry" value="bulk" onclick="toggleEntryMode()">
-                    <label class="form-check-label" for="bulkEntry">Introdução em Bulk(CSV)</label>
-                </div>
-            </div>
-        
-            <!-- Single Entry Fields -->
-            <div id="singleEntryFields">
+        <div class="container equipment-form">
+            <h1>Adicionar Equipamento</h1>
+            <form enctype="multipart/form-data" action="{{ url_for('add_equip') }}" method="post" onsubmit="return confirmAdd()">         
                 <div class="form-group">
-                    <label for="itemSerialNo">Numero de série</label>
-                    <input type="text" class="form-control" id="itemSerialNo" name="itemSerialNo" placeholder="Introduzir serial number">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="entryMode" id="singleEntry" value="single" checked onclick="toggleEntryMode()">
+                        <label class="form-check-label" for="singleEntry">Introdução unitaria</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="entryMode" id="bulkEntry" value="bulk" onclick="toggleEntryMode()">
+                        <label class="form-check-label" for="bulkEntry">Introdução em Bulk(CSV)</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="itemName">Tipo de equipamento</label>
-                    <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento">
+            
+                <!-- Single Entry Fields -->
+                <div id="singleEntryFields">
+                    <div class="form-group">
+                        <label for="itemSerialNo">Numero de série</label>
+                        <input type="text" class="form-control" id="itemSerialNo" name="itemSerialNo" placeholder="Introduzir serial number">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemName">Tipo de equipamento</label>
+                        <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Escola</label>
+                        <select class="form-control" id="location" name="location">
+                            <option value="" disabled selected>Selecionar escola</option>
+                            {% for escola in escolas %}
+                                <option>{{ escola }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignedTo">Atribuido a (opcional)</label>
+                        <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduzir cc do aluno">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="location">Escola</label>
-                    <select class="form-control" id="location" name="location">
-                        <option value="" disabled selected>Selecionar escola</option>
-                        {% for escola in escolas %}
-                            <option>{{ escola }}</option>
-                        {% endfor %}
-                    </select>
+            
+                <!-- Bulk Entry Fields -->
+                <div id="bulkEntryFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="csvFile">Upload ficheiro CSV</label>
+                        <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="assignedTo">Atribuido a (opcional)</label>
-                    <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduzir cc do aluno">
-                </div>
-            </div>
-        
-            <!-- Bulk Entry Fields -->
-            <div id="bulkEntryFields" style="display: none;">
-                <div class="form-group">
-                    <label for="csvFile">Upload ficheiro CSV</label>
-                    <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv">
-                </div>
-            </div>
-        
-            <button type="submit" class="btn btn-primary">Adicionar equipamento</button>
-        </form>
+            
+                <button type="submit" class="btn btn-primary">Adicionar equipamento</button>
+            </form>
+        </div>
         
         <script>
             function toggleEntryMode() {

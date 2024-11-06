@@ -296,7 +296,7 @@ def edit_equip():
         if request.form.get('returned'):
             id_escola = None  # Set cedido_a_escola to NULL
             assigned_to = None
-            status = 'Disponivel'
+            status = 'Disponivel'   
             
         else:
             to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None

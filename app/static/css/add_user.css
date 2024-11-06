@@ -5,45 +5,7 @@ body, html {
     background-color: #f8f9fa;
 }
 
-/* Sidebar */
-#sidebar {
-    background-color: #343a40;
-    padding-top: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 60px;
-    z-index: 1;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.2s ease;
-}
 
-
-
-#sidebar .nav-link {
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 0;
-    transition: background-color 0.2s;
-}
-
-#sidebar .nav-link:hover {
-    background-color: #495057;
-    border-radius: 5px;
-}
-
-/* Main content */
-#main-content {
-    margin-left: 60px;
-    padding: 20px;
-    height: 100vh;
-    overflow-y: auto;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-}
 
 h1 {
     font-size: 28px;
