@@ -84,6 +84,7 @@
                         <label for="itemName">Tipo de equipamento</label>
                         <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento">
                     </div>
+                    {%if is_admin %}
                     <div class="form-group">
                         <label for="location">Escola</label>
                         <select class="form-control" id="location" name="location">
@@ -93,6 +94,7 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {%endif%}
                     <div class="form-group">
                         <label for="assignedTo">Atribuido a (opcional)</label>
                         <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduzir cc do aluno">

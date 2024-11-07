@@ -30,7 +30,7 @@ def connect_to_database():
 
 
 @app.route('/', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")  # Apply a custom rate limit specifically for the login route
+@limiter.limit("100 per minute")  # Apply a custom rate limit specifically for the login route
 def login():
     error = None
     if request.method == 'POST':
@@ -129,9 +129,10 @@ def user_profile():
     
     
     user_data = get_user_fields(session['user_id'])
+    escola_nome = get_school_name_by_id(user_data.get('escola_id'))
     
         
-    return render_template('user_profile.html',user_data=user_data,is_admin=is_admin(session['user_id']))
+    return render_template('user_profile.html',user_data=user_data,is_admin=is_admin(session['user_id']),escola_nome=escola_nome)
 
 @app.route('/inventory')
 def inventory():
@@ -140,7 +141,7 @@ def inventory():
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
 
     search_query = request.args.get('search', '')  # Get the search query from the request
-    
+
     if is_admin(user_id):
         equipamentos = get_all_equip()  # Fetch all equipment data
     else:
@@ -151,26 +152,37 @@ def inventory():
         escola_id = cursor.fetchone()
         cursor.close()
         conn.close()
-        
+
         if escola_id:
-            equipamentos = get_equip_by_escola(escola_id[0])  # Create this function to fetch equipment by escola_id
-            
+            equipamentos = get_equip_by_escola(escola_id[0])  # Fetch equipment by escola_id
         else:
             equipamentos = []  # No equipment found if escola_id is not found
 
     # Filter the equipment based on the search query
     if search_query:
-        equipamentos = [e for e in equipamentos if search_query.lower() in e.serial_number.lower()]
+        equipamentos = [e for e in equipamentos if search_query.lower() in e['serial_number'].lower()]
 
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
-    
+
     total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
     start = (page - 1) * per_page
     end = start + per_page
     equipamentos_paginated = equipamentos[start:end]  # Slice the equipment list for the current page
 
-    return render_template('inventory.html', equipamentos=equipamentos_paginated, page=page, total_pages=total_pages, search_query=search_query,is_admin=is_admin(session['user_id']))
+    
+    for equipamento in equipamentos_paginated:
+        escola_name_from = get_school_name_by_id(equipamento['escola_id'])  
+        equipamento['escola_name_from'] = escola_name_from  
+        escola_name_to = get_school_name_by_id(equipamento['cedido_a_escola']) 
+        equipamento['escola_name_to'] = escola_name_to 
+
+    return render_template('inventory.html', 
+                           equipamentos=equipamentos_paginated, 
+                           page=page, 
+                           total_pages=total_pages, 
+                           search_query=search_query,
+                           is_admin=is_admin(session['user_id']))
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
@@ -180,13 +192,18 @@ def add_equip():
     if request.method == 'POST':
         entry_mode = request.form.get('entryMode', 'single')
         print("Entry Mode Selected:", entry_mode)  # Debugging print
+        user_details = get_user_fields(session['user_id'])
+        print(user_details)
 
         # If single entry mode is selected
         if entry_mode == 'single':
             try:
                 numero_serie = request.form['itemSerialNo']
                 tipo = request.form['itemName']
-                escola_nome = request.form['location']
+                if not is_admin(session['user_id']):
+                    escola_nome = get_school_name_by_id(user_details.get('escola_id'))
+                else:
+                    escola_nome = request.form['location']
                 cc_aluno = request.form.get('assignedTo', None)
                 data_aquisicao = datetime.now().date()
                 data_ultimo_movimento = data_aquisicao

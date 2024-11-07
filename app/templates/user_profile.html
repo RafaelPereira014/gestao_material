@@ -72,7 +72,7 @@
                     <p><strong>Nome:</strong> {{ user_data['username'] }}</p>
                     <p><strong>Email:</strong> {{ user_data['email'] }}</p>
                     {%if not is_admin%}
-                        <p><strong>Escola:</strong> {{ user_data['escola_id'] }}</p>
+                        <p><strong>Escola:</strong> {{ escola_nome }}</p>
                     {% endif %}
                     <p><strong>Função:</strong> {{ user_data['role'] }}</p>
                     
