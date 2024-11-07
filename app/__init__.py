@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from io import TextIOWrapper
 import bcrypt
-from flask import Flask, flash, render_template, redirect, session, url_for, request
+from flask import Flask, flash, jsonify, render_template, redirect, session, url_for, request
 from flask_limiter import Limiter
 import mysql.connector
 from app.db_operations.edit_equip import *
@@ -88,7 +88,7 @@ def add_user():
         escola_id = get_school_id_by_name(escola)
         role = request.form.get('role')
         password = request.form.get('password')
-        print(username)
+        #print(username)
 
         if not username or not email or not role or not password:
             flash('Todos os campos são obrigatórios.', 'danger')
@@ -184,19 +184,33 @@ def inventory():
                            search_query=search_query,
                            is_admin=is_admin(session['user_id']))
 
+
+@app.route('/check_serial_number', methods=['POST'])
+def check_serial_number():
+    numero_serie = request.form.get('numero_serie')
+    escola_id = request.form.get('escola_id')  
+
+    if is_serial_number_exists(numero_serie, escola_id):
+        print("ISTO EXISTE!")
+        return jsonify({'exists': True})
+    return jsonify({'exists': False})
+
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
     escolas = get_escolas()  # Ensure this function returns a list of school objects
     success = False
+    user_details = get_user_fields(session['user_id'])
+
 
     if request.method == 'POST':
         entry_mode = request.form.get('entryMode', 'single')
         print("Entry Mode Selected:", entry_mode)  # Debugging print
-        user_details = get_user_fields(session['user_id'])
-        print(user_details)
+        #print(user_details)
 
         # If single entry mode is selected
         if entry_mode == 'single':
+            connection = None
+            cursor = None  # Ensure cursor is initialized
             try:
                 numero_serie = request.form['itemSerialNo']
                 tipo = request.form['itemName']
@@ -208,20 +222,26 @@ def add_equip():
                 data_aquisicao = datetime.now().date()
                 data_ultimo_movimento = data_aquisicao
                 status = 'Em uso' if cc_aluno else 'Disponivel'
-                escola_id= get_school_id_by_name(escola_nome)
+                escola_id = get_school_id_by_name(escola_nome)
+                
+
+                # Check if the serial number already exists
+                if is_serial_number_exists(numero_serie, escola_id):
+                    flash(f"Equipment with serial number {numero_serie} already exists.", "danger")
+                    return redirect(url_for('add_equip'))  # Redirect to the add equipment page
 
                 print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
 
                 # Insert single equipment into the database
                 connection = connect_to_database()
-                cursor = connection.cursor()
+                cursor = connection.cursor()  # Initialize cursor here
                 cursor.execute(
-                        """
-                        INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        """,
-                        ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,numero_serie,cc_aluno)
-                    )
+                    """
+                    INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
+                )
                 connection.commit()
                 flash("Equipment added successfully", "success")
                 print("Single equipment added successfully.")  # Debugging print
@@ -230,19 +250,24 @@ def add_equip():
             except Exception as e:
                 flash(f"An error occurred: {e}", "danger")
                 print(f"Error adding single equipment: {e}")  # Debugging print
-                connection.rollback()
+                if connection:
+                    connection.rollback()
             finally:
-                cursor.close()
-                connection.close()
+                # Ensure cursor is always closed, even if an error occurs
+                if cursor:
+                    cursor.close()
+                if connection:
+                    connection.close()
 
         # If bulk entry mode is selected
         elif entry_mode == 'bulk' and 'csvFile' in request.files:
             csv_file = request.files['csvFile']
             print("Processing bulk CSV file...")  # Debugging print
-
+            connection = None
+            cursor = None  # Initialize cursor here
             try:
                 connection = connect_to_database()
-                cursor = connection.cursor()
+                cursor = connection.cursor()  # Initialize cursor here
                 
                 # Use delimiter=':' to handle colon-separated values
                 csv_reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'), delimiter=';')
@@ -259,6 +284,12 @@ def add_equip():
                     numero_serie = row[0]
                     tipo = row[1]
                     escola_id = row[2]
+                    
+                    # Check if the serial number already exists
+                    if is_serial_number_exists(numero_serie, escola_id):
+                        print(f"Skipping duplicate serial number: {numero_serie}")
+                        continue
+                    
                     cc_aluno = row[3] if len(row) > 3 and row[3] else None  
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
@@ -272,7 +303,7 @@ def add_equip():
                         INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                         """,
-                        ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,numero_serie,cc_aluno)
+                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
                     )
                     row_count += 1
 
@@ -284,14 +315,18 @@ def add_equip():
             except Exception as e:
                 flash(f"An error occurred during bulk upload: {e}", "danger")
                 print(f"Error during bulk equipment addition: {e}")  
-                connection.rollback()
+                if connection:
+                    connection.rollback()
             finally:
-                cursor.close()
-                connection.close()
+                # Ensure cursor is always closed, even if an error occurs
+                if cursor:
+                    cursor.close()
+                if connection:
+                    connection.close()
 
         return redirect(url_for('add_equip'))
 
-    return render_template('add_equipment.html', escolas=escolas, success=success,is_admin=is_admin(session['user_id']))
+    return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']),user_details=user_details)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():

@@ -139,3 +139,16 @@ def get_school_name_by_id(school_id):
     finally:
         cursor.close()
         connection.close()
+        
+def is_serial_number_exists(serial_number, escola_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT COUNT(*) FROM equipamentos WHERE serial_number = %s AND escola_id = %s
+    """, (serial_number, escola_id))
+    
+    result = cursor.fetchone()
+    
+    cursor.close()
+    connection.close()
+    return result[0] > 0  # Returns True if the serial number exists, else False
