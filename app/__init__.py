@@ -236,13 +236,13 @@ def add_equip():
                 row_count = 0  # Track number of rows processed
                 for row in csv_reader:
                     if len(row) < 3 or not all(row[:3]):  # Check if required fields are filled
-                        print(f"Skipping incomplete row: {row}")  # Debugging print for invalid rows
+                        print(f"Skipping incomplete row: {row}")  
                         continue
                     
                     numero_serie = row[0]
                     tipo = row[1]
                     escola_id = row[2]
-                    cc_aluno = row[3] if len(row) > 3 and row[3] else None  # Optional field
+                    cc_aluno = row[3] if len(row) > 3 and row[3] else None  
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
@@ -261,12 +261,12 @@ def add_equip():
 
                 connection.commit()
                 flash(f"{row_count} equipment entries added successfully in bulk!", "success")
-                print(f"Bulk equipment insertion complete. Rows added: {row_count}")  # Debugging print
+                print(f"Bulk equipment insertion complete. Rows added: {row_count}")  
                 success = True
 
             except Exception as e:
                 flash(f"An error occurred during bulk upload: {e}", "danger")
-                print(f"Error during bulk equipment addition: {e}")  # Debugging print
+                print(f"Error during bulk equipment addition: {e}")  
                 connection.rollback()
             finally:
                 cursor.close()
@@ -279,7 +279,7 @@ def add_equip():
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
     if request.method == 'POST':
-        # Capture form data
+        
         serial_number = request.form.get('SerialNo')
         equipment_type = request.form.get('item')
         from_location = request.form.get('fromLocation')
@@ -294,7 +294,7 @@ def edit_equip():
         
         # Check if the "returned" checkbox is checked
         if request.form.get('returned'):
-            id_escola = None  # Set cedido_a_escola to NULL
+            id_escola = None  
             assigned_to = None
             status = 'Disponivel'   
             
@@ -310,14 +310,12 @@ def edit_equip():
         else:
             document_path = None
             
-        # Call a function to update the equipment in the database
         update_equipment(serial_number,escola_id,equipment_type,status,assigned_to,datetime.now(),id_escola)
 
         
         
         return redirect(url_for('inventory'))
     
-    # GET request: Render the edit form with the existing equipment data
     all_schools = get_escolas()
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
@@ -330,7 +328,6 @@ def edit_equip():
 def item_page():
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    # Retrieve equipment details by ID
     equipment = get_equipment_by_serial(serial_number,id_escola)
     
     school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
