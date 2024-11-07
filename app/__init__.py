@@ -191,7 +191,6 @@ def check_serial_number():
     escola_id = request.form.get('escola_id')  
 
     if is_serial_number_exists(numero_serie, escola_id):
-        print("ISTO EXISTE!")
         return jsonify({'exists': True})
     return jsonify({'exists': False})
 
