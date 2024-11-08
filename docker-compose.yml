@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  flaskapp:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - FLASK_APP=run.py
+      - FLASK_ENV=production
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=*****
+      - MYSQL_DB=*****
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: *****
+      MYSQL_DATABASE: *****
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql_data:
