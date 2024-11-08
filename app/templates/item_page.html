@@ -86,7 +86,7 @@
                     <h5 class="card-title">Acessórios</h5>
                         <ul>
                         {% for accessory in equipment_acessories %}
-                            <li>{{ accessory.tipo_acessorio }}</li>
+                            <li>{{ accessory }}</li>  <!-- Directly print the accessory name -->
                         {% endfor %}
                         </ul>
                     {% endif %}

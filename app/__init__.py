@@ -401,12 +401,15 @@ def edit_equip():
 def item_page():
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
+    
     equipment = get_equipment_by_serial(serial_number, id_escola)
     
+
+    
     if equipment:  # Ensure 'equipment' is not None
-        equipment_acessories = get_equipment_acessories(equipment['id'])
-        print(equipment_acessories)  # This will print a list of accessory dictionaries
         
+        equipment_acessories = get_equipment_acessories(equipment['id'])
+        print(equipment_acessories)
         school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
         escola_nome = get_school_name_by_id(school_id)
         return render_template('item_page.html', equipment=equipment, escola_nome=escola_nome, 

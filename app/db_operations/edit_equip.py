@@ -1,7 +1,6 @@
 from datetime import datetime
 import pymysql
 from config import DB_CONFIG
-from collections import namedtuple
 
 
 
@@ -11,18 +10,15 @@ def connect_to_database():
 
 
 
-def get_equipment_by_serial(serial_number,escola_id):
+def get_equipment_by_serial(serial_number, id_escola):
     connection = connect_to_database()
-    cursor = connection.cursor()  # Enable dictionary cursor
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use DictCursor
     
     try:
-        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s and escola_id=%s", (serial_number,escola_id,))
-        row = cursor.fetchone()
+        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, id_escola))
+        result = cursor.fetchone()  # This will return a dictionary, not a tuple
         
-        if row:
-            return row  # Directly return the row as a dictionary
-        else:
-            return None
+        return result  # Return equipment as a dictionary
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
@@ -32,14 +28,16 @@ def get_equipment_by_serial(serial_number,escola_id):
 
 def get_equipment_acessories(equip_id):
     connection = connect_to_database()
-    cursor = connection.cursor()  # Enable dictionary cursor
+    cursor = connection.cursor()  # You can use the default cursor here
     
     try:
         cursor.execute("SELECT tipo_acessorio FROM acessorios WHERE equipamento_id = %s", (equip_id,))
-        rows = cursor.fetchall()  # Fetch all matching rows
+        rows = cursor.fetchall()  # This will return a list of tuples
         
         if rows:
-            return rows  # Return all accessories as a list of dictionaries
+            # Extract the first element from each tuple to get a flat list
+            accessories = [row[0] for row in rows]
+            return accessories  # Return the flat list of accessory names
         else:
             return []  # Return an empty list if no accessories are found
     except Exception as e:
