@@ -11,9 +11,6 @@ limits==3.13.0
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
-mysql==0.0.3
-mysql-connector==2.2.9
-mysqlclient==2.2.4
 ordered-set==4.1.0
 packaging==24.1
 Pygments==2.18.0
