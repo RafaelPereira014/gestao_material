@@ -213,6 +213,17 @@ def add_equip():
             try:
                 numero_serie = request.form['itemSerialNo']
                 tipo = request.form['itemName']
+                accessories = request.form.getlist('accessories')
+                other_accessory = request.form.get('otherAccessory')
+                if other_accessory:
+                    other_accessories_list = [item.strip() for item in other_accessory.split(',') if item.strip()]
+                    accessories.extend(other_accessories_list)
+                
+                #remove duplicates if needed
+                accessories = list(set(accessories))
+                print(accessories)
+                
+                
                 if not is_admin(session['user_id']):
                     escola_nome = get_school_name_by_id(user_details.get('escola_id'))
                 else:
@@ -241,6 +252,16 @@ def add_equip():
                     """,
                     (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
                 )
+                equipamento_id = cursor.lastrowid
+                print(equipamento_id)
+
+                for acessorio in accessories:
+                    cursor.execute(
+                        """INSERT INTO acessorios(equipamento_id,tipo_acessorio)
+                        VALUES (%s,%s)
+                        """,
+                        (equipamento_id,acessorio)
+                    )
                 connection.commit()
                 flash("Equipment added successfully", "success")
                 print("Single equipment added successfully.")  # Debugging print
@@ -379,11 +400,18 @@ def edit_equip():
 def item_page():
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    equipment = get_equipment_by_serial(serial_number,id_escola)
+    equipment = get_equipment_by_serial(serial_number, id_escola)
     
-    school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
-    escola_nome = get_school_name_by_id(school_id)
-    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
+    if equipment:  # Ensure 'equipment' is not None
+        equipment_acessories = get_equipment_acessories(equipment['id'])
+        print(equipment_acessories)  # This will print a list of accessory dictionaries
+        
+        school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
+        escola_nome = get_school_name_by_id(school_id)
+        return render_template('item_page.html', equipment=equipment, escola_nome=escola_nome, 
+                               equipment_acessories=equipment_acessories, is_admin=is_admin(session['user_id']))
+    else:
+        return "Equipment not found", 404
 
 
 if __name__ == '__main__':

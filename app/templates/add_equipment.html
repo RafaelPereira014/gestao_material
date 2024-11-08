@@ -74,12 +74,12 @@
                 <div id="singleEntryFields">
                     <div class="form-group">
                         <label for="itemSerialNo">Numero de série</label>
-                        <input type="text" class="form-control" id="itemSerialNo" name="itemSerialNo" placeholder="Introduzir serial number" oninput="checkSerialNumber()">
+                        <input type="text" class="form-control" id="itemSerialNo" name="itemSerialNo" placeholder="Introduzir serial number" oninput="checkSerialNumber()" required>
                         <small id="serialError" class="form-text text-danger" style="display: none;">Número de série já existe!</small>
                     </div>
                     <div class="form-group">
                         <label for="itemName">Tipo de equipamento</label>
-                        <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento">
+                        <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento" required>
                     </div>
                     {%if is_admin %}
                     <div class="form-group">
@@ -97,7 +97,39 @@
                         <input type="text" class="form-control" id="assignedTo" name="assignedTo" placeholder="Introduzir cc do aluno">
                     </div>
                 </div>
-            
+
+                <!-- Checkbox to Show "Cedido a" and "Upload Documento" Fields -->
+                <div class="form-group">
+                    <input type="checkbox" id="toggleAcessories" name="toggleAcessories" onclick="toggleFields()">
+                    <label for="toggleAcessories">Equipamento possui acessórios?</label>
+                </div>
+
+                <div class="form-group" id = "acessorios" style="display: none;">
+                    <label>Acessórios</label>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="accessory1" name="accessories" value="Cabo USB">
+                        <label class="form-check-label" for="accessory1">Cabo USB</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="accessory2" name="accessories" value="Carregador">
+                        <label class="form-check-label" for="accessory2">Carregador</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="accessory3" name="accessories" value="Bolsa de transporte">
+                        <label class="form-check-label" for="accessory3">Bolsa de transporte</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="accessory4" name="accessories" value="outros" onchange="toggleOtherAccessory()">
+                        <label class="form-check-label" for="accessory4">Outros</label>
+                    </div>
+                
+                    <!-- Text box for specifying other accessories -->
+                    <div class="form-group" id="otherAccessoryField" style="display: none; margin-top: 10px;">
+                        <label for="otherAccessory">Especificar outro acessório(s)</label>
+                        <input type="text" class="form-control" id="otherAccessory" name="otherAccessory" placeholder="Separar os acessórios por virgulas">
+                    </div>
+                </div>
+
                 <!-- Bulk Entry Fields -->
                 <div id="bulkEntryFields" style="display: none;">
                     <div class="form-group">
@@ -109,8 +141,26 @@
                 <button type="submit" class="btn btn-primary" id="submitBtn">Adicionar equipamento</button>
             </form>
         </div>
+    </div>
         
         <script>
+            function toggleFields() {
+                const acessorios = document.getElementById('acessorios');
+                
+                const isChecked = document.getElementById('toggleAcessories').checked;
+                
+                // Show or hide fields based on checkbox state
+                acessorios.style.display = isChecked ? 'block' : 'none';
+            }
+
+            function toggleOtherAccessory() {
+                const otherAccessoryField = document.getElementById("otherAccessoryField");
+                const otherCheckbox = document.getElementById("accessory4");
+                
+                // Show or hide the text box based on the checkbox state
+                otherAccessoryField.style.display = otherCheckbox.checked ? "block" : "none";
+            }
+
             function toggleEntryMode() {
                 const singleEntryFields = document.getElementById("singleEntryFields");
                 const bulkEntryFields = document.getElementById("bulkEntryFields");

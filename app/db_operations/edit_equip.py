@@ -29,6 +29,25 @@ def get_equipment_by_serial(serial_number,escola_id):
     finally:
         cursor.close()
         connection.close()
+
+def get_equipment_acessories(equip_id):
+    connection = connect_to_database()
+    cursor = connection.cursor(dictionary=True)  # Enable dictionary cursor
+    
+    try:
+        cursor.execute("SELECT tipo_acessorio FROM acessorios WHERE equipamento_id = %s", (equip_id,))
+        rows = cursor.fetchall()  # Fetch all matching rows
+        
+        if rows:
+            return rows  # Return all accessories as a list of dictionaries
+        else:
+            return []  # Return an empty list if no accessories are found
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
         
 def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()

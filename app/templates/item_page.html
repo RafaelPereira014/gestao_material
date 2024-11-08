@@ -82,7 +82,16 @@
                     <p><strong>Localização:</strong> {{ escola_nome }}</p>
                     <p><strong>Data de aquisição:</strong> {{ equipment.data_aquisicao }}</p>
                     <p><strong>Data da ultima alteração:</strong> {{ equipment.data_ultimo_movimento }}</p>
+                    {% if equipment_acessories %}
+                    <h5 class="card-title">Acessórios</h5>
+                        <ul>
+                        {% for accessory in equipment_acessories %}
+                            <li>{{ accessory.tipo_acessorio }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
+                
                 <div class="card-footer text-right">
                     <a href="/inventory" class="btn btn-secondary">Voltar para o inventario</a>
                 </div>
