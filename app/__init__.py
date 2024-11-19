@@ -4,7 +4,7 @@ from io import TextIOWrapper
 import bcrypt
 from flask import Flask, flash, jsonify, render_template, redirect, session, url_for, request
 from flask_limiter import Limiter
-import mysql.connector
+import pymysql
 from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
 from app.db_operations.profile import *
@@ -25,7 +25,7 @@ limiter = Limiter(
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
-    return mysql.connector.connect(**DB_CONFIG)
+    return pymysql.connect(**DB_CONFIG)
 
 
 
