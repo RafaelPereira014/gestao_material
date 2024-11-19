@@ -330,7 +330,6 @@ def add_equip():
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
     if request.method == 'POST':
-        
         serial_number = request.form.get('SerialNo')
         equipment_type = request.form.get('item')
         from_location = request.form.get('fromLocation')
@@ -340,40 +339,51 @@ def edit_equip():
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
-        
-        
-        
-        # Check if the "returned" checkbox is checked
+
+        # Handle "returned" checkbox
         if request.form.get('returned'):
-            id_escola = None  
+            id_escola = None
             assigned_to = None
-            status = 'Disponivel'   
-            
+            status = 'Disponivel'
         else:
-            to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
-            id_escola = get_school_id_by_name(to_location)
+            # Enforce rules for "Cedido" state
+            if request.form.get('toggleCedido'):
+                if not to_location:
+                    flash("Por favor, selecione a unidade a qual o equipamento está cedido.", "error")
+                    return redirect(request.url)
+                status = "Em uso"
+                id_escola = get_school_id_by_name(to_location)
 
-
-        # Process the document file if provided
+        # Save document file if provided
         if document:
             document_path = f'static/uploads/{document.filename}'
-            document.save(document_path)  # Save the uploaded document to a specified path
+            document.save(document_path)
         else:
             document_path = None
-            
-        update_equipment(serial_number,escola_id,equipment_type,status,assigned_to,datetime.now(),id_escola)
 
-        
-        
+        # Update the equipment
+        update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola)
+
         return redirect(url_for('inventory'))
-    
+
+    # Fetch equipment details
     all_schools = get_escolas()
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    equipment_data = get_equipment_by_serial(serial_number,id_escola)
+    equipment_data = get_equipment_by_serial(serial_number, id_escola)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
-    
-    return render_template('edit_equipment.html', equipment=equipment_data, all_schools=all_schools,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
+    cedido_status = is_cedido(serial_number, id_escola)  # Check if cedido
+    cedido_a = get_school_name_by_id(equipment_data.get('cedido_a_escola'))  # Get cedido school
+
+    return render_template(
+        'edit_equipment.html',
+        equipment=equipment_data,
+        all_schools=all_schools,
+        escola_nome=escola_nome,
+        is_admin=is_admin(session['user_id']),
+        cedido_status=cedido_status,
+        cedido_a=cedido_a
+    )
 
 @app.route('/item_page')
 def item_page():

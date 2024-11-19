@@ -30,7 +30,7 @@ def get_equipment_by_serial(serial_number,escola_id):
         cursor.close()
         connection.close()
         
-def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
+def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -38,10 +38,10 @@ def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=N
         serial_number = serial_number.strip()  # Remove any leading/trailing spaces
 
         # Check if the equipment exists
-        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s and escola_id=%s ", (serial_number,escola_id,))
+        cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
         existing_equipment = cursor.fetchone()
         if not existing_equipment:
-            print(f"No equipment found with serial_number: {serial_number}")
+            print(f"No equipment found with serial_number: {serial_number} and escola_id: {escola_id}")
             return False
 
         # Start constructing the SQL statement
@@ -71,8 +71,8 @@ def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=N
         params.append(cedido_a_escola)
 
         # Remove trailing comma and finalize SQL with WHERE clause
-        sql = sql.rstrip(", ") + " WHERE serial_number = %s"
-        params.append(serial_number)
+        sql = sql.rstrip(", ") + " WHERE serial_number = %s AND escola_id = %s"
+        params.extend([serial_number, escola_id])
 
         # Debugging output
         print("Executing SQL:", sql)
@@ -84,7 +84,7 @@ def update_equipment(serial_number,escola_id, tipo=None, status=None, aluno_CC=N
 
         # Check how many rows were affected
         if cursor.rowcount == 0:
-            print("No rows were updated. Check if the serial_number exists.")
+            print("No rows were updated. Check if the serial_number and escola_id exist.")
             return False
 
         print("Equipment updated successfully.")
@@ -152,3 +152,26 @@ def is_serial_number_exists(serial_number, escola_id):
     cursor.close()
     connection.close()
     return result[0] > 0  # Returns True if the serial number exists, else False
+
+def is_cedido(serial_number,escola_id):
+    
+    # Assuming you have a database connection setup
+    conn = connect_to_database()
+    cursor = conn.cursor()
+
+    try:
+        # Query to check if cedido_a exists for the given serial number
+        query = """
+        SELECT cedido_a_escola
+        FROM equipamentos
+        WHERE serial_number = %s and escola_id=%s
+        LIMIT 1;
+        """
+        cursor.execute(query, (serial_number,escola_id,))
+        result = cursor.fetchone()
+
+        # If result is not None and cedido_a is not NULL, return True
+        return result is not None and result[0] is not None
+    finally:
+        cursor.close()
+        conn.close()
