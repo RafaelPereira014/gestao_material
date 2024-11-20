@@ -79,9 +79,14 @@
                         {% endif %}
                     </p>
                     <p><strong>Atribuido a:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
-                    <p><strong>Localização:</strong> {{ escola_nome }}</p>
+                    <p><strong>Localização:</strong> {{ escola_nome  }}</p>
                     <p><strong>Data de aquisição:</strong> {{ equipment.data_aquisicao }}</p>
                     <p><strong>Data da ultima alteração:</strong> {{ equipment.data_ultimo_movimento }}</p>
+                    {%if acessorios%}
+                        <h5 class="card-title">Acessórios</h5>
+                        <span>{{ acessorios | join(', ') }}</span>
+                    {%endif%}
+                        
                 </div>
                 <div class="card-footer text-right">
                     <a href="/inventory" class="btn btn-secondary">Voltar para o inventario</a>

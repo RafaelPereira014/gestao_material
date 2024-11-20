@@ -206,7 +206,6 @@ def add_equip():
         print("Entry Mode Selected:", entry_mode)  # Debugging print
         #print(user_details)
 
-        # If single entry mode is selected
         if entry_mode == 'single':
             connection = None
             cursor = None  # Ensure cursor is initialized
@@ -222,7 +221,7 @@ def add_equip():
                 data_ultimo_movimento = data_aquisicao
                 status = 'Em uso' if cc_aluno else 'Disponivel'
                 escola_id = get_school_id_by_name(escola_nome)
-                
+                accessories = request.form.get('accessories', None)
 
                 # Check if the serial number already exists
                 if is_serial_number_exists(numero_serie, escola_id):
@@ -236,14 +235,29 @@ def add_equip():
                 cursor = connection.cursor()  # Initialize cursor here
                 cursor.execute(
                     """
-                    INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
+                    INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
                     (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
                 )
+                equipamento_id = cursor.lastrowid
+
+                # Insert accessories into a related table if provided
+                if accessories:
+                    accessories_list = [accessory.strip() for accessory in accessories.split(',') if accessory.strip()]
+                    for accessory in accessories_list:
+                        print(f"Inserting accessory: {accessory} for equipment {numero_serie}")
+                        cursor.execute(
+                            """
+                            INSERT INTO acessorios (equipamento_id, tipo_acessorio)
+                            VALUES (%s, %s)
+                            """,
+                            (equipamento_id, accessory)
+                        )
+
                 connection.commit()
-                flash("Equipment added successfully", "success")
-                print("Single equipment added successfully.")  # Debugging print
+                flash("Equipment and accessories added successfully", "success")
+                print("Single equipment and accessories added successfully.")  # Debugging print
                 success = True
 
             except Exception as e:
@@ -257,7 +271,6 @@ def add_equip():
                     cursor.close()
                 if connection:
                     connection.close()
-
         # If bulk entry mode is selected
         elif entry_mode == 'bulk' and 'csvFile' in request.files:
             csv_file = request.files['csvFile']
@@ -391,9 +404,11 @@ def item_page():
     id_escola = request.args.get('escola_id')
     equipment = get_equipment_by_serial(serial_number,id_escola)
     
-    school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['id']
+    school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['escola_id']
     escola_nome = get_school_name_by_id(school_id)
-    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']))
+    acessorios = get_equipment_acessories(equipment['id'])
+    
+    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']),acessorios=acessorios)
 
 
 if __name__ == '__main__':

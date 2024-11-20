@@ -175,3 +175,22 @@ def is_cedido(serial_number,escola_id):
     finally:
         cursor.close()
         conn.close()
+        
+def get_equipment_acessories(equipamento_id):
+    connection = connect_to_database()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Enable dictionary cursor
+    
+    try:
+        cursor.execute("SELECT tipo_acessorio FROM acessorios WHERE equipamento_id=%s", (equipamento_id,))
+        rows = cursor.fetchall()  # Fetch all rows
+
+        if rows:
+            return [row['tipo_acessorio'] for row in rows]  # Return a list of 'tipo_acessorio'
+        else:
+            return []  # Return an empty list if no accessories are found
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
