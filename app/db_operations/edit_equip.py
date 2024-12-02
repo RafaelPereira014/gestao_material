@@ -140,6 +140,27 @@ def get_school_name_by_id(school_id):
         cursor.close()
         connection.close()
         
+def get_school_ilha_id(school_id):
+    connection = connect_to_database()  # Replace with your actual database connection function
+    cursor = connection.cursor()
+    
+    try:
+        # Execute the query to fetch the school ID based on the name
+        cursor.execute("SELECT ilha_id FROM ilha_escola WHERE escola_id = %s", (school_id,))
+        result = cursor.fetchone()
+        
+        # Check if a result was found and return the school ID
+        if result:
+            return result[0]  # Return the first column which is the ID
+        else:
+            return None  # Return None if no match is found
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+        
 def is_serial_number_exists(serial_number, escola_id):
     connection = connect_to_database()
     cursor = connection.cursor()

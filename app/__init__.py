@@ -351,6 +351,8 @@ def edit_equip():
         assigned_to = request.form.get('assignedTo')
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
         id_escola = get_school_id_by_name(to_location)
+        ilha_id = get_school_ilha_id(to_location)
+        print(ilha_id)
         document = request.files.get('document')
 
         # Handle "returned" checkbox
