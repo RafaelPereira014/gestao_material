@@ -1,4 +1,5 @@
 db_schema.sql
+gestao_material.sql
 config.py
 /venv
 docker-compose.yml

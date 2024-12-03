@@ -95,7 +95,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span>{{ doc.nome_arquivo }}</span>
                                             <div>
-                                                <small class="text-muted">Enviado em: {{ doc.data_upload }}</small>
+                                                <small class="text-muted">Publicado em: {{ doc.data_upload }}</small>
                                                 <!-- Link to download the document -->
                                                 <a href="{{ url_for('download_document', filename=doc.nome_arquivo) }}" class="btn btn-success btn-sm ml-2" download>Download</a>
                                             </div>
