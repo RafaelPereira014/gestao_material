@@ -1,6 +1,7 @@
 from datetime import datetime
 import pymysql
 from config import DB_CONFIG
+from collections import namedtuple
 
 
 
@@ -31,10 +32,11 @@ def get_equipment_by_serial(serial_number,escola_id):
         
 def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()
-    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor = connection.cursor()
 
     try:
-       
+        serial_number = serial_number.strip()  # Remove any leading/trailing spaces
+
         # Check if the equipment exists
         cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
         existing_equipment = cursor.fetchone()

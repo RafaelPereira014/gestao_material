@@ -411,9 +411,9 @@ def edit_equip():
     # Fetch equipment details
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    print(id_escola)
     all_schools = get_schools_same_island(id_escola)
     equipment_data = get_equipment_by_serial(serial_number, id_escola)
+    print(equipment_data)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     cedido_status = is_cedido(serial_number, id_escola)  # Check if cedido
     cedido_a = get_school_name_by_id(equipment_data.get('cedido_a_escola'))  # Get cedido school
