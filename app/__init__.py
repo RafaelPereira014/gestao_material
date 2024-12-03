@@ -196,7 +196,10 @@ def check_serial_number():
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
+    
+    
     escolas = get_escolas()  # Ensure this function returns a list of school objects
+    
     success = False
     user_details = get_user_fields(session['user_id'])
 
@@ -351,8 +354,6 @@ def edit_equip():
         assigned_to = request.form.get('assignedTo')
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
         id_escola = get_school_id_by_name(to_location)
-        ilha_id = get_school_ilha_id(to_location)
-        print(ilha_id)
         document = request.files.get('document')
 
         # Handle "returned" checkbox
@@ -368,6 +369,8 @@ def edit_equip():
                     return redirect(request.url)
                 status = "Em uso"
                 id_escola = get_school_id_by_name(to_location)
+                ilha_id = get_school_ilha_id(to_location)
+                print(ilha_id)
 
         # Save document file if provided
         if document:
@@ -382,9 +385,11 @@ def edit_equip():
         return redirect(url_for('inventory'))
 
     # Fetch equipment details
-    all_schools = get_escolas()
+    #all_schools = get_escolas()
+    
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
+    all_schools = get_schools_same_island(id_escola)
     equipment_data = get_equipment_by_serial(serial_number, id_escola)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     cedido_status = is_cedido(serial_number, id_escola)  # Check if cedido

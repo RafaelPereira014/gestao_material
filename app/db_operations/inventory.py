@@ -26,6 +26,46 @@ def get_escolas():
     finally:
         cursor.close()
         connection.close()
+
+def get_schools_same_island(escola_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    try:
+        # Fetch the ilha_id of the given escola_id
+        cursor.execute("""
+            SELECT ilha_id 
+            FROM ilha_escola 
+            WHERE escola_id = %s
+        """, (escola_id,))
+        result = cursor.fetchone()
+        
+        if not result:
+            print(f"No ilha found for escola_id {escola_id}")
+            return []
+        
+        ilha_id = result[0]
+        
+        # Fetch all schools in the same ilha
+        cursor.execute("""
+            SELECT e.id, e.nome 
+            FROM escolas e
+            JOIN ilha_escola ie ON e.id = ie.escola_id
+            WHERE ie.ilha_id = %s
+        """, (ilha_id,))
+        
+        schools = cursor.fetchall()
+        
+        # Return list of school names
+        return [school[1] for school in schools]
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    
+    finally:
+        cursor.close()
+        connection.close()
         
 def get_all_equip():
     connection = connect_to_database()
