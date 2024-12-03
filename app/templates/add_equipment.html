@@ -68,6 +68,11 @@
                         <input type="radio" class="form-check-input" name="entryMode" id="bulkEntry" value="bulk" onclick="toggleEntryMode()">
                         <label class="form-check-label" for="bulkEntry">Introdução em Bulk(CSV)</label>
                     </div>
+                    <!-- Link to download sample CSV file, initially hidden -->
+                    <div id="downloadLink" style="display: block; margin-top: 10px;">
+                        <a href="{{ url_for('static', filename='default.csv') }}"  download>Download modelo CSV</a>
+                    </div>
+                    
                 </div>
             
                 <!-- Single Entry Fields -->
@@ -118,10 +123,14 @@
             function toggleEntryMode() {
                 const singleEntryFields = document.getElementById("singleEntryFields");
                 const bulkEntryFields = document.getElementById("bulkEntryFields");
+                const downloadLink = document.getElementById('downloadLink');
+
                 const isBulk = document.getElementById("bulkEntry").checked;
         
                 singleEntryFields.style.display = isBulk ? "none" : "block";
                 bulkEntryFields.style.display = isBulk ? "block" : "none";
+                downloadLink.style.display = isBulkEntrySelected ? 'block' : 'none';
+
             }
 
             function checkSerialNumber() {

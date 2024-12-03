@@ -1,11 +1,11 @@
 import csv
 from datetime import datetime
-from io import TextIOWrapper
+from io import BytesIO, StringIO, TextIOWrapper
 import mimetypes
 import os
 from urllib.parse import unquote
 import bcrypt
-from flask import Flask, flash, jsonify, render_template, redirect, send_from_directory, session, url_for, request
+from flask import Flask, flash, jsonify, render_template, redirect, send_file, send_from_directory, session, url_for, request
 from flask_limiter import Limiter
 import pymysql
 from app.db_operations.edit_equip import *
@@ -75,6 +75,9 @@ def login():
 def logout():
     session.clear()  # Clear session data
     return redirect(url_for('login'))  # Redirect to homepage after logout
+
+
+
 
 
 @app.route('/index')
@@ -224,18 +227,16 @@ def check_serial_number():
 
 @app.route('/adicionar_equipamento', methods=['GET', 'POST'])
 def add_equip():
-    
-    
     escolas = get_escolas()  # Ensure this function returns a list of school objects
-    
     success = False
     user_details = get_user_fields(session['user_id'])
-
 
     if request.method == 'POST':
         entry_mode = request.form.get('entryMode', 'single')
         print("Entry Mode Selected:", entry_mode)  # Debugging print
-        #print(user_details)
+
+        # Get the escola_id from the logged-in user
+        escola_id = user_details.get('escola_id')  # This will ensure escola_id is associated with the user
 
         if entry_mode == 'single':
             connection = None
@@ -243,53 +244,98 @@ def add_equip():
             try:
                 numero_serie = request.form['itemSerialNo']
                 tipo = request.form['itemName']
+
+                # Automatically associate escola_id from user details
                 if not is_admin(session['user_id']):
-                    escola_nome = get_school_name_by_id(user_details.get('escola_id'))
+                    # For non-admin, escola_id is from user details, so no need to select school
+                    cc_aluno = request.form.get('assignedTo', None)
+                    data_aquisicao = datetime.now().date()
+                    data_ultimo_movimento = data_aquisicao
+                    status = 'Em uso' if cc_aluno else 'Disponivel'
+                    accessories = request.form.get('accessories', None)
+
+                    # Check if the serial number already exists
+                    if is_serial_number_exists(numero_serie, escola_id):
+                        flash(f"Equipment with serial number {numero_serie} already exists.", "danger")
+                        return redirect(url_for('add_equip'))  # Redirect to the add equipment page
+
+                    print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+
+                    # Insert single equipment into the database
+                    connection = connect_to_database()
+                    cursor = connection.cursor()  # Initialize cursor here
+                    cursor.execute(
+                        """
+                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
+                    )
+                    equipamento_id = cursor.lastrowid
+
+                    # Insert accessories into a related table if provided
+                    if accessories:
+                        accessories_list = [accessory.strip() for accessory in accessories.split(',') if accessory.strip()]
+                        for accessory in accessories_list:
+                            print(f"Inserting accessory: {accessory} for equipment {numero_serie}")
+                            cursor.execute(
+                                """
+                                INSERT INTO acessorios (equipamento_id, tipo_acessorio)
+                                VALUES (%s, %s)
+                                """,
+                                (equipamento_id, accessory)
+                            )
+
+                    connection.commit()
+                    flash("Equipment and accessories added successfully", "success")
+                    print("Single equipment and accessories added successfully.")  # Debugging print
+                    success = True
+
                 else:
+                    # For admin users, still use the escola_id from the user
                     escola_nome = request.form['location']
-                cc_aluno = request.form.get('assignedTo', None)
-                data_aquisicao = datetime.now().date()
-                data_ultimo_movimento = data_aquisicao
-                status = 'Em uso' if cc_aluno else 'Disponivel'
-                escola_id = get_school_id_by_name(escola_nome)
-                accessories = request.form.get('accessories', None)
+                    cc_aluno = request.form.get('assignedTo', None)
+                    data_aquisicao = datetime.now().date()
+                    data_ultimo_movimento = data_aquisicao
+                    status = 'Em uso' if cc_aluno else 'Disponivel'
+                    accessories = request.form.get('accessories', None)
 
-                # Check if the serial number already exists
-                if is_serial_number_exists(numero_serie, escola_id):
-                    flash(f"Equipment with serial number {numero_serie} already exists.", "danger")
-                    return redirect(url_for('add_equip'))  # Redirect to the add equipment page
+                    # Check if the serial number already exists
+                    if is_serial_number_exists(numero_serie, escola_id):
+                        flash(f"Equipment with serial number {numero_serie} already exists.", "danger")
+                        return redirect(url_for('add_equip'))  # Redirect to the add equipment page
 
-                print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+                    print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
 
-                # Insert single equipment into the database
-                connection = connect_to_database()
-                cursor = connection.cursor()  # Initialize cursor here
-                cursor.execute(
-                    """
-                    INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """,
-                    (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
-                )
-                equipamento_id = cursor.lastrowid
+                    # Insert single equipment into the database
+                    connection = connect_to_database()
+                    cursor = connection.cursor()  # Initialize cursor here
+                    cursor.execute(
+                        """
+                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
+                    )
+                    equipamento_id = cursor.lastrowid
 
-                # Insert accessories into a related table if provided
-                if accessories:
-                    accessories_list = [accessory.strip() for accessory in accessories.split(',') if accessory.strip()]
-                    for accessory in accessories_list:
-                        print(f"Inserting accessory: {accessory} for equipment {numero_serie}")
-                        cursor.execute(
-                            """
-                            INSERT INTO acessorios (equipamento_id, tipo_acessorio)
-                            VALUES (%s, %s)
-                            """,
-                            (equipamento_id, accessory)
-                        )
+                    # Insert accessories into a related table if provided
+                    if accessories:
+                        accessories_list = [accessory.strip() for accessory in accessories.split(',') if accessory.strip()]
+                        for accessory in accessories_list:
+                            print(f"Inserting accessory: {accessory} for equipment {numero_serie}")
+                            cursor.execute(
+                                """
+                                INSERT INTO acessorios (equipamento_id, tipo_acessorio)
+                                VALUES (%s, %s)
+                                """,
+                                (equipamento_id, accessory)
+                            )
 
-                connection.commit()
-                flash("Equipment and accessories added successfully", "success")
-                print("Single equipment and accessories added successfully.")  # Debugging print
-                success = True
+                    connection.commit()
+                    flash("Equipment and accessories added successfully", "success")
+                    print("Single equipment and accessories added successfully.")  # Debugging print
+                    success = True
 
             except Exception as e:
                 flash(f"An error occurred: {e}", "danger")
@@ -302,6 +348,7 @@ def add_equip():
                     cursor.close()
                 if connection:
                     connection.close()
+
         # If bulk entry mode is selected
         elif entry_mode == 'bulk' and 'csvFile' in request.files:
             csv_file = request.files['csvFile']
@@ -311,8 +358,8 @@ def add_equip():
             try:
                 connection = connect_to_database()
                 cursor = connection.cursor()  # Initialize cursor here
-                
-                # Use delimiter=':' to handle colon-separated values
+
+                # Use delimiter=';' for CSV file handling
                 csv_reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'), delimiter=';')
 
                 # Skip header row if present
@@ -326,24 +373,25 @@ def add_equip():
                     
                     numero_serie = row[0]
                     tipo = row[1]
-                    escola_id = row[2]
-                    
-                    # Check if the serial number already exists
-                    if is_serial_number_exists(numero_serie, escola_id):
-                        print(f"Skipping duplicate serial number: {numero_serie}")
-                        continue
-                    
                     cc_aluno = row[3] if len(row) > 3 and row[3] else None  
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
+
+                    # Use the escola_id from the user instead of the CSV
+                    escola_id = user_details.get('escola_id')
+
+                    # Check if the serial number already exists
+                    if is_serial_number_exists(numero_serie, escola_id):
+                        print(f"Skipping duplicate serial number: {numero_serie}")
+                        continue
 
                     print(f"Inserting bulk equipment row: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
 
                     # Insert bulk equipment data into the database
                     cursor.execute(
                         """
-                        INSERT INTO equipamentos ( tipo, status,  escola_id, data_aquisicao, data_ultimo_movimento,serial_number,aluno_CC)
+                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                         """,
                         (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
@@ -369,7 +417,7 @@ def add_equip():
 
         return redirect(url_for('add_equip'))
 
-    return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']),user_details=user_details)
+    return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']), user_details=user_details)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
