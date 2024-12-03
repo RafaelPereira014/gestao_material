@@ -27,3 +27,59 @@ body {
     text-decoration: underline;
     text-align: center;
 }
+
+/* Center the logo at the top */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Adjust as needed */
+}
+
+/* Style the title on the left */
+.title-container {
+    position: absolute;
+    top: 50px; /* Adjust vertical position */
+    left: 50px; /* Adjust horizontal position */
+    font-size: 24px; /* Adjust font size */
+    font-weight: bold;
+    color: #333; /* Adjust text color */
+}
+
+/* Center card on the page */
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); /* Adjust to account for logo/title */
+}
+
+/* Additional styling for card */
+.card {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Center the logo at the top */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Adjust as needed */
+    font-size: 48px; /* Adjust font size */
+    color: #5b5a5a; /* Adjust text color */
+    margin-right: 10px ;
+    /* Add blurred background */
+    background-color: rgba(255, 255, 255, 0.151); /* Transparent white */
+    backdrop-filter: blur(10px); /* Adjust blur intensity */
+    padding: 10px 20px; /* Add some padding for spacing */
+    border-radius: 3px; /* Optional: rounded corners */
+}
+
+/* Style the title on the left */
+.title-container {
+    position: absolute;
+    top: 50px; /* Adjust vertical position */
+    left: 120px; /* Adjust horizontal position */
+    
+    
+}
