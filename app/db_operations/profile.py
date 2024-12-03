@@ -6,12 +6,11 @@ def connect_to_database():
     return pymysql.connect(**DB_CONFIG)
 
 def get_user_fields(user_id):
-    
     conn = connect_to_database()
     cursor = conn.cursor()
 
     # Define the query
-    query = "SELECT id, username, email, escola_id, role,cc FROM users WHERE id = %s"
+    query = "SELECT id, username, email, escola_id, role, cc, password FROM users WHERE id = %s"
     cursor.execute(query, (user_id,))
 
     # Fetch the user data
@@ -27,8 +26,8 @@ def get_user_fields(user_id):
             "email": user_data[2],
             "escola_id": user_data[3],
             "role": user_data[4],
-            "cc": user_data[5]
-            
+            "cc": user_data[5],
+            "password": user_data[6],  # Include the password
         }
         return user_fields
 
@@ -48,3 +47,20 @@ def is_admin(user_id):
         return True
     else:
         return False
+    
+def update_password(user_id, new_password_hash):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            "UPDATE users SET password = %s WHERE id = %s",
+            (new_password_hash, user_id)
+        )
+        connection.commit()
+    except Exception as e:
+        connection.rollback()
+        print(f"Error updating password: {e}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()

@@ -64,7 +64,8 @@ def login():
                 session.permanent = True
                 return redirect('/index')  # Redirect to dashboard on success
             else:
-                error = 'Invalid username or password'
+                flash('Email ou password incorretos.', 'error')
+
         else:
             error = 'Invalid username or password'
 
@@ -128,18 +129,38 @@ def add_user():
 
     return render_template('add_user.html', escolas=escolas,is_admin=is_admin(session['user_id']))
 
-@app.route('/perfil')
+@app.route('/perfil', methods=['GET', 'POST'])
 def user_profile():
     if 'user_id' not in session:
-        return redirect(url_for('login')) 
-    
-    
-    
+        return redirect(url_for('login'))
+
     user_data = get_user_fields(session['user_id'])
+    print(user_data)
     escola_nome = get_school_name_by_id(user_data.get('escola_id'))
-    
-        
-    return render_template('user_profile.html',user_data=user_data,is_admin=is_admin(session['user_id']),escola_nome=escola_nome)
+
+    if request.method == 'POST':
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+
+        # Validate current password
+        stored_password_hash = user_data['password']
+        if not bcrypt.checkpw(current_password.encode('utf-8'), stored_password_hash.encode('utf-8')):
+            return jsonify({'success': False, 'message': 'Senha atual incorreta.'}), 400
+
+        # Hash the new password
+        new_password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        # Update the password in the database
+        update_password(session['user_id'], new_password_hash)
+        return redirect(url_for('user_profile'))
+
+
+    return render_template(
+        'user_profile.html',
+        user_data=user_data,
+        is_admin=is_admin(session['user_id']),
+        escola_nome=escola_nome
+    )
 
 @app.route('/inventory')
 def inventory():
