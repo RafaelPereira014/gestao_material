@@ -1,7 +1,6 @@
 from datetime import datetime
 import pymysql
 from config import DB_CONFIG
-from collections import namedtuple
 
 
 
@@ -32,17 +31,29 @@ def get_equipment_by_serial(serial_number,escola_id):
         
 def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
     connection = connect_to_database()
-    cursor = connection.cursor()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
 
     try:
-        serial_number = serial_number.strip()  # Remove any leading/trailing spaces
-
+       
         # Check if the equipment exists
         cursor.execute("SELECT * FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
         existing_equipment = cursor.fetchone()
         if not existing_equipment:
             print(f"No equipment found with serial_number: {serial_number} and escola_id: {escola_id}")
             return False
+
+        # Fetch current values for comparison
+        cursor.execute("SELECT tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
+        existing_values = cursor.fetchone()
+
+        # Debugging: print existing values and new values
+        print(f"Existing values: {existing_values}")
+        print(f"New values: {tipo}, {status}, {aluno_CC}, {data_ultimo_movimento}, {cedido_a_escola}")
+
+        # Check if any fields have changed
+        if existing_values == (tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola):
+            print("No changes detected. Skipping update.")
+            return True
 
         # Start constructing the SQL statement
         sql = "UPDATE equipamentos SET "
@@ -67,16 +78,18 @@ def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=
         params.append(data_ultimo_movimento)
 
         # Handle cedido_a_escola, allowing it to be None
-        sql += "cedido_a_escola = %s, "
-        params.append(cedido_a_escola)
+        if cedido_a_escola is None:
+            sql += "cedido_a_escola = NULL, "
+        else:
+            sql += "cedido_a_escola = %s, "
+            params.append(cedido_a_escola)
 
         # Remove trailing comma and finalize SQL with WHERE clause
         sql = sql.rstrip(", ") + " WHERE serial_number = %s AND escola_id = %s"
         params.extend([serial_number, escola_id])
 
-        # Debugging output
-        print("Executing SQL:", sql)
-        print("With parameters:", params)
+        # Debugging: print the final SQL query and params
+        print(f"Executing SQL: {sql} with params: {params}")
 
         # Execute the SQL statement
         cursor.execute(sql, tuple(params))
@@ -114,6 +127,36 @@ def get_school_id_by_name(school_name):
             return None  # Return None if no match is found
     except Exception as e:
         print(f"An error occurred: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def get_equip_id_by_serial(serial_number, escola_id):
+    connection = connect_to_database()  # Replace with your actual database connection function
+    cursor = connection.cursor()
+
+    try:
+        # Debugging: Print the input values and check for any invisible characters
+        serial_number = serial_number.strip()
+        escola_id = str(escola_id).strip()  # Ensure escola_id is a string
+        
+        print(f"Fetching equipment for SerialNo: {serial_number}, Escola ID: {escola_id}")
+        
+        # Execute the query to fetch the equipment ID based on serial number and school ID
+        query = "SELECT * FROM equipamentos WHERE serial_number = %s AND escola_id = %s"
+        print(f"Executing query: {query} with parameters: {serial_number}, {escola_id}")
+        cursor.execute(query, (serial_number, escola_id))
+        result = cursor.fetchone()
+        
+        # Check if a result was found and return the equipment ID
+        if result:
+            return result[0]  # Return the first column which is the ID
+        else:
+            print(f"No equipment found for SerialNo: {serial_number} and Escola ID: {escola_id}")
+            return None  # Return None if no match is found
+    except Exception as e:
+        print(f"An error occurred while fetching equipment ID: {e}, SerialNo: {serial_number}, Escola ID: {escola_id}")
         return None
     finally:
         cursor.close()
@@ -212,6 +255,25 @@ def get_equipment_acessories(equipamento_id):
     except Exception as e:
         print(f"An error occurred: {e}")
         return []
+    finally:
+        cursor.close()
+        connection.close()
+    
+def store_document(user_id, equipamento_id, escola_id, nome_arquivo, caminho_arquivo):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    try:
+        # Insert the document metadata into the documentos table
+        cursor.execute("""
+            INSERT INTO documentos (user_id, equipamento_id, escola_id, nome_arquivo, caminho_arquivo, data_upload)
+            VALUES (%s, %s, %s, %s, %s, NOW())
+        """, (user_id, equipamento_id, escola_id, nome_arquivo, caminho_arquivo))
+        connection.commit()
+    except Exception as e:
+        print(f"Error storing document: {e}")
+        connection.rollback()
+        raise e
     finally:
         cursor.close()
         connection.close()

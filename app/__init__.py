@@ -1,8 +1,11 @@
 import csv
 from datetime import datetime
 from io import TextIOWrapper
+import mimetypes
+import os
+from urllib.parse import unquote
 import bcrypt
-from flask import Flask, flash, jsonify, render_template, redirect, session, url_for, request
+from flask import Flask, flash, jsonify, render_template, redirect, send_from_directory, session, url_for, request
 from flask_limiter import Limiter
 import pymysql
 from app.db_operations.edit_equip import *
@@ -27,6 +30,10 @@ def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return pymysql.connect(**DB_CONFIG)
 
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, '..', 'static', 'uploads')
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -369,15 +376,32 @@ def edit_equip():
                     return redirect(request.url)
                 status = "Em uso"
                 id_escola = get_school_id_by_name(to_location)
-                ilha_id = get_school_ilha_id(to_location)
-                print(ilha_id)
+                
+                
 
         # Save document file if provided
-        if document:
-            document_path = f'static/uploads/{document.filename}'
-            document.save(document_path)
-        else:
-            document_path = None
+        document_path = None
+        if document and document.filename:
+            try:
+                # Define the upload directory
+                upload_dir = os.path.join('static', 'uploads')
+                os.makedirs(upload_dir, exist_ok=True)
+                # Save the document
+                document_path = os.path.join(upload_dir, document.filename)
+                document.save(document_path)
+
+                # Store document details in the database
+                store_document(
+                    user_id=session['user_id'],
+                    equipamento_id=get_equip_id_by_serial(serial_number,escola_id),
+                    escola_id=escola_id,
+                    nome_arquivo=document.filename,
+                    caminho_arquivo=document_path
+                )
+                flash("Documento carregado com sucesso.", "success")
+            except Exception as e:
+                flash(f"Erro ao carregar o documento: {e}", "danger")
+                return redirect(request.url)
 
         # Update the equipment
         update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola)
@@ -385,10 +409,9 @@ def edit_equip():
         return redirect(url_for('inventory'))
 
     # Fetch equipment details
-    #all_schools = get_escolas()
-    
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
+    print(id_escola)
     all_schools = get_schools_same_island(id_escola)
     equipment_data = get_equipment_by_serial(serial_number, id_escola)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
@@ -404,18 +427,50 @@ def edit_equip():
         cedido_status=cedido_status,
         cedido_a=cedido_a
     )
+    
 
 @app.route('/item_page')
 def item_page():
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    equipment = get_equipment_by_serial(serial_number,id_escola)
+    equipment = get_equipment_by_serial(serial_number, id_escola)
     
     school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['escola_id']
     escola_nome = get_school_name_by_id(school_id)
     acessorios = get_equipment_acessories(equipment['id'])
     
-    return render_template('item_page.html', equipment=equipment,escola_nome=escola_nome,is_admin=is_admin(session['user_id']),acessorios=acessorios)
+    # Fetch documents for the equipment and school
+    documents = get_documents_by_equipment_and_school(equipment['id'], id_escola)
+    print(documents)
+    
+    return render_template(
+        'item_page.html',
+        equipment=equipment,
+        escola_nome=escola_nome,
+        is_admin=is_admin(session['user_id']),
+        acessorios=acessorios,
+        documents=documents
+    )
+    
+@app.route('/view_document/<path:filename>', methods=['GET'])
+def view_document(filename):
+    try:
+        # Send the file from the 'uploads' directory
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except FileNotFoundError:
+        return "File not found", 404
+
+
+@app.route('/download_document/<path:filename>', methods=['GET'])
+def download_document(filename):
+    try:
+        # Decode the filename in case of URL encoding issues
+        filename = unquote(filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        print(f"Attempting to serve file from: {file_path}")
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+    except FileNotFoundError:
+        return "File not found", 404
 
 
 if __name__ == '__main__':

@@ -112,3 +112,32 @@ def get_equip_by_escola(escola_id):
         cursor.close()
         conn.close()
     
+def get_documents_by_equipment_and_school(equip_id, escola_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    try:
+        # Query documents for the specified equipment and school
+        cursor.execute("""
+            SELECT nome_arquivo, caminho_arquivo, data_upload
+            FROM documentos
+            WHERE equipamento_id = %s AND escola_id = %s
+            ORDER BY data_upload DESC
+        """, (equip_id, escola_id))
+        
+        # Fetch the results and convert each row into a dictionary
+        documents = cursor.fetchall()
+        document_list = []
+        for doc in documents:
+            document_list.append({
+                'nome_arquivo': doc[0],
+                'caminho_arquivo': doc[1],
+                'data_upload': doc[2]
+            })
+        return document_list
+    except Exception as e:
+        print(f"Error fetching documents: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()

@@ -86,6 +86,27 @@
                         <h5 class="card-title">Acessórios</h5>
                         <span>{{ acessorios | join(', ') }}</span>
                     {%endif%}
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Documentos</h5>
+                            {% if documents %}
+                                <ul class="list-group">
+                                    {% for doc in documents %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>{{ doc.nome_arquivo }}</span>
+                                            <div>
+                                                <small class="text-muted">Enviado em: {{ doc.data_upload }}</small>
+                                                <!-- Link to download the document -->
+                                                <a href="{{ url_for('download_document', filename=doc.nome_arquivo) }}" class="btn btn-success btn-sm ml-2" download>Download</a>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">Nenhum documento associado a este equipamento.</p>
+                            {% endif %}
+                        </div>
+                    </div>
                         
                 </div>
                 <div class="card-footer text-right">
