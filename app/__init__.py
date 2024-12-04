@@ -93,10 +93,11 @@ def index():
         return redirect(url_for('login')) 
     year = datetime.now().year
     user_data = get_user_fields(session['user_id'])
+    escola_nome = get_school_name_by_id(user_data.get('escola_id'))
     equipment_counts = get_equipment_counts(user_data.get('escola_id'))
     total_equipm = total_equip(user_data.get('escola_id'))
     
-    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']),equipment_counts=equipment_counts,total_equipm=total_equipm)
+    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']),equipment_counts=equipment_counts,total_equipm=total_equipm,escola_nome=escola_nome)
 
 
 @app.route('/adicionar_utilizador', methods=['GET', 'POST'])
@@ -149,7 +150,6 @@ def user_profile():
         return redirect(url_for('login'))
 
     user_data = get_user_fields(session['user_id'])
-    print(user_data)
     escola_nome = get_school_name_by_id(user_data.get('escola_id'))
 
     if request.method == 'POST':
