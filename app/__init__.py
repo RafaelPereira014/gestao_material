@@ -301,6 +301,11 @@ def add_equip():
                     flash("Equipment and accessories added successfully", "success")
                     print("Single equipment and accessories added successfully.")  # Debugging print
                     success = True
+                    equipment_added = True  # Replace with actual logic
+                    if equipment_added:
+                        flash("Equipamento adicionado com sucesso!", "success")
+                    else:
+                        flash("Erro ao adicionar equipamento. Por favor, tente novamente.", "error")
 
                 else:
                     # For admin users, still use the escola_id from the user
