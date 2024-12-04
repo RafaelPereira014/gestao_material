@@ -77,7 +77,13 @@ def logout():
     return redirect(url_for('login'))  # Redirect to homepage after logout
 
 
-
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    email = request.form.get('email')
+    token = request.form.get('token')
+    # Add logic to verify the token and reset the password
+    flash('Intruções para recuperar a password foram enviadas para o respetivo email.', 'success')
+    return redirect(url_for('login'))
 
 
 @app.route('/index')
