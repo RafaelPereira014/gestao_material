@@ -11,6 +11,7 @@ import pymysql
 from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
 from app.db_operations.profile import *
+from app.db_operations.statistics import *
 from config import DB_CONFIG
 from flask_limiter.util import get_remote_address
 
@@ -64,7 +65,7 @@ def login():
                 session.permanent = True
                 return redirect('/index')  # Redirect to dashboard on success
             else:
-                flash('Email ou password incorretos.', 'error')
+                flash('Email ou password incorretos.', 'danger')
 
         else:
             error = 'Invalid username or password'
@@ -91,7 +92,11 @@ def index():
     if 'user_id' not in session:
         return redirect(url_for('login')) 
     year = datetime.now().year
-    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']))
+    user_data = get_user_fields(session['user_id'])
+    equipment_counts = get_equipment_counts(user_data.get('escola_id'))
+    total_equipm = total_equip(user_data.get('escola_id'))
+    
+    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']),equipment_counts=equipment_counts,total_equipm=total_equipm)
 
 
 @app.route('/adicionar_utilizador', methods=['GET', 'POST'])
@@ -305,6 +310,8 @@ def add_equip():
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
                     accessories = request.form.get('accessories', None)
+                    escola_id = get_school_id_by_name(request.form['location'])
+                    print(escola_id)
 
                     # Check if the serial number already exists
                     if is_serial_number_exists(numero_serie, escola_id):
@@ -486,9 +493,13 @@ def edit_equip():
     # Fetch equipment details
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
-    all_schools = get_schools_same_island(id_escola)
+    
+    if session['user_type'] == 'admin':
+        all_schools = get_escolas()
+    else:
+        all_schools = get_schools_same_island(id_escola)
+        
     equipment_data = get_equipment_by_serial(serial_number, id_escola)
-    print(equipment_data)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
     cedido_status = is_cedido(serial_number, id_escola)  # Check if cedido
     cedido_a = get_school_name_by_id(equipment_data.get('cedido_a_escola'))  # Get cedido school

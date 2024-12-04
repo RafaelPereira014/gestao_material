@@ -69,7 +69,15 @@
                 <div class="card bg-primary text-white mb-3">
                     <div class="card-header">Equipamentos registados</div>
                     <div class="card-body">
-                        <h5 class="card-title">150</h5>
+                        <h5 class="card-title">{{totalequipm}}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-info text-white mb-3">
+                    <div class="card-header">Equipamentos disponiveis</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ equipment_counts.get('Disponivel', 0) }}</h5>
                     </div>
                 </div>
             </div>
@@ -77,7 +85,7 @@
                 <div class="card bg-success text-white mb-3">
                     <div class="card-header">Equipamentos em uso</div>
                     <div class="card-body">
-                        <h5 class="card-title">25</h5>
+                        <h5 class="card-title">{{ equipment_counts.get('Em uso', 0) }}</h5>
                     </div>
                 </div>
             </div>
@@ -85,29 +93,22 @@
                 <div class="card bg-warning text-white mb-3">
                     <div class="card-header">Equipamentos em manutenção</div>
                     <div class="card-body">
-                        <h5 class="card-title">10</h5>
+                        <h5 class="card-title">{{ equipment_counts.get('Em manutenção', 0) }}</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card bg-danger text-white mb-3">
+                    <div class="card-header">Equipamentos extraviados</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ equipment_counts.get('Extraviado', 0) }}</h5>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Graphic Panels -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-info">
-                    <div class="card-body">
-                        <i class="fas fa-chart-pie"></i> Equipamentos disponiveis
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="card panel-graphic bg-danger">
-                    <div class="card-body">
-                        <i class="fas fa-exclamation-triangle"></i> Equipamentos extraviados
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
