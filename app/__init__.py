@@ -386,12 +386,13 @@ def add_equip():
                 row_count = 0  # Track number of rows processed
                 for row in csv_reader:
                     if len(row) < 3 or not all(row[:3]):  # Check if required fields are filled
-                        print(f"Skipping incomplete row: {row}")  
+                        print(f"Skipping incomplete row: {row}")
                         continue
-                    
+
                     numero_serie = row[0]
                     tipo = row[1]
-                    cc_aluno = row[3] if len(row) > 3 and row[3] else None  
+                    cc_aluno = row[3] if len(row) > 3 and row[3] else None
+                    accessories = row[4] if len(row) > 4 else None  # Column for accessories
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
@@ -414,16 +415,30 @@ def add_equip():
                         """,
                         (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
                     )
+                    equipamento_id = cursor.lastrowid  # Get the last inserted equipamento ID
+
+                    # Process and insert accessories if provided
+                    if accessories:
+                        accessories_list = [acc.strip() for acc in accessories.split(',') if acc.strip()]
+                        for accessory in accessories_list:
+                            print(f"Inserting accessory: {accessory} for equipment {numero_serie}")
+                            cursor.execute(
+                                """
+                                INSERT INTO acessorios (equipamento_id, tipo_acessorio)
+                                VALUES (%s, %s)
+                                """,
+                                (equipamento_id, accessory)
+                            )
+
                     row_count += 1
 
                 connection.commit()
-                flash(f"{row_count} equipment entries added successfully in bulk!", "success")
-                print(f"Bulk equipment insertion complete. Rows added: {row_count}")  
-                success = True
+                flash(f"{row_count} equipment entries added successfully in bulk, including accessories!", "success")
+                print(f"Bulk equipment insertion complete. Rows added: {row_count}")
 
             except Exception as e:
                 flash(f"An error occurred during bulk upload: {e}", "danger")
-                print(f"Error during bulk equipment addition: {e}")  
+                print(f"Error during bulk equipment addition: {e}")
                 if connection:
                     connection.rollback()
             finally:
