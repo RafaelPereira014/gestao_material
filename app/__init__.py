@@ -391,8 +391,8 @@ def add_equip():
 
                     numero_serie = row[0]
                     tipo = row[1]
-                    cc_aluno = row[3] if len(row) > 3 and row[3] else None
-                    accessories = row[4] if len(row) > 4 else None  # Column for accessories
+                    cc_aluno = row[2] if len(row) > 2 and row[2] else None
+                    accessories = row[3] if len(row) > 3 else None  # Column for accessories
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
