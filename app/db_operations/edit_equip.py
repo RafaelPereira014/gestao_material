@@ -30,7 +30,8 @@ def get_equipment_by_serial(serial_number,escola_id):
         cursor.close()
         connection.close()
         
-def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, data_ultimo_movimento=None, cedido_a_escola=None):
+def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, 
+                     data_ultimo_movimento=None, cedido_a_escola=None, observacoes=None):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -45,15 +46,15 @@ def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=
             return False
 
         # Fetch current values for comparison
-        cursor.execute("SELECT tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
+        cursor.execute("SELECT tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola, observacoes FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
         existing_values = cursor.fetchone()
 
         # Debugging: print existing values and new values
         print(f"Existing values: {existing_values}")
-        print(f"New values: {tipo}, {status}, {aluno_CC}, {data_ultimo_movimento}, {cedido_a_escola}")
+        print(f"New values: {tipo}, {status}, {aluno_CC}, {data_ultimo_movimento}, {cedido_a_escola}, {observacoes}")
 
         # Check if any fields have changed
-        if existing_values == (tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola):
+        if existing_values == (tipo, status, aluno_CC, data_ultimo_movimento, cedido_a_escola, observacoes):
             print("No changes detected. Skipping update.")
             return True
 
@@ -85,6 +86,13 @@ def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=
         else:
             sql += "cedido_a_escola = %s, "
             params.append(cedido_a_escola)
+
+        # Handle observacoes, allowing it to be None
+        if observacoes is None:
+            sql += "observacoes = NULL, "
+        else:
+            sql += "observacoes = %s, "
+            params.append(observacoes)
 
         # Remove trailing comma and finalize SQL with WHERE clause
         sql = sql.rstrip(", ") + " WHERE serial_number = %s AND escola_id = %s"

@@ -84,7 +84,7 @@
                         <td>{{ equipamento.escola_name_to if equipamento.escola_name_to else '-' }}</td>  
                         <td>
                             <a href="{{ url_for('edit_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}" class="btn btn-warning">Editar</a>
-                            
+                            <button class="btn btn-danger" onclick="confirmRemoval('{{ url_for('remove_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}')">Remover</button>
                         </td>
                     </tr>
                 {% else %}
@@ -140,6 +140,27 @@
             </div>
         </div>
     </div>
+    <!-- Remove modal -->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeModalLabel">Remover Equipamento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza de que deseja remover este equipamento? Esta ação não pode ser desfeita.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmRemove">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for Assign Equipment -->
     <div class="modal fade" id="atribuirModal" tabindex="-1" role="dialog" aria-labelledby="atribuirModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -217,6 +238,16 @@
                 window.location.href = url;
             };
             $('#actionModal').modal('show');
+        }
+    </script>
+    <script>
+        function confirmRemoval(url) {
+            // Set the URL for the confirmation button
+            document.getElementById('confirmRemove').onclick = function () {
+                window.location.href = url;
+            };
+            // Show the modal
+            $('#removeModal').modal('show');
         }
     </script>
 </body>

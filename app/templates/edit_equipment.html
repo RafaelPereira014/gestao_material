@@ -92,6 +92,7 @@
                     value="{{ equipment['aluno_CC'] if equipment['aluno_CC'] is not none else '' }}" 
                     placeholder="Introduza o CC do aluno" required>
             </div>
+            
 
             <!-- Returned Checkbox -->
             <div class="form-group">
@@ -119,9 +120,16 @@
                 </select>
             </div>
 
+
+
             <div class="form-group" id="uploadDocument" style="display: block;">
                 <label for="document">Upload Documento</label>
                 <input type="file" class="form-control-file" id="document" name="document">
+            </div>
+            <div class="form-group">
+                <label for="observacoes">Observações:</label>
+                <textarea class="form-control" id="observacoes" name="observacoes" 
+                    placeholder="Adicione observações (opcional)" rows="3">{{ equipment['observacoes'] if equipment['observacoes'] else '' }}</textarea>
             </div>
 
 

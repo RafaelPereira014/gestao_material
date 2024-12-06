@@ -464,6 +464,8 @@ def edit_equip():
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
+        observacoes = request.form.get('observacoes', '')  # New field
+
 
         # Handle "returned" checkbox
         if request.form.get('returned'):
@@ -506,7 +508,7 @@ def edit_equip():
                 return redirect(request.url)
 
         # Update the equipment
-        update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola)
+        update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola,observacoes)
 
         return redirect(url_for('inventory'))
 
@@ -534,6 +536,28 @@ def edit_equip():
         cedido_a=cedido_a
     )
     
+@app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
+def remove_equip(serial_number, escola_id):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Delete the equipment and associated accessories
+        cursor.execute("DELETE FROM acessorios WHERE equipamento_id = (SELECT id FROM equipamentos WHERE serial_number = %s AND escola_id = %s)", (serial_number, escola_id))
+        cursor.execute("DELETE FROM equipamentos WHERE serial_number = %s AND escola_id = %s", (serial_number, escola_id))
+
+        connection.commit()
+        flash("Equipamento removido com sucesso.", "success")
+    except Exception as e:
+        flash(f"Erro ao remover o equipamento: {e}", "danger")
+        if connection:
+            connection.rollback()
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+    return redirect(url_for('inventory'))
 
 @app.route('/item_page')
 def item_page():
@@ -544,6 +568,7 @@ def item_page():
     school_id = equipment['cedido_a_escola'] if equipment['cedido_a_escola'] is not None else equipment['escola_id']
     escola_nome = get_school_name_by_id(school_id)
     acessorios = get_equipment_acessories(equipment['id'])
+    observacoes = equipment['observacoes']
     
     # Fetch documents for the equipment and school
     documents = get_documents_by_equipment_and_school(equipment['id'], id_escola)
@@ -555,7 +580,8 @@ def item_page():
         escola_nome=escola_nome,
         is_admin=is_admin(session['user_id']),
         acessorios=acessorios,
-        documents=documents
+        documents=documents,
+        observacoes=observacoes
     )
     
 @app.route('/view_document/<path:filename>', methods=['GET'])

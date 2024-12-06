@@ -86,6 +86,11 @@
                         <h5 class="card-title">Acessórios</h5>
                         <span>{{ acessorios | join(', ') }}</span>
                     {%endif%}
+                    {%if observacoes %}
+                        <h5 class="card-title">Observações</h5>
+                        <span>{{ observacoes }}</span>
+
+                    {%endif%}
                     <div class="card mt-4">
                         <div class="card-body">
                             <h5 class="card-title">Documentos</h5>
@@ -107,6 +112,9 @@
                             {% endif %}
                         </div>
                     </div>
+                    
+                    
+
                         
                 </div>
                 <div class="card-footer text-right">
