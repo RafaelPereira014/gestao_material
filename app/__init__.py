@@ -378,8 +378,8 @@ def add_equip():
                 cursor = connection.cursor()  # Initialize cursor here
 
                 # Use delimiter=';' for CSV file handling
-                csv_reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'), delimiter=';')
-
+                csv_reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8', errors='replace'), delimiter=';')
+                
                 # Skip header row if present
                 next(csv_reader, None)
 
