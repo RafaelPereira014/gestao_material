@@ -1,11 +1,11 @@
 import csv
 from datetime import datetime
 from io import BytesIO, StringIO, TextIOWrapper
-import mimetypes
+from fpdf import FPDF
 import os
 from urllib.parse import unquote
 import bcrypt
-from flask import Flask, flash, jsonify, render_template, redirect, send_file, send_from_directory, session, url_for, request
+from flask import Flask, flash, jsonify, make_response, render_template, redirect, send_file, send_from_directory, session, url_for, request
 from flask_limiter import Limiter
 import pymysql
 from app.db_operations.edit_equip import *
@@ -261,6 +261,36 @@ def requisicoes():
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
     
     return render_template('requisicoes.html',is_admin=is_admin(session['user_id']))
+
+@app.route('/formulario_requisicao', methods=['GET', 'POST'])
+def formulario_requisicao():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        material_type = request.form.get('material_type')
+        quantity = request.form.get('quantity')
+        reason = request.form.get('reason')
+
+        # Generate PDF
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        pdf.cell(200, 10, txt="Formulário de Requisição de Material", ln=True, align='C')
+        pdf.ln(10)
+        pdf.cell(200, 10, txt=f"Nome: {username}", ln=True)
+        pdf.cell(200, 10, txt=f"Email: {email}", ln=True)
+        pdf.cell(200, 10, txt=f"Tipo de Material: {material_type}", ln=True)
+        pdf.cell(200, 10, txt=f"Quantidade: {quantity}", ln=True)
+        pdf.cell(200, 10, txt=f"Motivo: {reason}", ln=True)
+
+        # Output to bytes
+        response = make_response(pdf.output(dest='S').encode('latin1'))
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = 'inline; filename=formulario_requisicao.pdf'
+        return response
+
+    return render_template('formulario_requisicao.html')
 
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():
