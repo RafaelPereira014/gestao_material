@@ -207,17 +207,26 @@ def inventory():
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
 
-    total_pages = (len(equipamentos) + per_page - 1) // per_page  # Calculate total pages
-    start_page = max(1, page - 2)
-    end_page = min(total_pages, page + 2)
-    equipamentos_paginated = equipamentos[start_page:end_page]  # Slice the equipment list for the current page
+    # Calculate total pages
+    total_pages = (len(equipamentos) + per_page - 1) // per_page
 
-    
+    # Calculate the start and end index for pagination
+    start_index = (page - 1) * per_page
+    end_index = min(start_index + per_page, len(equipamentos))
+
+    # Slice the list of equipamentos for the current page
+    equipamentos_paginated = equipamentos[start_index:end_index]
+
+    # Fetch escola names for each equipamento
     for equipamento in equipamentos_paginated:
         escola_name_from = get_school_name_by_id(equipamento['escola_id'])  
         equipamento['escola_name_from'] = escola_name_from  
         escola_name_to = get_school_name_by_id(equipamento['cedido_a_escola']) 
         equipamento['escola_name_to'] = escola_name_to 
+
+    # Calculate pagination range (for displaying 5 pages at a time, like 1-5, 6-10, etc.)
+    start_page = max(1, page - 2)
+    end_page = min(total_pages, page + 2)
 
     return render_template('inventory.html', 
                            equipamentos=equipamentos_paginated, 
@@ -225,10 +234,8 @@ def inventory():
                            total_pages=total_pages, 
                            search_query=search_query,
                            start_page=start_page,
-                            end_page=end_page,
+                           end_page=end_page,
                            is_admin=is_admin(session['user_id']))
-
-
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():
     numero_serie = request.form.get('numero_serie')
