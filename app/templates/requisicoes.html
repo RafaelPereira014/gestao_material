@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Requisições</title>
     <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -75,65 +75,7 @@
         </ul>
     </div>
 
-    <!-- Main content -->
-    <div id="main-content">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">
-                Dashboard 
-                {% if escola_nome %}
-                     {{ escola_nome }}
-                {% endif %}
-                {{ year }}
-            </h1>
-        </div>
-
-        <!-- Panels -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-primary text-white mb-3">
-                    <div class="card-header">Equipamentos registados</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{totalequipm}}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-info text-white mb-3">
-                    <div class="card-header">Equipamentos disponiveis</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ equipment_counts.get('Disponivel', 0) }}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-success text-white mb-3">
-                    <div class="card-header">Equipamentos em uso</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ equipment_counts.get('Em uso', 0) }}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-warning text-white mb-3">
-                    <div class="card-header">Equipamentos em manutenção</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ equipment_counts.get('Em manutenção', 0) }}</h5>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card bg-danger text-white mb-3">
-                    <div class="card-header">Equipamentos extraviados</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ equipment_counts.get('Extraviado', 0) }}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-    </div>
+    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

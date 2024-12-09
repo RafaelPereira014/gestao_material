@@ -244,6 +244,24 @@ def inventory():
                            end_page=end_page,
                            is_admin=is_admin(session['user_id']))
     
+@app.route('/inventory_nit')
+def inventory_nit():
+    user_id = session.get('user_id')  # Get the user_id from session
+    if user_id is None:
+        return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
+    
+    
+    return render_template('inventory_nit.html',is_admin=is_admin(session['user_id']))
+
+
+@app.route('/requisicoes')
+def requisicoes():
+    user_id = session.get('user_id')  # Get the user_id from session
+    if user_id is None:
+        return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
+    
+    return render_template('requisicoes.html',is_admin=is_admin(session['user_id']))
+
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():
     numero_serie = request.form.get('numero_serie')
