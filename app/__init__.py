@@ -183,6 +183,7 @@ def inventory():
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
 
     search_query = request.args.get('search', '')  # Get the search query from the request
+    search_type = request.args.get('search_type', 'serial_number')  # Get the selected search type, default to serial_number
 
     if is_admin(user_id):
         equipamentos = get_all_equip()  # Fetch all equipment data
@@ -200,9 +201,14 @@ def inventory():
         else:
             equipamentos = []  # No equipment found if escola_id is not found
 
-    # Filter the equipment based on the search query
+    # Filter the equipment based on the search query and selected type
     if search_query:
-        equipamentos = [e for e in equipamentos if search_query.lower() in e['serial_number'].lower()]
+        if search_type == 'serial_number':
+            equipamentos = [e for e in equipamentos if search_query.lower() in e['serial_number'].lower()]
+        elif search_type == 'equipamento':
+            equipamentos = [e for e in equipamentos if search_query.lower() in e['tipo'].lower()]
+        elif search_type == 'cc_aluno':
+            equipamentos = [e for e in equipamentos if search_query.lower() in (e['aluno_CC'] or '').lower()]
 
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified
@@ -233,9 +239,11 @@ def inventory():
                            page=page, 
                            total_pages=total_pages, 
                            search_query=search_query,
+                           search_type=search_type,
                            start_page=start_page,
                            end_page=end_page,
                            is_admin=is_admin(session['user_id']))
+    
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():
     numero_serie = request.form.get('numero_serie')

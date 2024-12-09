@@ -72,7 +72,7 @@ def get_all_equip():
     cursor = connection.cursor()
 
     try:
-        cursor.execute("SELECT * FROM equipamentos")
+        cursor.execute("SELECT * FROM equipamentos ORDER BY data_aquisicao DESC")
         columns = [column[0] for column in cursor.description]  # Get column names
         equipamentos = []
 
@@ -95,7 +95,7 @@ def get_equip_by_escola(escola_id):
     cursor = conn.cursor()
     
     try:
-        cursor.execute("SELECT * FROM equipamentos WHERE escola_id = %s", (escola_id,))
+        cursor.execute("SELECT * FROM equipamentos WHERE escola_id = %s ORDER BY data_aquisicao DESC", (escola_id,))
         columns = [column[0] for column in cursor.description]  # Get column names
         equipamentos = []
 
