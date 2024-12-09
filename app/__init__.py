@@ -525,10 +525,12 @@ def edit_equip():
     serial_number = request.args.get('serial_number')
     id_escola = request.args.get('escola_id')
     
-    if session['user_type'] == 'admin':
-        all_schools = get_escolas()
-    else:
-        all_schools = get_schools_same_island(id_escola)
+    # if session['user_type'] == 'admin':
+    #     all_schools = get_escolas()
+    # else:
+    #     all_schools = get_schools_same_island(id_escola)
+        
+    all_schools = get_escolas()
         
     equipment_data = get_equipment_by_serial(serial_number, id_escola)
     escola_nome = get_school_name_by_id(equipment_data['escola_id'])
