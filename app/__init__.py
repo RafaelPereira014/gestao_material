@@ -288,10 +288,10 @@ def formulario_requisicao():
         pdf.cell(200, 10, txt=f"Data-inicio: {start_date}", ln=True)
         pdf.cell(200, 10, txt=f"Data-fim: {end_date}", ln=True)
 
-        # Output to bytes
+        # Output to bytes and force download
         response = make_response(pdf.output(dest='S').encode('latin1'))
         response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = 'inline; filename=formulario_requisicao.pdf'
+        response.headers['Content-Disposition'] = 'attachment; filename=formulario_requisicao.pdf'  # Change 'inline' to 'attachment'
         return response
 
     return render_template('formulario_requisicao.html')

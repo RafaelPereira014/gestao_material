@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF de Requisição de Material</title>
+    <title>Requisição de Material</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,32 +10,48 @@
         }
         h1 {
             text-align: center;
+            color: #333;
         }
         .details {
             margin-top: 20px;
         }
-        .details p {
-            margin: 5px 0;
-        }
-        .footer {
-            margin-top: 40px;
-            text-align: center;
+        .details th, .details td {
+            text-align: left;
+            padding: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Formulário de Requisição de Material</h1>
-    <div class="details">
-        <p><strong>Nome:</strong> {{ username }}</p>
-        <p><strong>Email:</strong> {{ email }}</p>
-        <p><strong>Tipo de Material:</strong> {{ material_type }}</p>
-        <p><strong>Quantidade:</strong> {{ quantity }}</p>
-        <p><strong>Motivo:</strong> {{ reason }}</p>
-        <p><strong>Data inicio:</strong> {{ start_date }}</p>
-        <p><strong>Data fim:</strong> {{ end_date }}</p>
-    </div>
-    <div class="footer">
-        <p>Este documento foi gerado automaticamente.</p>
-    </div>
+    <h1>Requisição de Material</h1>
+    <table class="details">
+        <tr>
+            <th>Nome:</th>
+            <td>{{ username }}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{ email }}</td>
+        </tr>
+        <tr>
+            <th>Tipo de Material:</th>
+            <td>{{ material_type }}</td>
+        </tr>
+        <tr>
+            <th>Quantidade:</th>
+            <td>{{ quantity }}</td>
+        </tr>
+        <tr>
+            <th>Motivo:</th>
+            <td>{{ reason }}</td>
+        </tr>
+        <tr>
+            <th>Data de Início:</th>
+            <td>{{ start_date }}</td>
+        </tr>
+        <tr>
+            <th>Data de Fim:</th>
+            <td>{{ end_date }}</td>
+        </tr>
+    </table>
 </body>
 </html>
