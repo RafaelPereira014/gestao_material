@@ -144,13 +144,14 @@
             </tbody>
         </table>
         <!-- Pagination Controls -->
+        <!-- Pagination Controls -->
         <div class="d-flex justify-content-center mt-4">
             <nav>
                 <ul class="pagination">
                     <!-- Previous Page Link -->
                     {% if page > 1 %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=page - 1, search=search_query) }}" aria-label="Previous">
+                            <a class="page-link" href="{{ url_for('inventory', page=page - 1, search=search_query, search_type=search_type) }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo; Anterior</span>
                             </a>
                         </li>
@@ -159,7 +160,7 @@
                     <!-- First Page Link -->
                     {% if start_page > 1 %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=1, search=search_query) }}">1</a>
+                            <a class="page-link" href="{{ url_for('inventory', page=1, search=search_query, search_type=search_type) }}">1</a>
                         </li>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     {% endif %}
@@ -167,7 +168,7 @@
                     <!-- Page Number Range -->
                     {% for p in range(start_page, end_page + 1) %}
                         <li class="page-item {% if p == page %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('inventory', page=p, search=search_query) }}">{{ p }}</a>
+                            <a class="page-link" href="{{ url_for('inventory', page=p, search=search_query, search_type=search_type) }}">{{ p }}</a>
                         </li>
                     {% endfor %}
             
@@ -175,14 +176,14 @@
                     {% if end_page < total_pages %}
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=total_pages, search=search_query) }}">{{ total_pages }}</a>
+                            <a class="page-link" href="{{ url_for('inventory', page=total_pages, search=search_query, search_type=search_type) }}">{{ total_pages }}</a>
                         </li>
                     {% endif %}
             
                     <!-- Next Page Link -->
                     {% if page < total_pages %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('inventory', page=page + 1, search=search_query) }}" aria-label="Next">
+                            <a class="page-link" href="{{ url_for('inventory', page=page + 1, search=search_query, search_type=search_type) }}" aria-label="Next">
                                 <span aria-hidden="true">Próximo &raquo;</span>
                             </a>
                         </li>
