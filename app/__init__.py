@@ -270,6 +270,8 @@ def formulario_requisicao():
         material_type = request.form.get('material_type')
         quantity = request.form.get('quantity')
         reason = request.form.get('reason')
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
 
         # Generate PDF
         pdf = FPDF()
@@ -283,6 +285,8 @@ def formulario_requisicao():
         pdf.cell(200, 10, txt=f"Tipo de Material: {material_type}", ln=True)
         pdf.cell(200, 10, txt=f"Quantidade: {quantity}", ln=True)
         pdf.cell(200, 10, txt=f"Motivo: {reason}", ln=True)
+        pdf.cell(200, 10, txt=f"Data-inicio: {start_date}", ln=True)
+        pdf.cell(200, 10, txt=f"Data-fim: {end_date}", ln=True)
 
         # Output to bytes
         response = make_response(pdf.output(dest='S').encode('latin1'))
