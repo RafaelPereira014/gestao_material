@@ -7,7 +7,7 @@
     <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
 </head>
 <body>
     <!-- Logo Section -->
@@ -62,7 +62,15 @@
                     <label for="reason">Motivo da Requisição</label>
                     <textarea class="form-control" id="reason" name="reason" rows="4" placeholder="Descreva o motivo da requisição" required></textarea>
                 </div>
-                <small>Após submeter a sua requisição , será gerado um documento PDF.</small>
+                <div class="form-group">
+                    <label for="start_date">Data de Início</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">Data de Fim</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                </div>
+                <small>Após submeter a sua requisição, será gerado um documento PDF.</small>
                 <small>Deve anexar o documento no seu ticket de pedido de requisição.</small>
                 <button type="submit" class="btn btn-primary btn-block">Submeter Requisição</button>
             </form>
