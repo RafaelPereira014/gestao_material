@@ -260,7 +260,17 @@ def requisicoes():
     if user_id is None:
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
     
-    return render_template('requisicoes.html',is_admin=is_admin(session['user_id']))
+    all_requisicoes = get_all_requisicoes()
+    
+    available_equipments = {
+        "laptop": ["Dell XPS", "HP Elitebook", "MacBook Pro"],
+        "monitor": ["Samsung 24-inch", "LG Ultrawide", "Dell 27-inch"],
+        "keyboard": ["Logitech MX Keys", "Razer BlackWidow"],
+        "mouse": ["Logitech MX Master", "Razer DeathAdder"],
+        "camera": ["Canon EOS", "Nikon D3500"]
+    }
+    
+    return render_template('requisicoes.html',is_admin=is_admin(session['user_id']),all_requisicoes=all_requisicoes,available_equipments=available_equipments)
 
 @app.route('/formulario_requisicao', methods=['GET', 'POST'])
 def formulario_requisicao():
@@ -272,6 +282,19 @@ def formulario_requisicao():
         reason = request.form.get('reason')
         start_date = request.form.get('start_date')
         end_date = request.form.get('end_date')
+        
+        
+        connection = connect_to_database()
+        cursor = connection.cursor()  # Initialize cursor here
+        cursor.execute(
+            """
+            INSERT INTO requisicoes (nome,email,tipo_equipamento,quantidade,motivo,data_inicio,data_fim)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            (username,email,material_type,quantity,reason,start_date,end_date)
+        )
+        connection.commit()
+        requisicao_id = cursor.lastrowid
 
         # Generate PDF
         pdf = FPDF()
@@ -291,7 +314,7 @@ def formulario_requisicao():
         # Output to bytes and force download
         response = make_response(pdf.output(dest='S').encode('latin1'))
         response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = 'attachment; filename=formulario_requisicao.pdf'  # Change 'inline' to 'attachment'
+        response.headers['Content-Disposition'] = 'attachment; filename=formulario_requisicao.pdf'  
         return response
 
     return render_template('formulario_requisicao.html')

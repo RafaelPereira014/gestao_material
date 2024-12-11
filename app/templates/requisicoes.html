@@ -75,6 +75,67 @@
         </ul>
     </div>
 
+    <div id="main-content">
+        <h1>Requisições</h1>
+        <!--
+        <div class="mb-3">
+            <form method="GET" action="{{ url_for('inventory') }}">
+                <div class="input-group">
+                    <input type="text" name="search" id="searchSerial" class="form-control" placeholder="Procurar" value="{{ search_query }}">
+                    <select name="search_type" class="form-control">
+                        <option value="serial_number" {% if search_type == 'serial_number' %}selected{% endif %}>Serial No.</option>
+                        <option value="equipamento" {% if search_type == 'equipamento' %}selected{% endif %}>Equipamento</option>
+                        <option value="cc_aluno" {% if search_type == 'cc_aluno' %}selected{% endif %}>Atribuido a</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Procurar</button>
+                        <a href="{{ url_for('inventory') }}" class="btn btn-secondary">Limpar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        -->
+
+        <!-- Equipment Table -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data pedido</th>
+                    <th>Nome</th>
+                    <th>Equipamento</th>
+                    <th>Quantidade</th>
+                    <th>Atribuir equipamento</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTable">
+                {% for requisicao in all_requisicoes %}
+                    <tr>
+                        <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{ requisicao.nome }}</td>
+                        <td>{{ requisicao.tipo_equipamento }}</td>
+                        <td>{{ requisicao.quantidade }}</td>
+                        <td>
+                            <select class="form-control">
+                                <option value="" disabled selected>Selecionar equipamento</option>
+                                {% for equipamento in available_equipments[requisicao.tipo_equipamento] %}
+                                    <option value="{{ equipamento }}">{{ equipamento }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Não foram encontradas quaisquer requisições.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Pagination Controls -->
+        
+        
+    </div>
+
     
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
