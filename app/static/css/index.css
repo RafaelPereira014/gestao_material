@@ -1,0 +1,21 @@
+/* Panels */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Graphic Panels */
+.panel-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    border-radius: 10px;
+    color: white;
+    font-size: 24px;
+}

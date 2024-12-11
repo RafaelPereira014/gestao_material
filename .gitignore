@@ -4,4 +4,3 @@ config.py
 /venv
 docker-compose.yml
 Dockerfile
-static
