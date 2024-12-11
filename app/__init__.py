@@ -267,7 +267,7 @@ def fetch_inventory():
             connection = connect_to_database()
             cursor = connection.cursor()  # Initialize cursor here
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-                query = "SELECT id, nome_ad AS nome, estado FROM computadores"
+                query = "SELECT atribuido_a, nome_ad AS nome, estado FROM computadores"
                 cursor.execute(query)
                 inventory_data = cursor.fetchall()
         except pymysql.MySQLError as e:

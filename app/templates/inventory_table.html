@@ -1,17 +1,40 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>Atribuido a </th>
             <th>Nome</th>
             <th>Estado</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
         {% for item in items %}
         <tr>
-            <td>{{ item.id }}</td>
+            <td>{{ item.atribuido_a }}</td>
             <td>{{ item.nome }}</td>
-            <td>{{ item.estado }}</td>
+            <td>
+                {% if item.estado == 'Em uso' %}
+                    <span class="badge badge-success rounded-pill">Em uso</span>
+                {% elif item.estado == 'Extraviado' %}
+                    <span class="badge badge-danger rounded-pill">Extraviado</span>
+                {% elif item.estado == 'Em manutenção' %}
+                    <span class="badge badge-warning rounded-pill">Manutenção</span>
+                {% elif item.estado == 'Disponivel' %}
+                    <span class="badge badge-info rounded-pill">Disponível</span>
+                {% else %}
+                    <span class="badge badge-secondary rounded-pill">Unknown</span>
+                {% endif %}
+            </td>
+            <td>
+                <!-- Edit Button with Icon -->
+                <a class="btn btn-sm btn-warning">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <!-- Delete Button with Icon -->
+                <a class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
+                    <i class="fas fa-trash"></i> Excluir
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

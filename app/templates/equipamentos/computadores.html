@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Computador</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
+</head>
+<body>
+    <div id="sidebar">
+        <!-- Sidebar content here (same as the one in your existing template) -->
+    </div>
+
+    <div id="main-content">
+        <div class="container">
+            <h1 class="mt-4">Detalhes do Computador</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Serial No.: {{ equipment.serial_number }}</h5>
+                    <p><strong>Tipo de equipamento:</strong> Computador</p>
+                    <p><strong>Estado:</strong>
+                        {% if equipment.status == 'Em uso' %}
+                            <span class="badge badge-success rounded-pill">Em uso</span>
+                        {% elif equipment.status == 'Extraviado' %}
+                            <span class="badge badge-danger rounded-pill">Extraviado</span>
+                        {% elif equipment.status == 'Em manutenção' %}
+                            <span class="badge badge-warning rounded-pill">Em manutenção</span>
+                        {% elif equipment.status == 'Disponivel' %}
+                            <span class="badge badge-info rounded-pill">Disponível</span>
+                        {% else %}
+                            <span class="badge badge-secondary rounded-pill">Unknown</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Atribuído a:</strong> {{ equipment.aluno_CC if equipment.aluno_CC else 'Not Assigned' }}</p>
+                    <p><strong>Localização:</strong> {{ escola_nome  }}</p>
+                    <p><strong>Data de aquisição:</strong> {{ equipment.data_aquisicao }}</p>
+                    <p><strong>Data da última alteração:</strong> {{ equipment.data_ultimo_movimento }}</p>
+                    {% if acessorios %}
+                        <h5 class="card-title">Acessórios</h5>
+                        <span>{{ acessorios | join(', ') }}</span>
+                    {% endif %}
+                    {% if observacoes %}
+                        <h5 class="card-title">Observações</h5>
+                        <span>{{ observacoes }}</span>
+                    {% endif %}
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Documentos</h5>
+                            {% if documents %}
+                                <ul class="list-group">
+                                    {% for doc in documents %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>{{ doc.nome_arquivo }}</span>
+                                            <div>
+                                                <small class="text-muted">Publicado em: {{ doc.data_upload }}</small>
+                                                <a href="{{ url_for('download_document', filename=doc.nome_arquivo) }}" class="btn btn-success btn-sm ml-2" download>Download</a>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">Nenhum documento associado a este equipamento.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="/inventory" class="btn btn-secondary">Voltar para o inventário</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
