@@ -12,14 +12,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
 </head>
 <body>
-
+    <!-- Sidebar -->
     <div id="sidebar">
-        <!-- Sidebar Icon/Logo -->
         <div class="sidebar-icon">
             <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
         </div>
-
-        <!-- Navigation Items -->
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link active" href="/index" title="Dashboard">
@@ -27,46 +24,41 @@
                 </a>
             </li>
             {% if is_admin %}
-               
                 <li class="nav-item">
-                    <a class="nav-link" href="/requisicoes" title="Inventory">
+                    <a class="nav-link" href="/requisicoes" title="Requisições">
                         <i class="fas fa-clipboard"></i> Requisições
                     </a>
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="/inventory" title="Inventory">
+                <a class="nav-link" href="/inventory" title="Inventário">
                     <i class="fas fa-box"></i> Inventário
                 </a>
             </li>
             {% if is_admin %}
-               
                 <li class="nav-item">
-                    <a class="nav-link" href="/inventory_nit" title="Inventory">
+                    <a class="nav-link" href="/inventory_nit" title="Inventário NIT">
                         <i class="fas fa-boxes"></i> Inventário NIT
                     </a>
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
+                <a class="nav-link" href="/adicionar_equipamento" title="Adicionar equipamento">
                     <i class="fas fa-plus"></i> Adicionar equipamento
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                <a class="nav-link" href="/perfil" title="Perfil">
                     <i class="fas fa-user"></i> Perfil
                 </a>
             </li>
             {% if is_admin %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Adicionar utilizador">
                         <i class="fas fa-user-plus"></i> Adicionar utilizador
                     </a>
                 </li>
-
-                
             {% endif %}
-            
             <li class="nav-item">
                 <a class="nav-link" href="/logout" title="Logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -75,10 +67,53 @@
         </ul>
     </div>
 
+    <!-- Main Content -->
+    <div id = "main-content">
+        <div class="container mt-4">
+            <h2>Inventário Dinâmico</h2>
     
+            <!-- Dropdown for selecting inventory type -->
+            <div class="form-group">
+                <label for="inventoryType">Escolha uma categoria:</label>
+                <select class="form-control" id="inventoryType" onchange="fetchInventory()">
+                    <option value="">Selecione</option>
+                    <option value="computadores">Computadores</option>
+                    <option value="monitores">Monitores</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+    
+            <!-- Placeholder for the inventory table -->
+            <div id="inventoryTable" class="mt-4">
+                <!-- Dynamic content will be rendered here -->
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+
+    <script>
+        // Function to fetch and display inventory based on user selection
+        function fetchInventory() {
+            const inventoryType = document.getElementById("inventoryType").value;
+            const inventoryTable = document.getElementById("inventoryTable");
+
+            if (inventoryType) {
+                // Fetch data from the server
+                fetch(`/fetch_inventory?type=${inventoryType}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        inventoryTable.innerHTML = html;
+                    })
+                    .catch(error => {
+                        inventoryTable.innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
+                    });
+            } else {
+                inventoryTable.innerHTML = "";
+            }
+        }
+    </script>
 </body>
 </html>
