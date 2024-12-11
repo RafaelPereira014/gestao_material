@@ -305,7 +305,7 @@ def requisicoes():
         "laptop": ["Dell XPS", "HP Elitebook", "MacBook Pro"],
         "monitor": ["Samsung 24-inch", "LG Ultrawide", "Dell 27-inch"],
         "keyboard": ["Logitech MX Keys", "Razer BlackWidow"],
-        "mouse": ["Logitech MX Master", "Razer DeathAdder"],
+        "mouse": ["Logitech MX Master"],
         "camera": ["Canon EOS", "Nikon D3500"]
     }
     
