@@ -257,41 +257,37 @@ def inventory_nit():
 def fetch_inventory():
     inventory_type = request.args.get('type')  # Get the selected inventory type
 
-    
+    # Define mappings of inventory types to their corresponding SQL queries
+    query_mapping = {
+        "computadores": "SELECT atribuido_a, nome_ad AS nome, estado FROM computadores",
+        "monitores": "SELECT atribuido_a, marca_modelo AS nome, estado FROM monitores",
+        "cameras": "SELECT atribuido_a, marca_modelo AS nome, estado FROM cameras",
+        "voips": "SELECT atribuido_a, marca_modelo AS nome, estado FROM voip",
+        "headsets": "SELECT atribuido_a, marca_modelo AS nome, estado FROM headset"
+    }
 
+    # Check if the selected type is valid
+    if inventory_type not in query_mapping:
+        return "<p class='text-danger'>Categoria inválida.</p>"
+
+    # Fetch inventory data for the specified type
     inventory_data = []
-
-    if inventory_type == "computadores":
-        # Query "computadores" table from the database
-        try:
-            connection = connect_to_database()
-            cursor = connection.cursor()  # Initialize cursor here
-            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-                query = "SELECT atribuido_a, nome_ad AS nome, estado FROM computadores"
-                cursor.execute(query)
-                inventory_data = cursor.fetchall()
-        except pymysql.MySQLError as e:
-            return f"<p class='text-danger'>Erro ao carregar computadores: {str(e)}</p>"
-        finally:
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        query = query_mapping[inventory_type]  # Get the SQL query for the selected type
+        cursor.execute(query)
+        inventory_data = cursor.fetchall()
+    except pymysql.MySQLError as e:
+        return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>"
+    finally:
+        if connection:
             connection.close()
 
-    elif inventory_type == "monitores":
-        # Replace this with your database query for "monitores"
-        inventory_data = [
-            {"id": 1, "nome": "Monitor A", "estado": "Em uso"},
-            {"id": 2, "nome": "Monitor B", "estado": "Disponível"}
-        ]
-    elif inventory_type == "outros":
-        # Replace this with your database query for "outros"
-        inventory_data = [
-            {"id": 1, "nome": "Outro A", "estado": "Em uso"},
-            {"id": 2, "nome": "Outro B", "estado": "Disponível"}
-        ]
-
+    # Render the table if data is found, otherwise display a message
     if inventory_data:
         return render_template('inventory_table.html', items=inventory_data)
     return "<p class='text-danger'>Nenhum dado encontrado para esta categoria.</p>"
-
 
 @app.route('/requisicoes')
 def requisicoes():
