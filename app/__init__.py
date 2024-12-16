@@ -734,5 +734,47 @@ def download_document(filename):
         return "File not found", 404
 
 
+@app.route('/receive-data', methods=['POST'])
+def receive_data():
+    data = request.get_json()
+    print(data)
+    
+    # Extract the fields from the incoming JSON data
+    username = data['User']
+    email = data['User email']
+    material_type = data['material_type']
+    quantity = data['quantidade']
+    reason = data['motivo']
+    start_date = datetime.strptime(data['data_inicio'], '%Y-%m-%d')  # Assuming date format is 'YYYY-MM-DD'
+    end_date = datetime.strptime(data['data_fim'], '%Y-%m-%d')  # Assuming date format is 'YYYY-MM-DD'
+    
+    
+    connection = connect_to_database()
+    cursor = connection.cursor()  # Initialize cursor here
+    
+    # Insert the data into the database
+    cursor.execute(
+        """
+        INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """,
+        (username, email, material_type, quantity, reason, start_date, end_date)
+    )
+    
+    # Commit the transaction
+    connection.commit()
+
+    
+    # Close the cursor and connection
+    cursor.close()
+    connection.close()
+
+       
+    
+    
+    return "Data received and stored successfully!", 200
+    
+
+
 if __name__ == '__main__':
     app.run(debug=True)
