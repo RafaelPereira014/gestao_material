@@ -27,7 +27,6 @@
                 </a>
             </li>
             {% if is_admin %}
-               
                 <li class="nav-item">
                     <a class="nav-link" href="/requisicoes" title="Inventory">
                         <i class="fas fa-clipboard"></i> Requisições
@@ -40,7 +39,6 @@
                 </a>
             </li>
             {% if is_admin %}
-               
                 <li class="nav-item">
                     <a class="nav-link" href="/inventory_nit" title="Inventory">
                         <i class="fas fa-boxes"></i> Inventário NIT
@@ -63,8 +61,6 @@
                         <i class="fas fa-user-plus"></i> Adicionar utilizador
                     </a>
                 </li>
-
-                
             {% endif %}
             
             <li class="nav-item">
@@ -77,25 +73,6 @@
 
     <div id="main-content">
         <h1>Requisições</h1>
-        <!--
-        <div class="mb-3">
-            <form method="GET" action="{{ url_for('inventory') }}">
-                <div class="input-group">
-                    <input type="text" name="search" id="searchSerial" class="form-control" placeholder="Procurar" value="{{ search_query }}">
-                    <select name="search_type" class="form-control">
-                        <option value="serial_number" {% if search_type == 'serial_number' %}selected{% endif %}>Serial No.</option>
-                        <option value="equipamento" {% if search_type == 'equipamento' %}selected{% endif %}>Equipamento</option>
-                        <option value="cc_aluno" {% if search_type == 'cc_aluno' %}selected{% endif %}>Atribuido a</option>
-                    </select>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Procurar</button>
-                        <a href="{{ url_for('inventory') }}" class="btn btn-secondary">Limpar</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-        
-        -->
 
         <!-- Equipment Table -->
         <table class="table table-striped">
@@ -116,12 +93,13 @@
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.quantidade }}</td>
                         <td>
-                            <select class="form-control">
+                            <select class="form-control" id="equipamento_{{ requisicao.id }}">
                                 <option value="" disabled selected>Selecionar equipamento</option>
                                 {% for equipamento in available_equipments[requisicao.tipo_equipamento] %}
-                                    <option >{{ equipamento.modelo }} - {{ equipamento  .n_serie }}</option>
+                                    <option value="{{ equipamento.id }}">{{ equipamento.nome_ad }} - {{ equipamento.n_serie }}</option>
                                 {% endfor %}
                             </select>
+                            <button class="btn btn-success mt-2" onclick="assignEquipment('{{ requisicao.id }}')">Confirmar</button>
                         </td>
                     </tr>
                 {% else %}
@@ -132,14 +110,46 @@
             </tbody>
         </table>
         <!-- Pagination Controls -->
-        
-        
     </div>
 
-    
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+    
+    <script>
+        // Function to handle equipment assignment
+        function assignEquipment(requisicao_id) {
+            // Get the selected equipment ID
+            var equipamento_id = document.getElementById('equipamento_' + requisicao_id).value;
+    
+            // Debugging: Check if equipment is selected
+            console.log('Selected equipamento ID:', equipamento_id);
+            console.log('Selected requisicao ID:', requisicao_id);
+            
+            if (!equipamento_id) {
+                alert('Selecione um equipamento!');
+                return;
+            }
+    
+            // Send the selected equipment to the server to update the 'atributo_a' field
+            $.ajax({
+                url: '/assign-equipment',  // Update this with your actual endpoint
+                method: 'POST',
+                data: {
+                    requisicao_id: requisicao_id,
+                    equipamento_id: equipamento_id
+                },
+                success: function(response) {
+                    console.log('Success:', response);  // Log the response from the server
+                    alert('Equipamento atribuído com sucesso!');
+                    location.reload();  // Reload the page to reflect changes
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', xhr, status, error);  // Log the error details
+                    alert('Erro ao atribuir equipamento.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

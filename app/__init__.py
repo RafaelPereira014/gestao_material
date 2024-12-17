@@ -304,7 +304,6 @@ def requisicoes():
     available_equipments['Camera'] = get_cameras() 
     available_equipments['Monitor'] = get_monitores()
     available_equipments['Computador'] = get_computadores()
-    print(available_equipments['Computador'])
     available_equipments['Headset'] = get_headset()
     available_equipments['Voip'] = get_voip()
     
@@ -313,53 +312,22 @@ def requisicoes():
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
                            available_equipments=available_equipments)
+    
+@app.route('/assign-equipment', methods=['POST'])
+def assign_equipment():
+    requisicao_id = request.form['requisicao_id']
+    equipamento_id = request.form['equipamento_id']
+    
+    
+    # Get the requisition data to extract the name
+    requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
+    update_equipment_atributo_a(requisicao[0],requisicao[1],equipamento_id)
+    update_estado_requisicao(requisicao_id,'Resolvido')
+    
+    
+    
+    return jsonify({"status": "success"}), 200    
 
-@app.route('/formulario_requisicao', methods=['GET', 'POST'])
-def formulario_requisicao():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        material_type = request.form.get('material_type')
-        quantity = request.form.get('quantity')
-        reason = request.form.get('reason')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        
-        
-        connection = connect_to_database()
-        cursor = connection.cursor()  # Initialize cursor here
-        cursor.execute(
-            """
-            INSERT INTO requisicoes (nome,email,tipo_equipamento,quantidade,motivo,data_inicio,data_fim)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """,
-            (username,email,material_type,quantity,reason,start_date,end_date)
-        )
-        connection.commit()
-        requisicao_id = cursor.lastrowid
-
-        # Generate PDF
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-
-        pdf.cell(200, 10, txt="Formulário de Requisição de Material", ln=True, align='C')
-        pdf.ln(10)
-        pdf.cell(200, 10, txt=f"Nome: {username}", ln=True)
-        pdf.cell(200, 10, txt=f"Email: {email}", ln=True)
-        pdf.cell(200, 10, txt=f"Tipo de Material: {material_type}", ln=True)
-        pdf.cell(200, 10, txt=f"Quantidade: {quantity}", ln=True)
-        pdf.cell(200, 10, txt=f"Motivo: {reason}", ln=True)
-        pdf.cell(200, 10, txt=f"Data-inicio: {start_date}", ln=True)
-        pdf.cell(200, 10, txt=f"Data-fim: {end_date}", ln=True)
-
-        # Output to bytes and force download
-        response = make_response(pdf.output(dest='S').encode('latin1'))
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = 'attachment; filename=formulario_requisicao.pdf'  
-        return response
-
-    return render_template('formulario_requisicao.html')
 
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():

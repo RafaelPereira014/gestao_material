@@ -287,3 +287,15 @@ def store_document(user_id, equipamento_id, escola_id, nome_arquivo, caminho_arq
     finally:
         cursor.close()
         connection.close()
+        
+
+def get_equip_cod_nit(equipamento_id):
+   
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("SELECT cod_nit FROM monitores WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return result

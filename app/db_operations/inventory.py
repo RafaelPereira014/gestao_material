@@ -147,7 +147,7 @@ def get_all_requisicoes():
     cursor = connection.cursor()
 
     try:
-        cursor.execute("SELECT * FROM requisicoes ORDER BY data_criacao DESC")
+        cursor.execute("SELECT * FROM requisicoes WHERE estado='Pendente' ORDER BY data_criacao DESC")
         columns = [column[0] for column in cursor.description]  # Get column names
         requisicoes = []
 
@@ -179,11 +179,11 @@ def get_computadores():
     cursor = connection.cursor()
     
     # Execute SQL query to fetch both modelo and n_serie
-    cursor.execute("SELECT modelo, n_serie FROM computadores WHERE estado = 'Disponivel'")
+    cursor.execute("SELECT id,nome_ad, n_serie FROM computadores WHERE estado = 'Disponivel'")
     result = cursor.fetchall()  # List of tuples with (modelo, n_serie)
     
     # Convert the result into a list of dictionaries
-    computadores = [{'modelo': row[0], 'n_serie': row[1]} for row in result]
+    computadores = [{'id': row[0],'nome_ad': row[1], 'n_serie': row[2]} for row in result]
     
     cursor.close()
     connection.close()
@@ -193,7 +193,7 @@ def get_computadores():
 def get_headset():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT marca_modelo FROM headset WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo FROM headset WHERE estado = 'Disponivel' ")
     result = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -203,7 +203,7 @@ def get_headset():
 def get_voip():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT marca_modelo FROM voip WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo FROM voip WHERE estado = 'Disponivel' ")
     result = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -213,9 +213,72 @@ def get_voip():
 def get_monitores():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT marca_modelo FROM monitores WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo FROM monitores WHERE estado = 'Disponivel' ")
     result = cursor.fetchall()
     cursor.close()
     connection.close()
     
     return result
+
+def get_requisicao_by_id(requisicao_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM requisicoes WHERE id = %s", (requisicao_id,))
+    
+    # Fetch a single result (if exists)
+    result = cursor.fetchone()  # Use fetchone() for a single record
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    # Get requisicao details (assuming you have already fetched requisicao details based on requisicao_id)
+    requisicao = get_requisicao_by_id(requisicao_id)  # Example function to get requisicao details
+    
+    tipo_equip = requisicao[3].lower()  # Assuming tipo_equip is in column 3, adjust based on your schema
+    
+    # Conditional update based on the tipo_equip value
+    if tipo_equip == 'camera':
+        cursor.execute(
+            "UPDATE cameras SET atribuido_a = %s WHERE id = %s ",
+            (nome_requisicao, equipamento_id)
+        )
+    elif tipo_equip == 'computador':
+        cursor.execute(
+            "UPDATE computadores SET atribuido_a = %s WHERE id = %s ",
+            (nome_requisicao, equipamento_id)
+        )
+    elif tipo_equip == 'monitor':
+        cursor.execute(
+            "UPDATE monitores SET atribuido_a = %s WHERE id = %s ",
+            (nome_requisicao, equipamento_id)
+        )
+    elif tipo_equip == 'headset':
+        cursor.execute(
+            "UPDATE headsets SET atribuido_a = %s WHERE id = %s ",
+            (nome_requisicao, equipamento_id)
+        )
+    elif tipo_equip == 'voip':
+        cursor.execute(
+            "UPDATE voips SET atribuido_a = %s WHERE id = %s ",
+            (nome_requisicao, equipamento_id)
+        )
+    else:
+        print("Tipo de equipamento não encontrado ou inválido")
+    
+    connection.commit()  # Commit the transaction to save changes
+    cursor.close()
+    connection.close()
+    
+def update_estado_requisicao(requisicao_id,estado):
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("UPDATE requisicoes SET estado=%s where id=%s",(estado,requisicao_id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
