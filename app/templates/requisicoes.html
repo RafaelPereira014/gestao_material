@@ -83,6 +83,7 @@
                     <th>Equipamento</th>
                     <th>Quantidade</th>
                     <th>Atribuir equipamento</th>
+                    <th>Confirmar</th> <!-- Add column for Confirmar button -->
                 </tr>
             </thead>
             <tbody id="inventoryTable">
@@ -95,11 +96,31 @@
                         <td>
                             <select class="form-control" id="equipamento_{{ requisicao.id }}">
                                 <option value="" disabled selected>Selecionar equipamento</option>
-                                {% for equipamento in available_equipments[requisicao.tipo_equipamento] %}
-                                    <option value="{{ equipamento.id }}">{{ equipamento.nome_ad }} - {{ equipamento.n_serie }}</option>
-                                {% endfor %}
+                                {% if requisicao.tipo_equipamento == 'Camera' %}
+                                    {% for equipamento in available_equipments['Camera'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.cod_nit }}</option>
+                                    {% endfor %}
+                                {% elif requisicao.tipo_equipamento == 'Computador' %}
+                                    {% for equipamento in available_equipments['Computador'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.nome_ad }} - {{ equipamento.n_serie }}</option>
+                                    {% endfor %}
+                                {% elif requisicao.tipo_equipamento == 'Monitor' %}
+                                    {% for equipamento in available_equipments['Monitor'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.n_serie }}</option>
+                                    {% endfor %}
+                                {% elif requisicao.tipo_equipamento == 'Headset' %}
+                                    {% for equipamento in available_equipments['Headset'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.cod_nit }}</option>
+                                    {% endfor %}
+                                {% elif requisicao.tipo_equipamento == 'Voip' %}
+                                    {% for equipamento in available_equipments['Voip'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.cod_nit }}</option>
+                                    {% endfor %}
+                                {% endif %}
                             </select>
-                            <button class="btn btn-success mt-2" onclick="assignEquipment('{{ requisicao.id }}')">Confirmar</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" onclick="assignEquipment({{ requisicao.id }})">Confirmar</button> <!-- Confirm button -->
                         </td>
                     </tr>
                 {% else %}

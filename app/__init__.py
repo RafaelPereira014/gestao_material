@@ -318,15 +318,30 @@ def assign_equipment():
     requisicao_id = request.form['requisicao_id']
     equipamento_id = request.form['equipamento_id']
     
-    
+    # Ensure that requisicao_id and equipamento_id are integers
+    try:
+        requisicao_id = int(requisicao_id)
+        equipamento_id = int(equipamento_id)
+    except ValueError:
+        return jsonify({"status": "error", "message": "Invalid input data."}), 400
+
     # Get the requisition data to extract the name
     requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
-    update_equipment_atributo_a(requisicao[0],requisicao[1],equipamento_id)
-    update_estado_requisicao(requisicao_id,'Resolvido')
+
+    # Check what requisicao returns
+    if not requisicao:
+        return jsonify({"status": "error", "message": "Requisition not found."}), 404
     
     
+    # Get the necessary fields from requisicao
+    nome_requisicao = requisicao[1]  # Assuming the name is at index 1, make sure this is correct.
+    print(nome_requisicao)
     
-    return jsonify({"status": "success"}), 200    
+    # Update equipment attributes and requisition state
+    update_equipment_atributo_a(requisicao[0],nome_requisicao, equipamento_id)
+    update_estado_requisicao(requisicao_id, 'Resolvido')
+    
+    return jsonify({"status": "success"}), 200
 
 
 @app.route('/check_serial_number', methods=['POST'])
