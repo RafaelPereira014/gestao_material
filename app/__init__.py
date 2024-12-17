@@ -737,41 +737,47 @@ def download_document(filename):
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
     data = request.get_json()
-    print(data)
-    
-    # Extract the fields from the incoming JSON data
+    print("Received data:", data)
+
+    material_types = data.get('material_type', [])  # Safely get material_type, default to an empty list if not found
+    print("Material types:", material_types)  # Check the material_types field
+
+    if not material_types:
+        return "Material types are required.", 400  # Return an error if material_types is empty
+
+    # Extract other fields from the data
     username = data['User']
     email = data['User email']
-    material_type = data['material_type']
     quantity = data['quantidade']
     reason = data['motivo']
-    start_date = datetime.strptime(data['data_inicio'], '%Y-%m-%d')  # Assuming date format is 'YYYY-MM-DD'
-    end_date = datetime.strptime(data['data_fim'], '%Y-%m-%d')  # Assuming date format is 'YYYY-MM-DD'
-    
-    
-    connection = connect_to_database()
-    cursor = connection.cursor()  # Initialize cursor here
-    
-    # Insert the data into the database
-    cursor.execute(
-        """
-        INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """,
-        (username, email, material_type, quantity, reason, start_date, end_date)
-    )
-    
-    # Commit the transaction
-    connection.commit()
+    start_date = datetime.strptime(data['data_inicio'], '%Y-%m-%d')
+    end_date = datetime.strptime(data['data_fim'], '%Y-%m-%d')
 
-    
-    # Close the cursor and connection
-    cursor.close()
-    connection.close()
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
 
-       
-    
-    
+        # Insert each material_type into the database
+        for material_type in material_types:
+            cursor.execute(
+                """
+                INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """,
+                (username, email, material_type, quantity, reason, start_date, end_date)
+            )
+
+        connection.commit()
+
+    except Exception as e:
+        print(f"Error: {e}")
+        connection.rollback()
+        return "Error while inserting data into the database.", 500
+
+    finally:
+        cursor.close()
+        connection.close()
+
     return "Data received and stored successfully!", 200
     
 
