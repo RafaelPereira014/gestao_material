@@ -295,17 +295,24 @@ def requisicoes():
     if user_id is None:
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
     
+    # Get all requisicoes (all requests)
     all_requisicoes = get_all_requisicoes()
     
-    available_equipments = {
-        "laptop": ["Dell XPS", "HP Elitebook", "MacBook Pro"],
-        "monitor": ["Samsung 24-inch", "LG Ultrawide", "Dell 27-inch"],
-        "keyboard": ["Logitech MX Keys", "Razer BlackWidow"],
-        "mouse": ["Logitech MX Master"],
-        "camera": ["Canon EOS", "Nikon D3500"]
-    }
+    # Prepare a dictionary to hold the available equipment for each type
+    available_equipments = {}
     
-    return render_template('requisicoes.html',is_admin=is_admin(session['user_id']),all_requisicoes=all_requisicoes,available_equipments=available_equipments)
+    available_equipments['Camera'] = get_cameras() 
+    available_equipments['Monitor'] = get_monitores()
+    available_equipments['Computador'] = get_computadores()
+    print(available_equipments['Computador'])
+    available_equipments['Headset'] = get_headset()
+    available_equipments['Voip'] = get_voip()
+    
+    
+
+    return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
+                           all_requisicoes=all_requisicoes, 
+                           available_equipments=available_equipments)
 
 @app.route('/formulario_requisicao', methods=['GET', 'POST'])
 def formulario_requisicao():

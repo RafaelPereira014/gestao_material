@@ -163,3 +163,59 @@ def get_all_requisicoes():
     finally:
         cursor.close()
         connection.close()
+        
+def get_cameras():
+    connection = connect_to_database() 
+    cursor = connection.cursor()
+    cursor.execute("SELECT marca_modelo FROM cameras WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_computadores():
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    
+    # Execute SQL query to fetch both modelo and n_serie
+    cursor.execute("SELECT modelo, n_serie FROM computadores WHERE estado = 'Disponivel'")
+    result = cursor.fetchall()  # List of tuples with (modelo, n_serie)
+    
+    # Convert the result into a list of dictionaries
+    computadores = [{'modelo': row[0], 'n_serie': row[1]} for row in result]
+    
+    cursor.close()
+    connection.close()
+    
+    return computadores
+
+def get_headset():
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("SELECT marca_modelo FROM headset WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_voip():
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("SELECT marca_modelo FROM voip WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_monitores():
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("SELECT marca_modelo FROM monitores WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return result
