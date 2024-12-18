@@ -307,12 +307,29 @@ def requisicoes():
     available_equipments['Headset'] = get_headset()
     available_equipments['Voip'] = get_voip()
     
-    
-
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
                            available_equipments=available_equipments)
     
+@app.route('/user_page/<string:user_name>')
+def user_page(user_name):
+    # Fetch the equipment assigned to the user
+    user_computadores = get_computadores_user(user_name)
+    user_monitores = get_monitores_user(user_name)
+    user_cameras = get_cameras_user(user_name)
+    user_voip = get_voip_user(user_name)
+    user_headset = get_headsets_user(user_name)
+
+    # Combine all equipment into one list for easier handling in the template
+    all_items = {
+        'Computadores': user_computadores,
+        'Monitores': user_monitores,
+        'Cameras': user_cameras,
+        'VoIP': user_voip,
+        'Headsets': user_headset
+    }
+
+    return render_template('user_page.html', user_name=user_name, all_items=all_items,is_admin=is_admin(session['user_id']))
 @app.route('/assign-equipment', methods=['POST'])
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']

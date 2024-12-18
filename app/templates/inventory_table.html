@@ -10,7 +10,11 @@
     <tbody>
         {% for item in items %}
         <tr>
-            <td>{{ item.atribuido_a }}</td>
+            <td>
+                <a href="{{ url_for('user_page', user_name=item.atribuido_a) }}">
+                    {{ item.atribuido_a }}
+                </a>
+            </td>
             <td>{{ item.nome }}</td>
             <td>
                 {% if item.estado == 'Em uso' %}

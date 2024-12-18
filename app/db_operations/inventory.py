@@ -298,3 +298,59 @@ def update_estado_requisicao(requisicao_id, estado):
     connection.commit()
     cursor.close()
     connection.close()
+    
+def get_cameras_user(user_name):
+    connection = connect_to_database() 
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM cameras WHERE atribuido_a = %s ",(user_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_monitores_user(user_name):
+    connection = connect_to_database() 
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM monitores WHERE atribuido_a = %s ",(user_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_computadores_user(user_name):
+    connection = connect_to_database() 
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM computadores WHERE atribuido_a = %s ",(user_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_headsets_user(user_name):
+    connection = connect_to_database() 
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM headset WHERE atribuido_a = %s ",(user_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+
+def get_voip_user(user_name):
+    connection = connect_to_database() 
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM voip WHERE atribuido_a = %s ",(user_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
+

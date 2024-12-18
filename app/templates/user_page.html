@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipamentos de {{ user_name }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
+</head>
+<body>
+
+    <div id="sidebar">
+        <!-- Sidebar Icon/Logo -->
+        <div class="sidebar-icon">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
+        </div>
+
+        <!-- Navigation Items -->
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/index" title="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            {% if is_admin %}
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="/requisicoes" title="Inventory">
+                        <i class="fas fa-clipboard"></i> Requisições
+                    </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory" title="Inventory">
+                    <i class="fas fa-box"></i> Inventário
+                </a>
+            </li>
+            {% if is_admin %}
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory_nit" title="Inventory">
+                        <i class="fas fa-boxes"></i> Inventário NIT
+                    </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
+                    <i class="fas fa-plus"></i> Adicionar equipamento
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+            </li>
+            {% if is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                        <i class="fas fa-user-plus"></i> Adicionar utilizador
+                    </a>
+                </li>
+
+                
+            {% endif %}
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="container">
+            <h1 class="mt-4">Equipamentos de {{ user_name }}</h1>
+            
+            {% for category, items in all_items.items() %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ category }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if items %}
+                            <ul class="list-group">
+                                {% for item in items %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <strong>{{ item['nome_ad'] or item['marca_modelo'] }}</strong> 
+                                        <strong>Serial No: {{ item['n_serie'] }}</strong> 
+                                        <strong>Cod NIT: {{ item['cod_nit'] }} </strong>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">Nenhum {{ category.lower() }} encontrado.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+</body>
+</html>
