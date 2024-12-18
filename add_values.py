@@ -15,10 +15,10 @@ def read_csv_and_write_to_db(csv_file_path, db_config, table_name):
             csv_to_db_mapping = {
                 "Coluna1": "atribuido_a",     # Maps to 'atribuido_a'
                 "Coluna2": "marca_modelo",    # Maps to 'marca_modelo'
-                "Coluna3": "ext",       # Maps to 'polegadas'
+                "Coluna3": "polegadas",       # Maps to 'polegadas'
                 "Coluna6": "cod_nit",         # Maps to 'cod_nit'
                 "Coluna7": "n_serie",        # Maps to 'n_serie'
-                "Coluna9": "headsets_cod_nit",        # Maps to 'data_aq'
+                "Coluna9": "garantia",        # Maps to 'data_aq'
             }
             
             # Extract database columns based on the CSV header
@@ -83,7 +83,7 @@ def read_csv_and_write_to_db(csv_file_path, db_config, table_name):
 # Configuration and execution
 if __name__ == "__main__":
     # CSV file path
-    csv_file_path = "static/files/voips.csv"
+    csv_file_path = "static/files/monitores2.csv"
 
     # Database configuration
     db_config = {
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     }
 
     # Table name
-    table_name = "voip"
+    table_name = "monitores"
 
     # Execute the function
     read_csv_and_write_to_db(csv_file_path, db_config, table_name)

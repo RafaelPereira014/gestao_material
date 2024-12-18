@@ -106,8 +106,8 @@
                                             data-peso="{{ item['peso'] if category == 'Monitores' else '' }}">
                                             {{ item['nome_ad'] or item['marca_modelo'] }}
                                         </strong> 
-                                        - Serial No: {{ item['n_serie'] }}
-                                        <span class="badge badge-info">{{ item['estado'] }}</span>
+                                        <strong>Serial No: {{ item['n_serie'] }}</strong>
+                                        <span>Cod. NIT: {{ item['cod_nit'] }}</span>
                                     </li>
                                 {% endfor %}
                             </ul>
