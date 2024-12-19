@@ -84,16 +84,29 @@
                 <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }} "style="background-color: #f0f8ff;" required>
             </div>
             <div class="form-group">
-                <label for="item">MAC addr:</label>
-                <input type="text" class="form-control" id="item" name="item" value="{{ equipment['mac_addr'] }}" required>
+                <label for="itemType">Tipo equipamento:</label>
+                <select class="form-control" id="itemType" name="itemType" required>
+                    <option value="">Selecione o tipo de equipamento</option>
+                    <option value="tablet" {% if equipment['tipo'] == 'Tablet' %}selected{% endif %}>Tablet</option>
+                    <option value="computador" {% if equipment['tipo'] == 'Computador' %}selected{% endif %}>Computador</option>
+                    <option value="portatil" {% if equipment['tipo'] == 'Portatil' %}selected{% endif %}>Portátil</option>
+                    <option value="switch" {% if equipment['tipo'] == 'Switch' %}selected{% endif %}>Switch</option>
+                    <option value="AP" {% if equipment['tipo'] == 'AP' %}selected{% endif %}>AP</option>
+                </select>
             </div>
+            
             <div class="form-group">
-                <label for="item">Tipo equipamento:</label>
-                <input type="text" class="form-control" id="item" name="item" value="{{ equipment['tipo'] }}" required>
+                <label for="itemUse">Utilização:</label>
+                <select class="form-control" id="itemUse" name="itemUse" required>
+                    <option value="">Selecione a utilização do equipamento</option>
+                    <option value="Manuais digitais" {% if equipment['use_case'] == 'Manuais Digitais' %}selected{% endif %}>Manuais digitais</option>
+                    <option value="-" {% if equipment['use_case'] == '-' %}selected{% endif %}>- </option>
+                </select>
             </div>
+            
             <div class="form-group">
-                <label for="item">Utilização:</label>
-                <input type="text" class="form-control" id="item" name="item" value="{{ equipment['use_case'] }}" required>
+                <label for="macAddr">MAC addr:</label>
+                <input type="text" class="form-control" id="macAddr" name="macAddr" value="{{ equipment['mac_addr'] }}" required>
             </div>
 
             <div class="form-group">

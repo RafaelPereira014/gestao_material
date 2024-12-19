@@ -31,7 +31,7 @@ def get_equipment_by_serial(serial_number,escola_id):
         connection.close()
         
 def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=None, 
-                     data_ultimo_movimento=None, cedido_a_escola=None, observacoes=None):
+                     data_ultimo_movimento=None, cedido_a_escola=None, observacoes=None,mac_addr=None,utilizacao=None):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -93,6 +93,20 @@ def update_equipment(serial_number, escola_id, tipo=None, status=None, aluno_CC=
         else:
             sql += "observacoes = %s, "
             params.append(observacoes)
+        
+        # Handle observacoes, allowing it to be None
+        if mac_addr is None:
+            sql += "mac_addr = NULL, "
+        else:
+            sql += "mac_addr = %s, "
+            params.append(mac_addr)
+            
+        # Handle observacoes, allowing it to be None
+        if utilizacao is None:
+            sql += "use_case = NULL, "
+        else:
+            sql += "use_case = %s, "
+            params.append(utilizacao)
 
         # Remove trailing comma and finalize SQL with WHERE clause
         sql = sql.rstrip(", ") + " WHERE serial_number = %s AND escola_id = %s"

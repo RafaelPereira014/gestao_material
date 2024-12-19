@@ -595,7 +595,7 @@ def add_equip():
 def edit_equip():
     if request.method == 'POST':
         serial_number = request.form.get('SerialNo')
-        equipment_type = request.form.get('item')
+        equipment_type = request.form.get('itemType')
         from_location = request.form.get('fromLocation')
         escola_id = get_school_id_by_name(from_location)
         status = request.form.get('status')
@@ -604,7 +604,7 @@ def edit_equip():
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
         observacoes = request.form.get('observacoes', '')  # New field
-        mac_addr = request.form.get('MACaddr')
+        mac_addr = request.form.get('macAddr')
         utilizacao = request.form.get('itemUse')
         
 
@@ -650,7 +650,7 @@ def edit_equip():
                 return redirect(request.url)
 
         # Update the equipment
-        update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola,observacoes)
+        update_equipment(serial_number, escola_id, equipment_type, status, assigned_to, datetime.now(), id_escola,observacoes,mac_addr,utilizacao)
 
         return redirect(url_for('inventory'))
 
