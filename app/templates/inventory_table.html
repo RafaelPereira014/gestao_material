@@ -1,8 +1,23 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Atribuido a </th>
+            <th>Atribuido a</th>
+            {% if items[0].nome_ad %}
             <th>Nome</th>
+            {% endif %}
+            {% if items[0].modelo or items[0].marca_modelo %}
+            <th>Marca/Modelo</th>
+            {% endif %}
+            {% if items[0].so %}
+            <th>SO</th>
+            {% endif %}
+            <th>COD Nit</th>
+            {% if items[0].data_aq %}
+            <th>Data aq.</th>
+            {% endif %}
+            {% if items[0].ext %}
+            <th>Ext</th>
+            {% endif %}
             <th>Estado</th>
             <th>Ações</th>
         </tr>
@@ -15,7 +30,30 @@
                     {{ item.atribuido_a }}
                 </a>
             </td>
-            <td>{{ item.nome }}</td>
+
+            {% if item.nome_ad %}
+            <td>{{ item.nome_ad }}</td>
+            {% endif %}
+
+            {% if item.modelo or item.marca_modelo %}
+            <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
+            {% endif %}
+
+            {% if item.so %}
+            <td>{{ item.so }}</td>
+            {% endif %}
+
+            <td>{{ item.cod_nit }}</td>
+
+            {% if item.data_aq %}
+            <td>{{ item.data_aq or '-'}}</td>
+            {%endif%}
+
+
+            {% if item.ext %}
+            <td>{{ item.ext or '-'}}</td>
+            {%endif%}
+
             <td>
                 {% if item.estado == 'Em uso' %}
                     <span class="badge badge-success rounded-pill">Em uso</span>
@@ -29,6 +67,7 @@
                     <span class="badge badge-secondary rounded-pill">Unknown</span>
                 {% endif %}
             </td>
+
             <td>
                 <!-- Edit Button with Icon -->
                 <a class="btn btn-sm btn-warning">

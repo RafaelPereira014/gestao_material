@@ -259,11 +259,11 @@ def fetch_inventory():
 
     # Define mappings of inventory types to their corresponding SQL queries
     query_mapping = {
-        "computadores": "SELECT atribuido_a, nome_ad AS nome, estado FROM computadores",
-        "monitores": "SELECT atribuido_a, marca_modelo AS nome, estado FROM monitores",
-        "cameras": "SELECT atribuido_a, marca_modelo AS nome, estado FROM cameras",
-        "voips": "SELECT atribuido_a, marca_modelo AS nome, estado FROM voip",
-        "headsets": "SELECT atribuido_a, marca_modelo AS nome, estado FROM headset"
+        "computadores": "SELECT * FROM computadores",
+        "monitores": "SELECT * FROM monitores",
+        "cameras": "SELECT * FROM cameras",
+        "voips": "SELECT * FROM voip",
+        "headsets": "SELECT * FROM headset"
     }
 
     # Check if the selected type is valid
