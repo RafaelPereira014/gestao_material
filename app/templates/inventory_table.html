@@ -1,4 +1,6 @@
-<table class="table table-bordered">
+
+
+<table class="table table-bordered" id="dataTable">
     <thead>
         <tr>
             <th>Atribuido a</th>
@@ -36,23 +38,34 @@
             {% endif %}
 
             {% if item.modelo or item.marca_modelo %}
-            <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
+                <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
+            {% else %}
+                <td>-</td>
             {% endif %}
+
 
             {% if item.so %}
-            <td>{{ item.so }}</td>
+                <td>{{ item.so }}</td>
+            {% else %}
+                <td>-</td>
             {% endif %}
 
-            <td>{{ item.cod_nit }}</td>
+            {% if item.cod_nit %}
+                <td>{{ item.cod_nit }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
 
             {% if item.data_aq %}
-            <td>{{ item.data_aq or '-'}}</td>
-            {%endif%}
+                <td>{{ item.data_aq }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
 
 
             {% if item.ext %}
             <td>{{ item.ext or '-'}}</td>
-            {%endif%}
+            {% endif %}
 
             <td>
                 {% if item.estado == 'Em uso' %}
@@ -82,3 +95,4 @@
         {% endfor %}
     </tbody>
 </table>
+
