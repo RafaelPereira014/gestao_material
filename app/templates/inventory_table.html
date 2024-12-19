@@ -13,7 +13,9 @@
             {% if items[0].so %}
             <th>SO</th>
             {% endif %}
+            {% if items[0].cod_nit %}
             <th>COD Nit</th>
+            {% endif %}
             {% if items[0].data_aq %}
             <th>Data aq.</th>
             {% endif %}
@@ -57,7 +59,7 @@
             {% endif %}
 
             {% if item.data_aq %}
-                <td>{{ item.data_aq }}</td>
+                <td>{{ item.data_aq  }}</td>
             {% else %}
                 <td>-</td>
             {% endif %}
