@@ -122,8 +122,29 @@
                         <small id="serialError" class="form-text text-danger" style="display: none;">Número de série já existe!</small>
                     </div>
                     <div class="form-group">
-                        <label for="itemName">Tipo de equipamento</label>
-                        <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Introduzir tipo de equipamento">
+                        <label for="itemType">Tipo de equipamento</label>
+                        <select class="form-control" id="itemType" name="itemType">
+                            <option value="" disabled selected>Selecione o tipo de equipamento</option>
+                            <option value="tablet">Tablet</option>
+                            <option value="computador">Computador</option>
+                            <option value="portatil">Portátil</option>
+                            <option value="switch">Switch</option>
+                            <option value="AP">AP</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="MACaddr">Mac address</label>
+                        <input type="text" class="form-control" id="MACaddr" name="MACaddr" placeholder="MAC addr">
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label for="itemUse">Utilização</label>
+                        <select class="form-control" id="itemUse" name="itemUse">
+                            <option value="" disabled selected>Selecione a utilização do equipamento</option>
+                            <option value="Manuais digitais">Manuais digitais</option>
+                            <option value="default">- </option>
+                        </select>
                     </div>
                     {%if is_admin %}
                     <div class="form-group">

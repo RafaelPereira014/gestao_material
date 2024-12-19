@@ -105,6 +105,7 @@
                 <tr>
                     <th>Serial No.</th>
                     <th>Equipamento</th>
+                    <th>Mac-Addr</th>
                     <th>Atribuido a</th>
                     <th>Pertencente a (escola)</th>
                     <th>Estado</th>
@@ -117,6 +118,7 @@
                     <tr>
                         <td><a href="{{ url_for('item_page', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}">{{ equipamento.serial_number }}</a></td>
                         <td>{{ equipamento.tipo }}</td>
+                        <td>{{ equipamento.mac_addr }}</td>
                         <td>{{ equipamento.aluno_CC if equipamento.aluno_CC else '-' }}</td>
                         <td>{{ equipamento.escola_name_from if equipamento.escola_name_from else '-' }}</td>  
                         <td>

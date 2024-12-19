@@ -83,6 +83,9 @@
                 <div class="card-body">
                     <h5 class="card-title">Serial No.: {{ equipment.serial_number }}</h5>
                     <p><strong>Tipo de equipamento:</strong> {{ equipment.tipo }}</p>
+                    <p><strong>MAC addr:</strong> {{ equipment.mac_addr }}</p>
+                    <p><strong>Utilização:</strong> {{ equipment.use_case }}</p>
+
                     <p><strong>Estado:</strong>
                         {% if equipment.status == 'Em uso' %}
                             <span class="badge badge-success rounded-pill">Em uso</span>

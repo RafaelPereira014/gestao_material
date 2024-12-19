@@ -84,9 +84,18 @@
                 <input type="text" class="form-control" id="SerialNo" name="SerialNo" value="{{ equipment['serial_number'] }} "style="background-color: #f0f8ff;" required>
             </div>
             <div class="form-group">
-                <label for="item">Equipamento:</label>
+                <label for="item">MAC addr:</label>
+                <input type="text" class="form-control" id="item" name="item" value="{{ equipment['mac_addr'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="item">Tipo equipamento:</label>
                 <input type="text" class="form-control" id="item" name="item" value="{{ equipment['tipo'] }}" required>
             </div>
+            <div class="form-group">
+                <label for="item">Utilização:</label>
+                <input type="text" class="form-control" id="item" name="item" value="{{ equipment['use_case'] }}" required>
+            </div>
+
             <div class="form-group">
                 <label for="fromLocation">Pertencente a:</label>
                 <input type="text" class="form-control" id="fromLocation" name="fromLocation" value="{{ escola_nome }}" style="background-color: #f0f8ff;" required>

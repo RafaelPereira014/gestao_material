@@ -388,7 +388,9 @@ def add_equip():
             cursor = None  # Ensure cursor is initialized
             try:
                 numero_serie = request.form['itemSerialNo']
-                tipo = request.form['itemName']
+                tipo = request.form['itemType']
+                mac_addr = request.form['MACaddr']
+                use_case = request.form['itemUse']
 
                 # Automatically associate escola_id from user details
                 if not is_admin(session['user_id']):
@@ -398,6 +400,7 @@ def add_equip():
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
                     accessories = request.form.get('accessories', None)
+                    
 
                     # Check if the serial number already exists
                     if is_serial_number_exists(numero_serie, escola_id):
@@ -411,10 +414,10 @@ def add_equip():
                     cursor = connection.cursor()  # Initialize cursor here
                     cursor.execute(
                         """
-                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC,mac_addr,use_case)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s)
                         """,
-                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
+                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno, mac_addr,use_case)
                     )
                     equipamento_id = cursor.lastrowid
 
@@ -525,8 +528,10 @@ def add_equip():
 
                     numero_serie = row[0]
                     tipo = row[1]
-                    cc_aluno = row[2] if len(row) > 2 and row[2] else None
-                    accessories = row[3] if len(row) > 3 else None  # Column for accessories
+                    utilizacao = row[2]
+                    mac_addr = row[3]
+                    cc_aluno = row[4]
+                    accessories = row[5] if len(row) > 5 else None  # Column for accessories
                     data_aquisicao = datetime.now().date()
                     data_ultimo_movimento = data_aquisicao
                     status = 'Em uso' if cc_aluno else 'Disponivel'
@@ -539,15 +544,15 @@ def add_equip():
                         print(f"Skipping duplicate serial number: {numero_serie}")
                         continue
 
-                    print(f"Inserting bulk equipment row: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+                    print(f"Inserting bulk equipment row: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id},{utilizacao},{mac_addr}")
 
                     # Insert bulk equipment data into the database
                     cursor.execute(
                         """
-                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        INSERT INTO equipamentos (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, serial_number, aluno_CC,mac_addr,use_case)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s)
                         """,
-                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno)
+                        (tipo, status, escola_id, data_aquisicao, data_ultimo_movimento, numero_serie, cc_aluno,mac_addr,utilizacao)
                     )
                     equipamento_id = cursor.lastrowid  # Get the last inserted equipamento ID
 
@@ -599,6 +604,9 @@ def edit_equip():
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
         observacoes = request.form.get('observacoes', '')  # New field
+        mac_addr = request.form.get('MACaddr')
+        utilizacao = request.form.get('itemUse')
+        
 
 
         # Handle "returned" checkbox
