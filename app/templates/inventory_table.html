@@ -46,27 +46,28 @@
             {% endif %}
 
 
-            {% if item.so %}
+            {% if item.so  %}
                 <td>{{ item.so }}</td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
+            {% elif item.so == '' %}
+                 <td>{{ '-' }}</td>
+            {%endif%}
+
 
             {% if item.cod_nit %}
                 <td>{{ item.cod_nit }}</td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
+            {% elif item.cod_nit == '' %}
+                 <td>{{ '-' }}</td>
+            {%endif%}
 
             {% if item.data_aq %}
-                <td>{{ item.data_aq  }}</td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
+                <td>{{ item.data_aq }}</td>
+            {% elif item.data_aq == '' %}
+                 <td>{{ '-' }}</td>
+            {%endif%}
 
 
             {% if item.ext %}
-            <td>{{ item.ext or '-'}}</td>
+            <td>{{ item.ext }}</td>
             {% endif %}
 
             <td>
