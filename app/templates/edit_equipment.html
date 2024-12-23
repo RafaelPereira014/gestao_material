@@ -241,4 +241,34 @@
                     document.getElementById('uploadDocument').style.display = 'block';
                     document.getElementById('status').value = 'Em uso';
                     document.getElementById('toLocation').setAttribute('required', 'required');
-               
+                    document.getElementById('assignedTo').setAttribute('required', 'required');
+                } else if (changedCheckboxId === 'returned') {
+                    document.getElementById('cedidoDropdown').style.display = 'none';
+                    document.getElementById('uploadDocument').style.display = 'none';
+                    document.getElementById('status').value = 'Disponivel';
+                    document.getElementById('toLocation').removeAttribute('required');
+                    document.getElementById('assignedTo').removeAttribute('required');
+                }
+            } else {
+                // Reset fields when unchecked
+                if (changedCheckboxId === 'toggleCedido') {
+                    document.getElementById('cedidoDropdown').style.display = 'none';
+                    document.getElementById('uploadDocument').style.display = 'none';
+                    document.getElementById('toLocation').removeAttribute('required');
+                }
+            }
+        }
+    
+        // Ensure initial state matches checkbox values
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleCedido = document.getElementById('toggleCedido');
+            const returned = document.getElementById('returned');
+    
+            handleCheckboxToggle(
+                toggleCedido.checked ? 'toggleCedido' : 'returned',
+                toggleCedido.checked ? 'returned' : 'toggleCedido'
+            );
+        });
+    </script>
+</body>
+</html>

@@ -164,6 +164,28 @@ def get_all_requisicoes():
         cursor.close()
         connection.close()
         
+def get_all_requisicoes_ativas():
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM requisicoes WHERE estado='ativa' ORDER BY data_criacao DESC")
+        columns = [column[0] for column in cursor.description]  # Get column names
+        requisicoes = []
+
+        # Fetch all rows and convert them into dictionaries
+        for row in cursor.fetchall():
+            requisicao_dict = dict(zip(columns, row))  # Create a dictionary
+            requisicoes.append(requisicao_dict)
+
+        return requisicoes
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+        
 def get_cameras():
     connection = connect_to_database() 
     cursor = connection.cursor()

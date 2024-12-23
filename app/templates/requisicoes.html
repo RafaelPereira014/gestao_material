@@ -83,6 +83,7 @@
             <thead>
                 <tr>
                     <th>Data pedido</th>
+                    <th>Ticket ID</th>
                     <th>Nome</th>
                     <th>Equipamento</th>
                     <th>Quantidade</th>
@@ -94,6 +95,7 @@
                 {% for requisicao in all_requisicoes %}
                     <tr>
                         <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{ticket_id}}</th>
                         <td>{{ requisicao.nome }}</td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.quantidade }}</td>
@@ -126,6 +128,38 @@
                         <td>
                             <button class="btn btn-primary" onclick="assignEquipment({{ requisicao.id }})">Confirmar</button> <!-- Confirm button -->
                         </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Não foram encontradas quaisquer requisições.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h1>Requisições ativas </h1>
+
+        <!-- Equipment Table -->
+        <table class="table table-striped2">
+            <thead>
+                <tr>
+                    <th>Data pedido</th>
+                    <th>Nome</th>
+                    <th>Tipo equipamento</th>
+                    <th>Quantidade</th>
+                    <th>Equipamento</th>
+                </tr>
+            </thead>
+
+            <tbody id="inventoryTable2">
+                {% for requisicao in all_requisicoes_ativas %}
+                    <tr>
+                        <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{ requisicao.nome }}</td>
+                        <td>{{ requisicao.tipo_equipamento }}</td>
+                        <td>{{ requisicao.quantidade }}</td>
+                        
+                        
                     </tr>
                 {% else %}
                     <tr>

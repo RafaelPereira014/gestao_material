@@ -297,7 +297,7 @@ def requisicoes():
     
     # Get all requisicoes (all requests)
     all_requisicoes = get_all_requisicoes()
-    
+    all_requisicoes_ativas = get_all_requisicoes_ativas()
     # Prepare a dictionary to hold the available equipment for each type
     available_equipments = {}
     
@@ -309,7 +309,8 @@ def requisicoes():
     
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
-                           available_equipments=available_equipments)
+                           available_equipments=available_equipments,
+                           all_requisicoes_ativas=all_requisicoes_ativas)
     
 @app.route('/user_page/<string:user_name>')
 def user_page(user_name):
@@ -352,11 +353,10 @@ def assign_equipment():
     
     # Get the necessary fields from requisicao
     nome_requisicao = requisicao[1]  # Assuming the name is at index 1, make sure this is correct.
-    print(nome_requisicao)
     
     # Update equipment attributes and requisition state
     update_equipment_atributo_a(requisicao[0],nome_requisicao, equipamento_id)
-    update_estado_requisicao(requisicao_id, 'Resolvido')
+    update_estado_requisicao(requisicao_id, 'ativa')
     
     return jsonify({"status": "success"}), 200
 
