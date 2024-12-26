@@ -95,7 +95,7 @@
                 {% for requisicao in all_requisicoes %}
                     <tr>
                         <td>{{ requisicao.data_criacao }}</td>
-                        <td>{{ticket_id}}</th>
+                        <td>{{ requisicao.ticket_id }}</th>
                         <td>{{ requisicao.nome }}</td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.quantidade }}</td>
@@ -144,6 +144,7 @@
             <thead>
                 <tr>
                     <th>Data pedido</th>
+                    <th>Ticket ID</th>
                     <th>Nome</th>
                     <th>Tipo equipamento</th>
                     <th>Quantidade</th>
@@ -155,6 +156,7 @@
                 {% for requisicao in all_requisicoes_ativas %}
                     <tr>
                         <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{ requisicao.ticket_id }}</td>
                         <td>{{ requisicao.nome }}</td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.quantidade }}</td>

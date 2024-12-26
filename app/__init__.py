@@ -761,6 +761,7 @@ def receive_data():
         return "Material types are required.", 400  # Return an error if material_types is empty
 
     # Extract other fields from the data
+    ticket_id = data['ID']
     username = data['User']
     email = data['User email']
     quantity = data['quantidade']
@@ -776,10 +777,10 @@ def receive_data():
         for material_type in material_types:
             cursor.execute(
                 """
-                INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim,ticket_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s,%s)
                 """,
-                (username, email, material_type, quantity, reason, start_date, end_date)
+                (username, email, material_type, quantity, reason, start_date, end_date,ticket_id)
             )
 
         connection.commit()
