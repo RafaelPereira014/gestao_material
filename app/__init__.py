@@ -773,7 +773,7 @@ def receive_data():
         connection = connect_to_database()
         cursor = connection.cursor()
 
-        # Insert each material_type into the database
+        
         for material_type in material_types:
             cursor.execute(
                 """
