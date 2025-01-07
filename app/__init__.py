@@ -256,25 +256,26 @@ def inventory_nit():
 @app.route('/fetch_inventory')
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default to 'computadores'
+    search_query = request.args.get('search', '').strip()  # Search term
     current_page = int(request.args.get('page', 1))
     per_page = 10
 
-    # Fetch total count of items for pagination
+    # Queries for total count and data with optional search
     query_mapping = {
-        "computadores": "SELECT COUNT(*) FROM computadores",
-        "monitores": "SELECT COUNT(*) FROM monitores",
-        "cameras": "SELECT COUNT(*) FROM cameras",
-        "headset": "SELECT COUNT(*) FROM headset",
-        "voip": "SELECT COUNT(*) FROM voip",
-
+        "computadores": "SELECT COUNT(*) FROM computadores WHERE atribuido_a LIKE %s",
+        "monitores": "SELECT COUNT(*) FROM monitores WHERE atribuido_a LIKE %s",
+        "cameras": "SELECT COUNT(*) FROM cameras WHERE atribuido_a LIKE %s",
+        "voips": "SELECT COUNT(*) FROM voips WHERE atribuido_a LIKE %s",
+        "headsets": "SELECT COUNT(*) FROM headsets WHERE atribuido_a LIKE %s",
+        "outros": "SELECT COUNT(*) FROM outros WHERE atribuido_a LIKE %s",
     }
     query_data_mapping = {
-        "computadores": "SELECT * FROM computadores LIMIT %s OFFSET %s",
-        "monitores": "SELECT * FROM monitores LIMIT %s OFFSET %s",
-        "cameras": "SELECT * FROM cameras LIMIT %s OFFSET %s",
-        "headset": "SELECT * FROM headset  LIMIT %s OFFSET %s",
-        "voip": "SELECT * FROM voip LIMIT %s OFFSET %s",
-        # Add other types...
+        "computadores": "SELECT * FROM computadores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "voips": "SELECT * FROM voips WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "headsets": "SELECT * FROM headsets WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "outros": "SELECT * FROM outros WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
     }
 
     if inventory_type not in query_mapping:
@@ -284,8 +285,11 @@ def fetch_inventory():
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
+        # Add wildcard for search
+        search_term = f"%{search_query}%"
+
         # Get the total number of items
-        cursor.execute(query_mapping[inventory_type])
+        cursor.execute(query_mapping[inventory_type], (search_term,))
         total_items = cursor.fetchone()['COUNT(*)']
 
         # Calculate pagination
@@ -293,7 +297,7 @@ def fetch_inventory():
         offset = (current_page - 1) * per_page
 
         # Fetch paginated data
-        cursor.execute(query_data_mapping[inventory_type], (per_page, offset))
+        cursor.execute(query_data_mapping[inventory_type], (search_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>"

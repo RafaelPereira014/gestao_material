@@ -86,6 +86,11 @@
                     <option value="outros">Outros</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label for="searchInput">Pesquisar "Atribuído a":</label>
+                <input type="text" class="form-control" id="searchInput" placeholder="Digite o nome">
+            </div>
     
             <!-- Placeholder for the inventory table -->
             <div id="inventoryTable" class="mt-4">
@@ -99,14 +104,13 @@
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 
     <script>
-        // Function to fetch and display inventory based on user selection
         function fetchInventory() {
             const inventoryType = document.getElementById("inventoryType").value;
+            const searchQuery = document.getElementById("searchInput").value.trim();
             const inventoryTable = document.getElementById("inventoryTable");
-
+        
             if (inventoryType) {
-                // Fetch data from the server
-                fetch(`/fetch_inventory?type=${inventoryType}`)
+                fetch(`/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}`)
                     .then(response => response.text())
                     .then(html => {
                         inventoryTable.innerHTML = html;
@@ -118,6 +122,8 @@
                 inventoryTable.innerHTML = "";
             }
         }
+        
+        document.getElementById("searchInput").addEventListener("input", fetchInventory);
 
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("page-link")) {
@@ -125,9 +131,10 @@
         
                 const page = e.target.getAttribute("data-page");
                 const inventoryType = document.getElementById("inventoryType").value;
+                const searchQuery = document.getElementById("searchInput").value.trim();
         
                 if (page && inventoryType) {
-                    fetch(`/fetch_inventory?type=${inventoryType}&page=${page}`)
+                    fetch(`/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}`)
                         .then(response => response.text())
                         .then(html => {
                             document.getElementById("inventoryTable").innerHTML = html;
