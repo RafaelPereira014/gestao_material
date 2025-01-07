@@ -355,6 +355,7 @@ def user_page(user_name):
     }
 
     return render_template('user_page.html', user_name=user_name, all_items=all_items,is_admin=is_admin(session['user_id']))
+
 @app.route('/assign-equipment', methods=['POST'])
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']
