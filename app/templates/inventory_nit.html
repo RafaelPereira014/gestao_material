@@ -118,6 +118,26 @@
                 inventoryTable.innerHTML = "";
             }
         }
+
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("page-link")) {
+                e.preventDefault();
+        
+                const page = e.target.getAttribute("data-page");
+                const inventoryType = document.getElementById("inventoryType").value;
+        
+                if (page && inventoryType) {
+                    fetch(`/fetch_inventory?type=${inventoryType}&page=${page}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById("inventoryTable").innerHTML = html;
+                        })
+                        .catch(error => {
+                            document.getElementById("inventoryTable").innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
+                        });
+                }
+            }
+        });
     </script>
 </body>
 </html>

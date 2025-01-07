@@ -255,28 +255,45 @@ def inventory_nit():
 
 @app.route('/fetch_inventory')
 def fetch_inventory():
-    inventory_type = request.args.get('type')  # Get the selected inventory type
+    inventory_type = request.args.get('type', 'computadores')  # Default to 'computadores'
+    current_page = int(request.args.get('page', 1))
+    per_page = 10
 
-    # Define mappings of inventory types to their corresponding SQL queries
+    # Fetch total count of items for pagination
     query_mapping = {
-        "computadores": "SELECT * FROM computadores",
-        "monitores": "SELECT * FROM monitores",
-        "cameras": "SELECT * FROM cameras",
-        "voips": "SELECT * FROM voip",
-        "headsets": "SELECT * FROM headset"
+        "computadores": "SELECT COUNT(*) FROM computadores",
+        "monitores": "SELECT COUNT(*) FROM monitores",
+        "cameras": "SELECT COUNT(*) FROM cameras",
+        "headset": "SELECT COUNT(*) FROM headset",
+        "voip": "SELECT COUNT(*) FROM voip",
+
+    }
+    query_data_mapping = {
+        "computadores": "SELECT * FROM computadores LIMIT %s OFFSET %s",
+        "monitores": "SELECT * FROM monitores LIMIT %s OFFSET %s",
+        "cameras": "SELECT * FROM cameras LIMIT %s OFFSET %s",
+        "headset": "SELECT * FROM headset  LIMIT %s OFFSET %s",
+        "voip": "SELECT * FROM voip LIMIT %s OFFSET %s",
+        # Add other types...
     }
 
-    # Check if the selected type is valid
     if inventory_type not in query_mapping:
         return "<p class='text-danger'>Categoria inválida.</p>"
 
-    # Fetch inventory data for the specified type
-    inventory_data = []
     try:
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-        query = query_mapping[inventory_type]  # Get the SQL query for the selected type
-        cursor.execute(query)
+
+        # Get the total number of items
+        cursor.execute(query_mapping[inventory_type])
+        total_items = cursor.fetchone()['COUNT(*)']
+
+        # Calculate pagination
+        total_pages = (total_items + per_page - 1) // per_page
+        offset = (current_page - 1) * per_page
+
+        # Fetch paginated data
+        cursor.execute(query_data_mapping[inventory_type], (per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>"
@@ -284,10 +301,13 @@ def fetch_inventory():
         if connection:
             connection.close()
 
-    # Render the table if data is found, otherwise display a message
-    if inventory_data:
-        return render_template('inventory_table.html', items=inventory_data)
-    return "<p class='text-danger'>Nenhum dado encontrado para esta categoria.</p>"
+    return render_template(
+        'inventory_table.html',
+        items=inventory_data,
+        current_page=current_page,
+        total_pages=total_pages,
+        inventory_type=inventory_type,
+    )
 
 @app.route('/requisicoes')
 def requisicoes():

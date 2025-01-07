@@ -1,101 +1,108 @@
-
-
-<table class="table table-bordered" id="dataTable">
-    <thead>
-        <tr>
-            <th>Atribuido a</th>
-            {% if items[0].nome_ad %}
-            <th>Nome</th>
-            {% endif %}
-            {% if items[0].modelo or items[0].marca_modelo %}
-            <th>Marca/Modelo</th>
-            {% endif %}
-            {% if items[0].so %}
-            <th>SO</th>
-            {% endif %}
-            {% if items[0].cod_nit %}
-            <th>COD Nit</th>
-            {% endif %}
-            {% if items[0].data_aq %}
-            <th>Data aq.</th>
-            {% endif %}
-            {% if items[0].ext %}
-            <th>Ext</th>
-            {% endif %}
-            <th>Estado</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in items %}
-        <tr>
-            <td>
-                <a href="{{ url_for('user_page', user_name=item.atribuido_a) }}">
-                    {{ item.atribuido_a }}
-                </a>
-            </td>
-
-            {% if item.nome_ad %}
-            <td>{{ item.nome_ad }}</td>
-            {% endif %}
-
-            {% if item.modelo or item.marca_modelo %}
-                <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
-
-
-            {% if item.so  %}
-                <td>{{ item.so }}</td>
-            {% elif item.so == '' %}
-                 <td>{{ '-' }}</td>
-            {%endif%}
-
-
-            {% if item.cod_nit %}
-                <td>{{ item.cod_nit }}</td>
-            {% elif item.cod_nit == '' %}   
-                 <td>{{ '-' }}</td>
-            {%endif%}
-
-            {% if item.data_aq %}
-                <td>{{ item.data_aq }}</td>
-            {% elif item.data_aq == '' %}
-                 <td>{{ '-' }}</td>
-            {%endif%}
-
-
-            {% if item.ext %}
-            <td>{{ item.ext }}</td>
-            {% endif %}
-
-            <td>
-                {% if item.estado == 'Em uso' %}
-                    <span class="badge badge-success rounded-pill">Em uso</span>
-                {% elif item.estado == 'Extraviado' %}
-                    <span class="badge badge-danger rounded-pill">Extraviado</span>
-                {% elif item.estado == 'Em manutenção' %}
-                    <span class="badge badge-warning rounded-pill">Manutenção</span>
-                {% elif item.estado == 'Disponivel' %}
-                    <span class="badge badge-info rounded-pill">Disponível</span>
-                {% else %}
-                    <span class="badge badge-secondary rounded-pill">Unknown</span>
+<div>
+    <table class="table table-bordered" id="dataTable">
+        <thead>
+            <tr>
+                <th>Atribuido a</th>
+                {% if items[0].nome_ad %}
+                <th>Nome</th>
                 {% endif %}
-            </td>
+                {% if items[0].modelo or items[0].marca_modelo %}
+                <th>Marca/Modelo</th>
+                {% endif %}
+                {% if items[0].so %}
+                <th>SO</th>
+                {% endif %}
+                {% if items[0].cod_nit %}
+                <th>COD Nit</th>
+                {% endif %}
+                {% if items[0].data_aq %}
+                <th>Data aq.</th>
+                {% endif %}
+                {% if items[0].ext %}
+                <th>Ext</th>
+                {% endif %}
+                <th>Estado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('user_page', user_name=item.atribuido_a) }}">
+                        {{ item.atribuido_a }}
+                    </a>
+                </td>
+                {% if item.nome_ad %}
+                <td>{{ item.nome_ad }}</td>
+                {% endif %}
+                {% if item.modelo or item.marca_modelo %}
+                    <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+                {% if item.so  %}
+                    <td>{{ item.so }}</td>
+                {% elif item.so == '' %}
+                    <td>{{ '-' }}</td>
+                {%endif%}
+                {% if item.cod_nit %}
+                    <td>{{ item.cod_nit }}</td>
+                {% elif item.cod_nit == '' %}   
+                    <td>{{ '-' }}</td>
+                {%endif%}
+                {% if item.data_aq %}
+                    <td>{{ item.data_aq }}</td>
+                {% elif item.data_aq == '' %}
+                    <td>{{ '-' }}</td>
+                {%endif%}
+                {% if item.ext %}
+                <td>{{ item.ext }}</td>
+                {% endif %}
+                <td>
+                    {% if item.estado == 'Em uso' %}
+                        <span class="badge badge-success rounded-pill">Em uso</span>
+                    {% elif item.estado == 'Extraviado' %}
+                        <span class="badge badge-danger rounded-pill">Extraviado</span>
+                    {% elif item.estado == 'Em manutenção' %}
+                        <span class="badge badge-warning rounded-pill">Manutenção</span>
+                    {% elif item.estado == 'Disponivel' %}
+                        <span class="badge badge-info rounded-pill">Disponível</span>
+                    {% else %}
+                        <span class="badge badge-secondary rounded-pill">Unknown</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-            <td>
-                <!-- Edit Button with Icon -->
-                <a class="btn btn-sm btn-warning">
-                    <i class="fas fa-edit"></i> Editar
-                </a>
-                <!-- Delete Button with Icon -->
-                <a class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
-                    <i class="fas fa-trash"></i> Excluir
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+    <!-- Pagination Controls -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if current_page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="{{ current_page - 1 }}">Anterior</a>
+            </li>
+            {% endif %}
+            {% for page in range(1, total_pages + 1) %}
+            <li class="page-item {% if page == current_page %}active{% endif %}">
+                <a class="page-link" href="#" data-page="{{ page }}">{{ page }}</a>
+            </li>
+            {% endfor %}
+            {% if current_page < total_pages %}
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="{{ current_page + 1 }}">Próximo</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
