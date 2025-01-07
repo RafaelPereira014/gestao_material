@@ -1,62 +1,82 @@
+/* General Styles */
 body, html {
     height: 100%;
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f8f9fa; /* Light background for contrast */
+    color: #212529; /* Default text color for better readability */
 }
-
 
 h1 {
     font-size: 28px; /* Heading size */
-    margin-bottom: 20px; /* Space below heading */
+    margin-bottom: 1.5rem; /* Consistent spacing */
     color: #343a40; /* Dark color for headings */
 }
 
-/* Card styling */
+/* Card Styling */
 .card {
     border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Slightly more rounded corners for modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer and slightly larger shadow */
+    overflow: hidden; /* Ensure content stays inside rounded corners */
 }
 
 .card-title {
-    font-weight: bold; /* Bold title */
-    color: #495057; /* Darker title color */
+    font-weight: bold; /* Emphasize title */
+    color: #495057; /* Neutral, easy-on-the-eyes color */
+    margin-bottom: 0.5rem; /* Add spacing below title */
 }
 
 .card-footer {
     background-color: #f1f1f1; /* Light footer background */
+    padding: 0.75rem 1rem; /* Consistent padding */
+    text-align: right; /* Align buttons or text in the footer */
 }
 
-/* Button styling */
+/* Button Styling */
 .btn {
-    margin: 0 5px;
-    transition: background-color 0.2s, color 0.2s; /* Smooth transition on hover */
+    margin: 0 0.5rem;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    border-radius: 5px; /* Rounded buttons for a cohesive look */
 }
 
 .btn-secondary {
     background-color: #6c757d; /* Secondary button color */
-    color: white; /* White text */
+    color: #fff; /* White text */
+    border: none; /* Cleaner look without borders */
 }
 
 .btn-secondary:hover {
     background-color: #5a6268; /* Darker on hover */
+    color: #f8f9fa; /* Ensure text remains readable */
 }
 
-/* Responsive design */
+
+
+/* Main Content */
+#main-content {
+    margin-left: 250px; /* Offset for sidebar */
+    padding: 2rem; /* Comfortable padding for content */
+    transition: margin-left 0.3s ease; /* Adjust smoothly */
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     #sidebar {
-        width: 60px; /* Default width */
-    }
-
-    #sidebar:hover {
-        width: 60px; /* Keep it narrow on small screens */
+        width: 60px; /* Narrower sidebar for smaller screens */
     }
 
     #main-content {
-        margin-left: 60px; /* Adjust margins for smaller screens */
+        margin-left: 60px; /* Adjust content margin */
     }
 }
-.nav-link:hover {
-    color: #adb5bd !important;
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 24px; /* Adjust heading size for very small screens */
+    }
+
+    .btn {
+        padding: 0.5rem 0.75rem; /* Compact buttons */
+    }
 }

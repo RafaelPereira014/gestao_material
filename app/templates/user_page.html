@@ -103,10 +103,11 @@
                                             data-marca="{{ item['marca'] if category == 'Computadores' else '' }}"
                                             data-modelo="{{ item['modelo'] if category == 'Computadores' else '' }}"
                                             data-processador="{{ item['processador'] if category == 'Computadores' else '' }}"
-                                            data-peso="{{ item['peso'] if category == 'Monitores' else '' }}">
+                                            data-peso="{{ item['peso'] if category == 'Monitores' else '' }}"
+                                            style="cursor: pointer;">
                                             {{ item['nome_ad'] or item['marca_modelo'] }}
                                         </strong> 
-                                        <strong>Serial No: {{ item['n_serie'] }}</strong>
+                                        <strong style="cursor: pointer;">Serial No: {{ item['n_serie'] }}</strong>
                                         <span>Cod. NIT: {{ item['cod_nit'] }}</span>
                                     </li>
                                 {% endfor %}
