@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Item</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    
+<div class="container mt-4">
+    <h2>Editar Item - Categoria: {{ category }}</h2>
+    <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
+        <div class="form-group">
+            <label for="atribuido_a">Atribuído a:</label>
+            <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
+        </div>
+        {% if item.nome_ad is not none %}
+        <div class="form-group">
+            <label for="nome_ad">Nome:</label>
+            <input type="text" class="form-control" id="nome_ad" name="nome_ad" value="{{ item.nome_ad }}">
+        </div>
+        {% endif %}
+        {% if item.modelo is not none %}
+        <div class="form-group">
+            <label for="modelo">Modelo:</label>
+            <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
+        </div>
+        {% endif %}
+        <!-- Add other fields as necessary -->
+        <div class="form-group">
+            <label for="estado">Estado:</label>
+            <select class="form-control" id="estado" name="estado">
+                <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
+                <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
+                <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
+                <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/inventory" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>

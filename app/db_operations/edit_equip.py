@@ -313,3 +313,31 @@ def get_equip_cod_nit(equipamento_id):
     connection.close()
     
     return result
+
+def get_item_by_id(item_id):
+    connection = connect_to_database()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Enable dictionary cursor
+    # Map categories to their respective database tables
+    category_table_map = {
+        "computadores": "computadores_table",
+        "monitores": "monitores_table",
+        "cameras": "cameras_table",
+        "voips": "voips_table",
+        "headsets": "headsets_table",
+        "outros": "outros_table",
+    }
+
+    # Get the corresponding table name for the given category
+    table_name = "computadores"
+
+   
+    # Construct the SQL query
+    query = f"SELECT * FROM {table_name} WHERE id = %s"
+
+   
+    cursor.execute(query, (item_id,))
+    result = cursor.fetchone()
+
+    cursor.close()
+
+    return result

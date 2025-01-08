@@ -74,7 +74,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a class="btn btn-sm btn-warning">
+                    <a class="btn btn-sm btn-warning" href="{{ url_for('edit_item', category=inventory_type, item_id=item['id']) }}">
                         <i class="fas fa-edit"></i> Editar
                     </a>
                     <a class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">

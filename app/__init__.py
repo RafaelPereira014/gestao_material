@@ -255,21 +255,13 @@ def inventory_nit():
 
 @app.route('/fetch_inventory')
 def fetch_inventory():
-    inventory_type = request.args.get('type', 'computadores')  # Default to 'computadores'
+    inventory_type = request.args.get('type', 'computadores')  # Default category
     search_query = request.args.get('search', '').strip()  # Search term
-    current_page = int(request.args.get('page', 1))
-    per_page = 10
+    current_page = int(request.args.get('page', 1))  # Current page
+    per_page = 10  # Items per page
 
-    # Queries for total count and data with optional search
-    query_mapping = {
-        "computadores": "SELECT COUNT(*) FROM computadores WHERE atribuido_a LIKE %s",
-        "monitores": "SELECT COUNT(*) FROM monitores WHERE atribuido_a LIKE %s",
-        "cameras": "SELECT COUNT(*) FROM cameras WHERE atribuido_a LIKE %s",
-        "voips": "SELECT COUNT(*) FROM voips WHERE atribuido_a LIKE %s",
-        "headsets": "SELECT COUNT(*) FROM headsets WHERE atribuido_a LIKE %s",
-        "outros": "SELECT COUNT(*) FROM outros WHERE atribuido_a LIKE %s",
-    }
-    query_data_mapping = {
+    # Query templates for counting and fetching data
+    query_templates = {
         "computadores": "SELECT * FROM computadores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
@@ -277,34 +269,44 @@ def fetch_inventory():
         "headsets": "SELECT * FROM headsets WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "outros": "SELECT * FROM outros WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
     }
+    count_templates = {
+        "computadores": "SELECT COUNT(*) AS count FROM computadores WHERE atribuido_a LIKE %s",
+        "monitores": "SELECT COUNT(*) AS count FROM monitores WHERE atribuido_a LIKE %s",
+        "cameras": "SELECT COUNT(*) AS count FROM cameras WHERE atribuido_a LIKE %s",
+        "voips": "SELECT COUNT(*) AS count FROM voips WHERE atribuido_a LIKE %s",
+        "headsets": "SELECT COUNT(*) AS count FROM headsets WHERE atribuido_a LIKE %s",
+        "outros": "SELECT COUNT(*) AS count FROM outros WHERE atribuido_a LIKE %s",
+    }
 
-    if inventory_type not in query_mapping:
-        return "<p class='text-danger'>Categoria inválida.</p>"
+    # Validate the inventory type
+    if inventory_type not in query_templates:
+        return "<p class='text-danger'>Categoria inválida.</p>", 400
 
     try:
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-        # Add wildcard for search
+        # Prepare search term with wildcard
         search_term = f"%{search_query}%"
 
-        # Get the total number of items
-        cursor.execute(query_mapping[inventory_type], (search_term,))
-        total_items = cursor.fetchone()['COUNT(*)']
+        # Fetch the total count of items for pagination
+        cursor.execute(count_templates[inventory_type], (search_term,))
+        total_items = cursor.fetchone().get('count', 0)
 
-        # Calculate pagination
+        # Calculate pagination details
         total_pages = (total_items + per_page - 1) // per_page
         offset = (current_page - 1) * per_page
 
-        # Fetch paginated data
-        cursor.execute(query_data_mapping[inventory_type], (search_term, per_page, offset))
+        # Fetch the inventory data with pagination
+        cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
-        return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>"
+        return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
     finally:
         if connection:
             connection.close()
 
+    # Render the inventory table
     return render_template(
         'inventory_table.html',
         items=inventory_data,
@@ -312,7 +314,6 @@ def fetch_inventory():
         total_pages=total_pages,
         inventory_type=inventory_type,
     )
-
 @app.route('/requisicoes')
 def requisicoes():
     user_id = session.get('user_id')  # Get the user_id from session
@@ -704,7 +705,40 @@ def edit_equip():
         cedido_status=cedido_status,
         cedido_a=cedido_a
     )
+
+@app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET'])
+def edit_item(category, item_id):
+    # Ensure the category is valid to prevent SQL injection
+    valid_categories = ['computadores', 'monitores', 'cameras', 'voips', 'headsets', 'outros']
     
+    if category not in valid_categories:
+        return "Categoria inválida", 400
+    
+    try:
+        # Connect to the database
+        connection = connect_to_database()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        
+        # Prepare the SQL query based on the category
+        query = f"SELECT * FROM {category} WHERE id = %s"
+        
+        # Execute the query with item_id
+        cursor.execute(query, (item_id,))
+        item = cursor.fetchone()
+        
+        # If no item is found, return an error
+        if not item:
+            return "Item não encontrado", 404
+        
+    except pymysql.MySQLError as e:
+        return f"Erro ao consultar o banco de dados: {str(e)}", 500
+    finally:
+        if connection:
+            connection.close()
+    
+    # Render the template with the fetched item and category
+    return render_template('edit_item.html', item=item, category=category)
+
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):
     try:

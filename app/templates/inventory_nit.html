@@ -119,9 +119,10 @@
                         inventoryTable.innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
                     });
             } else {
-                inventoryTable.innerHTML = "";
+                inventoryTable.innerHTML = "<p class='text-warning'>Por favor, selecione uma categoria.</p>";
             }
         }
+        
         
         document.getElementById("searchInput").addEventListener("input", fetchInventory);
 
