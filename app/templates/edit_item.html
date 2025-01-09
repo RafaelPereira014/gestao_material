@@ -8,38 +8,76 @@
 </head>
 <body>
     
-<div class="container mt-4">
-    <h2>Editar Item - Categoria: {{ category }}</h2>
-    <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
-        <div class="form-group">
-            <label for="atribuido_a">Atribuído a:</label>
-            <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
-        </div>
-        {% if item.nome_ad is not none %}
-        <div class="form-group">
-            <label for="nome_ad">Nome:</label>
-            <input type="text" class="form-control" id="nome_ad" name="nome_ad" value="{{ item.nome_ad }}">
-        </div>
-        {% endif %}
-        {% if item.modelo is not none %}
-        <div class="form-group">
-            <label for="modelo">Modelo:</label>
-            <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
-        </div>
-        {% endif %}
-        <!-- Add other fields as necessary -->
-        <div class="form-group">
-            <label for="estado">Estado:</label>
-            <select class="form-control" id="estado" name="estado">
-                <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
-                <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
-                <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
-                <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/inventory" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+    <div class="container mt-4">
+        <h2>Editar Item - Categoria: {{ category }}</h2>
+        <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
+            <div class="form-group">
+                <label for="atribuido_a">Atribuído a:</label>
+                <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
+            </div>
+            
+            {% if category == 'computadores' %}
+            <div class="form-group">
+                <label for="ad">Nome AD:</label>
+                <input type="text" class="form-control" id="ad" name="ad" value="{{ item.nome_ad}}">
+            </div>
+            <div class="form-group">
+                <label for="modelo">Modelo:</label>
+                <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
+            </div>
+            <div class="form-group">
+                <label for="so">Sistema Operacional (SO):</label>
+                <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
+            </div>
+            <div class="form-group">
+                <label for="so">Sistema Operacional (SO):</label>
+                <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
+            </div>
+            {% elif category == 'monitores' %}
+            <div class="form-group">
+                <label for="marca_modelo">Marca/Modelo:</label>
+                <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo }}">
+            </div>
+            {% elif category == 'cameras' %}
+            <div class="form-group">
+                <label for="resolucao">Marca/Modelo:</label>
+                <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.marca_modelo }}">
+            </div>
+            <div class="form-group">
+                <label for="cod_nit">Cod. NIT:</label>
+                <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.cod_nit }}">
+            </div>
+            
+            {% elif category == 'voip' %}
+            <div class="form-group">
+                <label for="ip">Endereço IP:</label>
+                <input type="text" class="form-control" id="ip" name="ip" value="{{ item.marca_modelo }}">
+            </div>
+            {% elif category == 'headset' %}
+            <div class="form-group">
+                <label for="marca">Marca:</label>
+                <input type="text" class="form-control" id="marca" name="marca" value="{{ item.marca_modelo }}">
+            </div>
+            {% elif category == 'outros' %}
+            <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <input type="text" class="form-control" id="descricao" name="descricao" value="{{ item.descricao }}">
+            </div>
+            {% endif %}
+    
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <select class="form-control" id="estado" name="estado">
+                    <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
+                    <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
+                    <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
+                    <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="/inventory" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
 </body>
 </html>

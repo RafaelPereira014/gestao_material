@@ -265,16 +265,16 @@ def fetch_inventory():
         "computadores": "SELECT * FROM computadores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "voips": "SELECT * FROM voips WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "headsets": "SELECT * FROM headsets WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "voip": "SELECT * FROM voip WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "headset": "SELECT * FROM headset WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "outros": "SELECT * FROM outros WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
     }
     count_templates = {
         "computadores": "SELECT COUNT(*) AS count FROM computadores WHERE atribuido_a LIKE %s",
         "monitores": "SELECT COUNT(*) AS count FROM monitores WHERE atribuido_a LIKE %s",
         "cameras": "SELECT COUNT(*) AS count FROM cameras WHERE atribuido_a LIKE %s",
-        "voips": "SELECT COUNT(*) AS count FROM voips WHERE atribuido_a LIKE %s",
-        "headsets": "SELECT COUNT(*) AS count FROM headsets WHERE atribuido_a LIKE %s",
+        "voip": "SELECT COUNT(*) AS count FROM voip WHERE atribuido_a LIKE %s",
+        "headset": "SELECT COUNT(*) AS count FROM headset WHERE atribuido_a LIKE %s",
         "outros": "SELECT COUNT(*) AS count FROM outros WHERE atribuido_a LIKE %s",
     }
 
@@ -709,7 +709,7 @@ def edit_equip():
 @app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET'])
 def edit_item(category, item_id):
     # Ensure the category is valid to prevent SQL injection
-    valid_categories = ['computadores', 'monitores', 'cameras', 'voips', 'headsets', 'outros']
+    valid_categories = ['computadores', 'monitores', 'cameras', 'voip', 'headset', 'outros']
     
     if category not in valid_categories:
         return "Categoria inválida", 400
