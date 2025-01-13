@@ -257,12 +257,18 @@ def inventory_nit():
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
     search_query = request.args.get('search', '').strip()  # Search term
+    so_query = request.args.get('so', '').strip()  # SO filter
+    modelo_query = request.args.get('modelo', '').strip()  # Marca/Modelo filter
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
 
     # Query templates for counting and fetching data
     query_templates = {
-        "computadores": "SELECT * FROM computadores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+        "computadores": """SELECT * FROM computadores 
+                           WHERE atribuido_a LIKE %s 
+                           AND (%s = '' OR so LIKE %s)
+                           AND (%s = '' OR modelo LIKE %s)
+                           LIMIT %s OFFSET %s""",
         "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "voip": "SELECT * FROM voip WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
@@ -270,7 +276,10 @@ def fetch_inventory():
         "outros": "SELECT * FROM outros WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
     }
     count_templates = {
-        "computadores": "SELECT COUNT(*) AS count FROM computadores WHERE atribuido_a LIKE %s",
+        "computadores": """SELECT COUNT(*) AS count FROM computadores 
+                           WHERE atribuido_a LIKE %s 
+                           AND (%s = '' OR so LIKE %s)
+                           AND (%s = '' OR modelo LIKE %s)""",
         "monitores": "SELECT COUNT(*) AS count FROM monitores WHERE atribuido_a LIKE %s",
         "cameras": "SELECT COUNT(*) AS count FROM cameras WHERE atribuido_a LIKE %s",
         "voip": "SELECT COUNT(*) AS count FROM voip WHERE atribuido_a LIKE %s",
@@ -286,11 +295,19 @@ def fetch_inventory():
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-        # Prepare search term with wildcard
+        # Prepare search terms with wildcards
         search_term = f"%{search_query}%"
+        so_term = f"%{so_query}%" if so_query else ""
+        modelo_term = f"%{modelo_query}%" if modelo_query else ""
 
         # Fetch the total count of items for pagination
-        cursor.execute(count_templates[inventory_type], (search_term,))
+        if inventory_type == "computadores":
+            cursor.execute(
+                count_templates[inventory_type],
+                (search_term, so_query, so_term, modelo_query, modelo_term),
+            )
+        else:
+            cursor.execute(count_templates[inventory_type], (search_term,))
         total_items = cursor.fetchone().get('count', 0)
 
         # Calculate pagination details
@@ -298,7 +315,13 @@ def fetch_inventory():
         offset = (current_page - 1) * per_page
 
         # Fetch the inventory data with pagination
-        cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
+        if inventory_type == "computadores":
+            cursor.execute(
+                query_templates[inventory_type],
+                (search_term, so_query, so_term, modelo_query, modelo_term, per_page, offset),
+            )
+        else:
+            cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500

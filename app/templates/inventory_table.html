@@ -92,17 +92,35 @@
         <ul class="pagination">
             {% if current_page > 1 %}
             <li class="page-item">
-                <a class="page-link" href="#" data-page="{{ current_page - 1 }}">Anterior</a>
+                <a class="page-link" href="#" 
+                data-page="{{ current_page - 1 }}" 
+                data-search="{{ request.args.get('search', '') }}" 
+                data-so="{{ request.args.get('so', '') }}" 
+                data-modelo="{{ request.args.get('modelo', '') }}">
+                    Anterior
+                </a>
             </li>
             {% endif %}
             {% for page in range(1, total_pages + 1) %}
             <li class="page-item {% if page == current_page %}active{% endif %}">
-                <a class="page-link" href="#" data-page="{{ page }}">{{ page }}</a>
+                <a class="page-link" href="#" 
+                data-page="{{ page }}" 
+                data-search="{{ request.args.get('search', '') }}" 
+                data-so="{{ request.args.get('so', '') }}" 
+                data-modelo="{{ request.args.get('modelo', '') }}">
+                    {{ page }}
+                </a>
             </li>
             {% endfor %}
             {% if current_page < total_pages %}
             <li class="page-item">
-                <a class="page-link" href="#" data-page="{{ current_page + 1 }}">Próximo</a>
+                <a class="page-link" href="#" 
+                data-page="{{ current_page + 1 }}" 
+                data-search="{{ request.args.get('search', '') }}" 
+                data-so="{{ request.args.get('so', '') }}" 
+                data-modelo="{{ request.args.get('modelo', '') }}">
+                    Próximo
+                </a>
             </li>
             {% endif %}
         </ul>
