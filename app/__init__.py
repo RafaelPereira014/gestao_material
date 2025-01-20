@@ -657,7 +657,7 @@ def edit_equip():
         to_location = request.form.get('toLocation') if request.form.get('toggleCedido') else None
         id_escola = get_school_id_by_name(to_location)
         document = request.files.get('document')
-        observacoes = request.form.get('observacoes', '')  # New field
+        observacoes = request.form.get('observacoes', '')  
         mac_addr = request.form.get('macAddr')
         utilizacao = request.form.get('itemUse')
         
