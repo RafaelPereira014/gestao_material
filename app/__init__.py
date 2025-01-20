@@ -760,7 +760,7 @@ def edit_item(category, item_id):
             connection.close()
     
     # Render the template with the fetched item and category
-    return render_template('edit_item.html', item=item, category=category)
+    return render_template('edit_item.html', item=item, category=category,is_admin=is_admin(session['user_id']))
 
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):

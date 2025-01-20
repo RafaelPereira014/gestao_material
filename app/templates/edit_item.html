@@ -5,79 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Item</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
 </head>
 <body>
-    
-    <div class="container mt-4">
-        <h2>Editar Item - Categoria: {{ category }}</h2>
-        <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
-            <div class="form-group">
-                <label for="atribuido_a">Atribuído a:</label>
-                <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
-            </div>
-            
-            {% if category == 'computadores' %}
-            <div class="form-group">
-                <label for="ad">Nome AD:</label>
-                <input type="text" class="form-control" id="ad" name="ad" value="{{ item.nome_ad}}">
-            </div>
-            <div class="form-group">
-                <label for="modelo">Modelo:</label>
-                <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
-            </div>
-            <div class="form-group">
-                <label for="so">Sistema Operacional (SO):</label>
-                <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
-            </div>
-            <div class="form-group">
-                <label for="so">Sistema Operacional (SO):</label>
-                <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
-            </div>
-            {% elif category == 'monitores' %}
-            <div class="form-group">
-                <label for="marca_modelo">Marca/Modelo:</label>
-                <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo }}">
-            </div>
-            {% elif category == 'cameras' %}
-            <div class="form-group">
-                <label for="resolucao">Marca/Modelo:</label>
-                <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.marca_modelo }}">
-            </div>
-            <div class="form-group">
-                <label for="cod_nit">Cod. NIT:</label>
-                <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.cod_nit }}">
-            </div>
-            
-            {% elif category == 'voip' %}
-            <div class="form-group">
-                <label for="ip">Endereço IP:</label>
-                <input type="text" class="form-control" id="ip" name="ip" value="{{ item.marca_modelo }}">
-            </div>
-            {% elif category == 'headset' %}
-            <div class="form-group">
-                <label for="marca">Marca:</label>
-                <input type="text" class="form-control" id="marca" name="marca" value="{{ item.marca_modelo }}">
-            </div>
-            {% elif category == 'outros' %}
-            <div class="form-group">
-                <label for="descricao">Descrição:</label>
-                <input type="text" class="form-control" id="descricao" name="descricao" value="{{ item.descricao }}">
-            </div>
+    <div id="sidebar">
+        <!-- Sidebar Icon/Logo -->
+        <div class="sidebar-icon">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
+        </div>
+
+        <!-- Navigation Items -->
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/index" title="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            {% if is_admin %}
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="/requisicoes" title="Inventory">
+                        <i class="fas fa-clipboard"></i> Requisições
+                    </a>
+                </li>
             {% endif %}
-    
-            <div class="form-group">
-                <label for="estado">Estado:</label>
-                <select class="form-control" id="estado" name="estado">
-                    <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
-                    <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
-                    <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
-                    <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
-                </select>
-            </div>
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory" title="Inventory">
+                    <i class="fas fa-box"></i> Inventário
+                </a>
+            </li>
+            {% if is_admin %}
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory_nit" title="Inventory">
+                        <i class="fas fa-boxes"></i> Inventário NIT
+                    </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
+                    <i class="fas fa-plus"></i> Adicionar equipamento
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+            </li>
+            {% if is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                        <i class="fas fa-user-plus"></i> Adicionar utilizador
+                    </a>
+                </li>
+
+                
+            {% endif %}
             
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <a href="/inventory_nit" class="btn btn-secondary">Cancelar</a>
-        </form>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
     </div>
+    
+    <div id="main-content">
+        <div class="container">
+            <h2>Editar Item - Categoria: {{ category }}</h2>
+            <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
+                <div class="form-group">
+                    <label for="atribuido_a">Atribuído a:</label>
+                    <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
+                </div>
+                
+                {% if category == 'computadores' %}
+                <div class="form-group">
+                    <label for="ad">Nome AD:</label>
+                    <input type="text" class="form-control" id="ad" name="ad" value="{{ item.nome_ad}}">
+                </div>
+                <div class="form-group">
+                    <label for="modelo">Modelo:</label>
+                    <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
+                </div>
+                <div class="form-group">
+                    <label for="so">Sistema Operacional (SO):</label>
+                    <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
+                </div>
+                <div class="form-group">
+                    <label for="so">Sistema Operacional (SO):</label>
+                    <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
+                </div>
+                {% elif category == 'monitores' %}
+                <div class="form-group">
+                    <label for="marca_modelo">Marca/Modelo:</label>
+                    <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo }}">
+                </div>
+                {% elif category == 'cameras' %}
+                <div class="form-group">
+                    <label for="resolucao">Marca/Modelo:</label>
+                    <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.marca_modelo }}">
+                </div>
+                <div class="form-group">
+                    <label for="cod_nit">Cod. NIT:</label>
+                    <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.cod_nit }}">
+                </div>
+                
+                {% elif category == 'voip' %}
+                <div class="form-group">
+                    <label for="ip">Endereço IP:</label>
+                    <input type="text" class="form-control" id="ip" name="ip" value="{{ item.marca_modelo }}">
+                </div>
+                {% elif category == 'headset' %}
+                <div class="form-group">
+                    <label for="marca">Marca:</label>
+                    <input type="text" class="form-control" id="marca" name="marca" value="{{ item.marca_modelo }}">
+                </div>
+                {% elif category == 'outros' %}
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" class="form-control" id="descricao" name="descricao" value="{{ item.descricao }}">
+                </div>
+                {% endif %}
+        
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select class="form-control" id="estado" name="estado">
+                        <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
+                        <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
+                        <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
+                        <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a href="/inventory_nit" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 </body>
 </html>
