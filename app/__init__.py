@@ -640,6 +640,11 @@ def add_equip():
 
     return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']), user_details=user_details)
 
+@app.route('/adicionar_equipamento_nit')
+def add_equip_nit():
+    
+
+    return render_template('add_equipment_nit.html',is_admin=is_admin(session['user_id']))
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
     if request.method == 'POST':
