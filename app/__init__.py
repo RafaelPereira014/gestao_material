@@ -764,6 +764,8 @@ def edit_item(category, item_id):
         if connection:
             connection.close()
     
+    
+    
     # Render the template with the fetched item and category
     return render_template('edit_item.html', item=item, category=category,is_admin=is_admin(session['user_id']))
 

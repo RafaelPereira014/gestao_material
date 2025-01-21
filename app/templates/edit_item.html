@@ -90,52 +90,119 @@
                 </div>
                 
                 {% if category == 'computadores' %}
-                <div class="form-group">
-                    <label for="ad">Nome AD:</label>
-                    <input type="text" class="form-control" id="ad" name="ad" value="{{ item.nome_ad}}">
-                </div>
-                <div class="form-group">
-                    <label for="modelo">Modelo:</label>
-                    <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
-                </div>
-                <div class="form-group">
-                    <label for="so">Sistema Operacional (SO):</label>
-                    <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
-                </div>
-                <div class="form-group">
-                    <label for="so">Sistema Operacional (SO):</label>
-                    <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
-                </div>
+                        
+                    <div class="form-group">
+                        <label for="nome_ad">Nome AD</label>
+                        <input type="text" class="form-control" id="nome_ad" name="nome_ad" value="{{ item.nome_ad }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <input type="text" class="form-control" id="marca" name="marca" value="{{ item.marca }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="processor">Processador</label>
+                        <input type="text" class="form-control" id="processor" name="processor" value="{{ item.processador }}"> 
+                    </div>
+                    <div class="form-group">
+                        <label for="ram">Memória RAM</label>
+                        <input type="text" class="form-control" id="ram" name="ram" value="{{ item.ram }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="storage">Armazenamento</label>
+                        <input type="text" class="form-control" id="storage" name="storage" value="{{ item.disco }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="no_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="no_serie" name="no_seire" value="{{ item.n_serie}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="cod_nit">Codigo NIT</label>
+                        <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="data_aq">Data aquisição</label>
+                        <input type="date" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="firma">Firma</label>
+                        <input type="text" class="form-control" id="firma" name="firma" value="{{ item.firma }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="so">SO</label>
+                        <input type="text" class="form-control" id="so" name="so" value="{{ item.so }}">
+                    </div>
                 {% elif category == 'monitores' %}
                 <div class="form-group">
-                    <label for="marca_modelo">Marca/Modelo:</label>
+                    <label for="marca_modelo">Marca/Modelo</label>
                     <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo }}">
+                </div>
+                <div class="form-group">
+                    <label for="polegadas">Polegadas</label>
+                    <input type="text" class="form-control" id="polegadas" name="polegadas" value="{{ item.polegadas }}">
+                </div>
+                <div class="form-group">
+                    <label for="cod_nit">Codigo NIT</label>
+                    <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
+                </div>
+                <div class="form-group">
+                    <label for="no_serie">Nº Série</label>
+                    <input type="text" class="form-control" id="no_serie" name="no_serie" value="{{ item.n_serie }}">
+                </div>
+                <div class="form-group">
+                    <label for="data_aq">Data aquisição</label>
+                    <input type="date" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
+                </div>
+                <div class="form-group">
+                    <label for="garantia">Garantia</label>
+                    <input type="text" class="form-control" id="garantia" name="garantia" value="{{ item.garantia }}">
                 </div>
                 {% elif category == 'cameras' %}
                 <div class="form-group">
-                    <label for="resolucao">Marca/Modelo:</label>
-                    <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.marca_modelo }}">
+                    <label for="marca_modelo">Marca/Modelo</label>
+                    <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.so }}">
                 </div>
                 <div class="form-group">
-                    <label for="cod_nit">Cod. NIT:</label>
-                    <input type="text" class="form-control" id="resolucao" name="resolucao" value="{{ item.cod_nit }}">
+                    <label for="cod_nit">Codigo NIT</label>
+                    <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.so }}">
                 </div>
                 
                 {% elif category == 'voip' %}
                 <div class="form-group">
-                    <label for="ip">Endereço IP:</label>
-                    <input type="text" class="form-control" id="ip" name="ip" value="{{ item.marca_modelo }}">
+                    <label for="marca_modelo">Marca/Modelo</label>
+                    <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo}}">
+                </div>
+                <div class="form-group">
+                    <label for="ext">Extensão</label>
+                    <input type="text" class="form-control" id="ext" name="ext" value="{{ item.ext }}">
+                </div>
+                <div class="form-group">
+                    <label for="cod_nit">Codigo NIT</label>
+                    <input type="text" class="form-control" id="cod_nit" name="cod_nit"value="{{ item.cod_nit }}">
+                </div>
+                <div class="form-group">
+                    <label for="no_serie">Nº Série</label>
+                    <input type="text" class="form-control" id="no_serie" name="no_seire" value="{{ item.n_serie }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="headset_cod_nit">HeadSet Codigo NIT</label>
+                    <input type="text" class="form-control" id="headset_cod_nit" name="headset_cod_nit" value="{{ item.headsets_cod_nit }}">
                 </div>
                 {% elif category == 'headset' %}
                 <div class="form-group">
-                    <label for="marca">Marca:</label>
-                    <input type="text" class="form-control" id="marca" name="marca" value="{{ item.marca_modelo }}">
+                    <label for="marca_modelo">Marca/Modelo</label>
+                    <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" value="{{ item.marca_modelo }}">
+                </div>
+                <div class="form-group">
+                    <label for="cod_nit">Codigo NIT</label>
+                    <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
                 </div>
                 {% elif category == 'outros' %}
-                <div class="form-group">
-                    <label for="descricao">Descrição:</label>
-                    <input type="text" class="form-control" id="descricao" name="descricao" value="{{ item.descricao }}">
-                </div>
+                
                 {% endif %}
         
                 <div class="form-group">
@@ -148,7 +215,7 @@
                     </select>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
                 <a href="/inventory_nit" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>

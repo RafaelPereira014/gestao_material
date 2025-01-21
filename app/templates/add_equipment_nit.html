@@ -89,6 +89,7 @@
                     <select class="form-control" id="category" name="category" onchange="toggleCategoryFields()">
                         <option value="" disabled selected>Selecione a categoria</option>
                         <option value="computadores">Computadores</option>
+                        <option value="monitores">Monitores</option>
                         <option value="cameras">Câmeras</option>
                         <option value="voips">VoIPs</option>
                         <option value="headsets">Headsets</option>
@@ -127,7 +128,7 @@
                     </div>
                     <div class="form-group">
                         <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_seire" placeholder="Ex: SN123455">
+                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -145,6 +146,39 @@
                         <label for="so">SO</label>
                         <input type="text" class="form-control" id="so" name="so" placeholder="Ex: Windows 11">
                     </div>
+                </div>
+
+                <!-- Fields for Monitores -->
+                <div id="monitoresFields" class="category-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="atribuido_a">Atribuido a</label>
+                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                    </div>
+                    <div class="form-group">
+                        <label for="marca_modelo">Marca/Modelo</label>
+                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                    </div>
+                    <div class="form-group">
+                        <label for="polegadas">Polegadas</label>
+                        <input type="text" class="form-control" id="polegadas" name="polegadas" placeholder="Ex: 22''">
+                    </div>
+                    <div class="form-group">
+                        <label for="cod_nit">Codigo NIT</label>
+                        <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
+                    </div>
+                    <div class="form-group">
+                        <label for="no_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
+                    </div>
+                    <div class="form-group">
+                        <label for="data_aq">Data aquisição</label>
+                        <input type="date" class="form-control" id="data_aq" name="data_aq" >
+                    </div>
+                    <div class="form-group">
+                        <label for="garantia">Garantia</label>
+                        <input type="text" class="form-control" id="garantia" name="garantia" placeholder="Ex: 3 anos">
+                    </div>
+
                 </div>
 
                 <!-- Fields for Câmeras -->
@@ -183,12 +217,9 @@
                     </div>
                     <div class="form-group">
                         <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_seire" placeholder="Ex: SN123455">
+                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
                     </div>
-                    <div class="form-group">
-                        <label for="powerSource">Fonte de Alimentação</label>
-                        <input type="text" class="form-control" id="powerSource" name="powerSource" placeholder="Ex: PoE">
-                    </div>
+                    
                     <div class="form-group">
                         <label for="headset_cod_nit">HeadSet Codigo NIT</label>
                         <input type="text" class="form-control" id="headset_cod_nit" name="headset_cod_nit" placeholder="Ex: 123">
