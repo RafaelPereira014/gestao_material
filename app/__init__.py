@@ -640,11 +640,39 @@ def add_equip():
 
     return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']), user_details=user_details)
 
-@app.route('/adicionar_equipamento_nit')
+@app.route('/adicionar_equipamento_nit', methods=['GET', 'POST'])
 def add_equip_nit():
-    
+    category = request.args.get('category')  # Get the category from the URL query parameter
 
-    return render_template('add_equipment_nit.html',is_admin=is_admin(session['user_id']))
+    if request.method == 'POST':
+        if not category:
+            return "Categoria não selecionada", 400
+
+        form_data = request.form.to_dict()
+
+        try:
+            # Connect to the database
+            connection = connect_to_database()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+            # Prepare the SQL query based on the category
+            fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
+            query = f"INSERT INTO {category} SET {fields}"
+
+            # Execute the query with form values
+            cursor.execute(query, list(form_data.values()))
+            connection.commit()
+        except pymysql.MySQLError as e:
+            return f"Erro ao atualizar a base de dados: {str(e)}", 500
+        finally:
+            if connection:
+                connection.close()
+
+        # Redirect back to the form with the selected category
+        return redirect(url_for('add_equip_nit', category=category))
+
+    # Render the equipment form for the selected category
+    return render_template('add_equipment_nit.html', category=category)
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
     if request.method == 'POST':

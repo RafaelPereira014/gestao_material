@@ -81,12 +81,12 @@
     <!-- Main content -->
     <div id="main-content">
         <div class="container equipment-form">
+
             <h1>Adicionar Equipamento</h1>
-            <form enctype="multipart/form-data" action="{{ url_for('add_equip') }}" method="post">
-                <!-- Category Selection -->
+            <form id="categoryForm" action="{{ url_for('add_equip_nit') }}" method="get">
                 <div class="form-group">
-                    <label for="category">Categoria</label>
-                    <select class="form-control" id="category" name="category" onchange="toggleCategoryFields()">
+                    <label for="category">Selecione a Categoria</label>
+                    <select class="form-control" id="category" name="category" required>
                         <option value="" disabled selected>Selecione a categoria</option>
                         <option value="computadores">Computadores</option>
                         <option value="monitores">Monitores</option>
@@ -95,7 +95,10 @@
                         <option value="headsets">Headsets</option>
                     </select>
                 </div>
+            </form>
+            <h3>Adicionar equipamento para a categoria: {{ category }}</h3>
 
+            <form action="{{ url_for('add_equip_nit', category=category) }}" method="post">
                 <!-- Fields for Computadores -->
                 <div id="computadoresFields" class="category-fields" style="display: none;">
                     <div class="form-group">
@@ -115,20 +118,20 @@
                             <label for="modelo">Modelo</label>
                             <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ex: AS123">
                         </div>
-                        <label for="processor">Processador</label>
-                        <input type="text" class="form-control" id="processor" name="processor" placeholder="Ex: Intel i7">
+                        <label for="processador">Processador</label>
+                        <input type="text" class="form-control" id="processador" name="processador" placeholder="Ex: Intel i7">
                     </div>
                     <div class="form-group">
                         <label for="ram">Memória RAM</label>
                         <input type="text" class="form-control" id="ram" name="ram" placeholder="Ex: 16GB">
                     </div>
                     <div class="form-group">
-                        <label for="storage">Armazenamento</label>
-                        <input type="text" class="form-control" id="storage" name="storage" placeholder="Ex: 512GB SSD">
+                        <label for="disco">Armazenamento</label>
+                        <input type="text" class="form-control" id="disco" name="disco" placeholder="Ex: 512GB SSD">
                     </div>
                     <div class="form-group">
-                        <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
+                        <label for="n_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -250,21 +253,34 @@
             </form>
         </div>
     </div>
+    <script>
+        // Automatically submit the form when a category is selected
+        document.getElementById("category").addEventListener("change", function () {
+            document.getElementById("categoryForm").submit();
+        });
+    </script>
 
     <script>
+        // Function to show/hide category-specific fields
         function toggleCategoryFields() {
             const selectedCategory = document.getElementById("category").value;
             const allFields = document.querySelectorAll(".category-fields");
-
+    
             // Hide all category-specific fields
             allFields.forEach(field => field.style.display = "none");
-
+    
             // Show the selected category's fields
             if (selectedCategory) {
                 const fieldsToShow = document.getElementById(`${selectedCategory}Fields`);
                 if (fieldsToShow) fieldsToShow.style.display = "block";
             }
         }
+    
+        // Event listener for the category dropdown
+        document.getElementById("category").addEventListener("change", toggleCategoryFields);
+    
+        // Call the function on page load to initialize the correct display
+        document.addEventListener("DOMContentLoaded", toggleCategoryFields);
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
