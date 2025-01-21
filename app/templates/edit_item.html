@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Item</title>
+    <title>Editar Equipamento</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
 
@@ -82,7 +82,7 @@
     
     <div id="main-content">
         <div class="container">
-            <h2>Editar Item - Categoria: {{ category }}</h2>
+            <h2>Editar equipamento - Categoria: {{ category }}</h2>
             <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
                 <div class="form-group">
                     <label for="atribuido_a">Atribuído a:</label>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="date" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
+                        <input type="text" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
                     </div>
                     <div class="form-group">
                         <label for="firma">Firma</label>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="form-group">
                     <label for="data_aq">Data aquisição</label>
-                    <input type="date" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
+                    <input type="text" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
                 </div>
                 <div class="form-group">
                     <label for="garantia">Garantia</label>
