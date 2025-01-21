@@ -83,8 +83,7 @@
     <div id="main-content">
         <div class="container">
             <h2>Editar equipamento - Categoria: {{ category }}</h2>
-            <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST">
-                <div class="form-group">
+            <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST" onsubmit="showSuccessModal(event)">                <div class="form-group">
                     <label for="atribuido_a">Atribuído a:</label>
                     <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
                 </div>
@@ -104,20 +103,20 @@
                         <input type="text" class="form-control" id="modelo" name="modelo" value="{{ item.modelo }}">
                     </div>
                     <div class="form-group">
-                        <label for="processor">Processador</label>
-                        <input type="text" class="form-control" id="processor" name="processor" value="{{ item.processador }}"> 
+                        <label for="processador">Processador</label>
+                        <input type="text" class="form-control" id="processador" name="processador" value="{{ item.processador }}"> 
                     </div>
                     <div class="form-group">
                         <label for="ram">Memória RAM</label>
                         <input type="text" class="form-control" id="ram" name="ram" value="{{ item.ram }}">
                     </div>
                     <div class="form-group">
-                        <label for="storage">Armazenamento</label>
-                        <input type="text" class="form-control" id="storage" name="storage" value="{{ item.disco }}">
+                        <label for="disco">Armazenamento</label>
+                        <input type="text" class="form-control" id="disco" name="disco" value="{{ item.disco }}">
                     </div>
                     <div class="form-group">
-                        <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_seire" value="{{ item.n_serie}}">
+                        <label for="n_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie" value="{{ item.n_serie}}">
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -149,8 +148,8 @@
                     <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
                 </div>
                 <div class="form-group">
-                    <label for="no_serie">Nº Série</label>
-                    <input type="text" class="form-control" id="no_serie" name="no_serie" value="{{ item.n_serie }}">
+                    <label for="n_serie">Nº Série</label>
+                    <input type="text" class="form-control" id="n_serie" name="n_serie" value="{{ item.n_serie }}">
                 </div>
                 <div class="form-group">
                     <label for="data_aq">Data aquisição</label>
@@ -184,8 +183,8 @@
                     <input type="text" class="form-control" id="cod_nit" name="cod_nit"value="{{ item.cod_nit }}">
                 </div>
                 <div class="form-group">
-                    <label for="no_serie">Nº Série</label>
-                    <input type="text" class="form-control" id="no_serie" name="no_seire" value="{{ item.n_serie }}">
+                    <label for="n_serie">Nº Série</label>
+                    <input type="text" class="form-control" id="n_serie" name="n_seire" value="{{ item.n_serie }}">
                 </div>
                 
                 <div class="form-group">
@@ -220,9 +219,45 @@
             </form>
         </div>
     </div>
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Sucesso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    O equipamento foi editado com sucesso!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="redirectButton">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+    <script>
+        function showSuccessModal(event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            // Show the success modal
+            $('#successModal').modal('show');
+    
+            // Redirect after 3 seconds or when the user clicks the OK button
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 1500);
+    
+            document.getElementById('redirectButton').addEventListener('click', function() {
+                document.querySelector('form').submit();
+            });
+        }
+    </script>
 </body>
 </html>

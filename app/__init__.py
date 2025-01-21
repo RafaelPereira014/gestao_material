@@ -734,40 +734,63 @@ def edit_equip():
         cedido_a=cedido_a
     )
 
-@app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET'])
+@app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET', 'POST'])
 def edit_item(category, item_id):
     # Ensure the category is valid to prevent SQL injection
     valid_categories = ['computadores', 'monitores', 'cameras', 'voip', 'headset', 'outros']
     
     if category not in valid_categories:
         return "Categoria inválida", 400
-    
+
+    if request.method == 'POST':
+        # Get form data
+        form_data = request.form.to_dict()
+
+        try:
+            # Connect to the database
+            connection = connect_to_database()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            
+            # Prepare the SQL query based on the category
+            # Dynamically generate the SQL UPDATE query based on the form data
+            fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
+            query = f"UPDATE {category} SET {fields} WHERE id = %s"
+            
+            # Execute the query with form values and item_id
+            values = list(form_data.values()) + [item_id]
+            cursor.execute(query, values)
+            connection.commit()
+
+        except pymysql.MySQLError as e:
+            return f"Erro ao atualizar a base de dados: {str(e)}", 500
+        finally:
+            if connection:
+                connection.close()
+
+        # Redirect to another page or render success message
+        return redirect(url_for('inventory_nit'))  # Replace with your desired route
+
+    # For GET request, fetch the item data to display in the form
     try:
-        # Connect to the database
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
         
-        # Prepare the SQL query based on the category
+        # Fetch item details
         query = f"SELECT * FROM {category} WHERE id = %s"
-        
-        # Execute the query with item_id
         cursor.execute(query, (item_id,))
         item = cursor.fetchone()
-        
-        # If no item is found, return an error
+
         if not item:
-            return "Item não encontrado", 404
-        
+            return "Equipamento não encontrado", 404
+
     except pymysql.MySQLError as e:
-        return f"Erro ao consultar o banco de dados: {str(e)}", 500
+        return f"Erro ao consultar a base de dados: {str(e)}", 500
     finally:
         if connection:
             connection.close()
-    
-    
-    
-    # Render the template with the fetched item and category
-    return render_template('edit_item.html', item=item, category=category,is_admin=is_admin(session['user_id']))
+
+    # Render the template for editing
+    return render_template('edit_item.html', item=item, category=category, is_admin=is_admin(session['user_id']))
 
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):
