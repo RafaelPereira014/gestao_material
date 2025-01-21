@@ -83,7 +83,8 @@
     <div id="main-content">
         <div class="container">
             <h2>Editar equipamento - Categoria: {{ category }}</h2>
-            <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST" onsubmit="showSuccessModal(event)">                <div class="form-group">
+            <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST" onsubmit="showSuccessModal(event)">               
+                <div class="form-group">
                     <label for="atribuido_a">Atribuído a:</label>
                     <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" value="{{ item.atribuido_a }}">
                 </div>
@@ -224,7 +225,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Sucesso</h5>
+                    <h5 class="modal-title" id="successModalLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
