@@ -643,23 +643,40 @@ def add_equip():
 
 @app.route('/adicionar_equipamento_nit/<category>', methods=['GET', 'POST'])
 def add_equipment(category=None):
+    if not category:
+        return "Categoria não selecionada", 400  # If no category is provided, return error
+    
+    # List of allowed categories to prevent SQL injection
+    allowed_categories = ['-','computadores', 'monitores', 'cameras', 'voips', 'headsets']
+    
+    if category not in allowed_categories:
+        return "Categoria inválida", 400  # If the category is not in the allowed list, return error
+
     if request.method == 'POST':
-        if not category:
-            return "Categoria não selecionada", 400
-
-        form_data = request.form.to_dict()
-
+        form_data = request.form.to_dict()  # Get all form data as a dictionary
+        print(form_data)  # Log form data for debugging
+        
         try:
             # Connect to the database
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-            # Prepare the SQL query based on the category
-            fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
+            # Step 1: Get the list of columns for the selected category table
+            cursor.execute(f"DESCRIBE {category}")
+            table_columns = [column['Field'] for column in cursor.fetchall()]
+
+            # Step 2: Filter the form data to include only the fields that exist in the table
+            filtered_form_data = {key: value for key, value in form_data.items() if key in table_columns}
+
+            if not filtered_form_data:
+                return "No valid data to insert.", 400  # Handle the case where no valid data is present
+
+            # Step 3: Prepare the SQL query dynamically based on filtered form data
+            fields = ', '.join([f"{key} = %s" for key in filtered_form_data.keys()])
             query = f"INSERT INTO {category} SET {fields}"
 
-            # Execute the query with form values
-            cursor.execute(query, list(form_data.values()))
+            # Step 4: Execute the query with the filtered form values
+            cursor.execute(query, list(filtered_form_data.values()))
             connection.commit()
         except pymysql.MySQLError as e:
             return f"Erro ao atualizar a base de dados: {str(e)}", 500
@@ -667,10 +684,11 @@ def add_equipment(category=None):
             if connection:
                 connection.close()
 
-        # Redirect back to the form with the selected category
-        return redirect(url_for('add_equipment', category=category),is_admin=is_admin(session['user_id']))
+        # Redirect back to the form with the selected category, passing 'is_admin' in session
+        return redirect(url_for('add_equipment', category=category))
 
-    return render_template('add_equipment_nit.html', category=category,is_admin=is_admin(session['user_id']))
+    # Render the template with the 'category' and 'is_admin' session data
+    return render_template('add_equipment_nit.html', category=category, is_admin=is_admin(session['user_id']))
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
