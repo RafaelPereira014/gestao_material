@@ -640,10 +640,13 @@ def add_equip():
 
     return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']), user_details=user_details)
 
-@app.route('/adicionar_equipamento_nit', methods=['GET', 'POST'])
-def add_equip_nit():
-    category = request.args.get('category')  # Get the category from the URL query parameter
+@app.route('/adicionar_equipamento_nit', methods=['GET'])
+def select_category():
+    # Render the category selection form
+    return render_template('select_category.html')
 
+@app.route('/adicionar_equipamento_nit/<category>', methods=['GET', 'POST'])
+def add_equipment(category):
     if request.method == 'POST':
         if not category:
             return "Categoria não selecionada", 400
@@ -669,10 +672,11 @@ def add_equip_nit():
                 connection.close()
 
         # Redirect back to the form with the selected category
-        return redirect(url_for('add_equip_nit', category=category))
+        return redirect(url_for('select_category'))
 
     # Render the equipment form for the selected category
     return render_template('add_equipment_nit.html', category=category)
+
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
     if request.method == 'POST':
