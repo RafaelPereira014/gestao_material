@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_equipamento_nit" title="Add Equipment">
+                    <a class="nav-link" href="/adicionar_equipamento_nit/-" title="Add Equipment">
                         <i class="fas fa-plus"></i> Adicionar equipamento NIT
                     </a>
                 </li>
@@ -83,23 +83,22 @@
     <div id="main-content">
         <div class="container equipment-form">
 
-            <h1>Adicionar Equipamento</h1>
-            <form id="categoryForm" action="{{ url_for('add_equip_nit') }}" method="get">
+            <form id="categoryForm">
                 <div class="form-group">
                     <label for="category">Selecione a Categoria</label>
                     <select class="form-control" id="category" name="category" required>
                         <option value="" disabled selected>Selecione a categoria</option>
-                        <option value="computadores">Computadores</option>
-                        <option value="monitores">Monitores</option>
-                        <option value="cameras">Câmeras</option>
-                        <option value="voips">VoIPs</option>
-                        <option value="headsets">Headsets</option>
+                        <option value="computadores" {% if category == 'computadores' %}selected{% endif %}>Computadores</option>
+                        <option value="monitores" {% if category == 'monitores' %}selected{% endif %}>Monitores</option>
+                        <option value="cameras" {% if category == 'cameras' %}selected{% endif %}>Câmeras</option>
+                        <option value="voips" {% if category == 'voips' %}selected{% endif %}>VoIPs</option>
+                        <option value="headsets" {% if category == 'headsets' %}selected{% endif %}>Headsets</option>
                     </select>
                 </div>
             </form>
             <h3>Adicionar equipamento para a categoria: {{ category }}</h3>
 
-            <form action="{{ url_for('add_equip_nit', category=category) }}" method="post">
+            <form action="{{ url_for('add_equipment', category=category) }}" method="post">
                 <!-- Fields for Computadores -->
                 <div id="computadoresFields" class="category-fields" style="display: none;">
                     <div class="form-group">
@@ -262,9 +261,19 @@
     </script>
 
     <script>
+        // Automatically submit the form when a category is selected
+        document.getElementById("category").addEventListener("change", function () {
+            const selectedCategory = this.value;
+            if (selectedCategory) {
+                // Redirect to the URL with the selected category
+                const url = "{{ url_for('add_equipment', category='') }}" + selectedCategory;
+                window.location.href = url;
+            }
+        });
+    
         // Function to show/hide category-specific fields
         function toggleCategoryFields() {
-            const selectedCategory = document.getElementById("category").value;
+            const selectedCategory = "{{ category }}"; // Use the category passed from the backend
             const allFields = document.querySelectorAll(".category-fields");
     
             // Hide all category-specific fields
@@ -277,12 +286,10 @@
             }
         }
     
-        // Event listener for the category dropdown
-        document.getElementById("category").addEventListener("change", toggleCategoryFields);
-    
         // Call the function on page load to initialize the correct display
         document.addEventListener("DOMContentLoaded", toggleCategoryFields);
     </script>
+    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
