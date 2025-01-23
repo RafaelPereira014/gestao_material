@@ -88,6 +88,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Pedido#</th>
                     <th>Data pedido</th>
                     <th>Ticket ID</th>
                     <th>Nome</th>
@@ -100,8 +101,13 @@
             <tbody id="inventoryTable">
                 {% for requisicao in all_requisicoes %}
                     <tr>
+                        <td>{{requisicao.id}}</td>
                         <td>{{ requisicao.data_criacao }}</td>
-                        <td>{{ requisicao.ticket_id }}</th>
+                        <td>
+                            <a href="https://helpdesk.edu.azores.gov.pt/ticket_details/{{ requisicao.ticket_id }}" target="_blank">
+                                {{ requisicao.ticket_id }}
+                            </a>
+                        </td>
                         <td>{{ requisicao.nome }}</td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.quantidade }}</td>
@@ -149,27 +155,35 @@
         <table class="table table-striped2">
             <thead>
                 <tr>
-                    <th>Data pedido</th>
+                    <th>Pedido#</th>
+                    <th>Data Inicio</th>
                     <th>Ticket ID</th>
                     <th>Nome</th>
                     <th>Tipo equipamento</th>
-                    <th>Quantidade</th>
-                    <th>Equipamento</th>
+                    <th>Data Fim</th>
+                    
                 </tr>
             </thead>
 
             <tbody id="inventoryTable2">
                 {% for requisicao in all_requisicoes_ativas %}
                     <tr>
-                        <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{requisicao.id}}</th>
+                        <td>{{ requisicao.data_inicio }}</td>
                         <td>
                             <a href="https://helpdesk.edu.azores.gov.pt/ticket_details/{{ requisicao.ticket_id }}" target="_blank">
                                 {{ requisicao.ticket_id }}
                             </a>
                         </td>
-                        <td>{{ requisicao.nome }}</td>
+                        <td>
+                            <a href="{{ url_for('user_page', user_name=requisicao.nome) }}">
+                                {{ requisicao.nome }}
+                            </a>
+                        </td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
-                        <td>{{ requisicao.quantidade }}</td>
+                        <td>{{ requisicao.data_fim }}</td>
+
+
                         
                         
                     </tr>

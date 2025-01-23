@@ -383,6 +383,7 @@ def user_page(user_name):
 @app.route('/assign-equipment', methods=['POST'])
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']
+    print(requisicao_id)
     equipamento_id = request.form['equipamento_id']
     
     # Ensure that requisicao_id and equipamento_id are integers
@@ -404,7 +405,7 @@ def assign_equipment():
     nome_requisicao = requisicao[1]  # Assuming the name is at index 1, make sure this is correct.
     
     # Update equipment attributes and requisition state
-    update_equipment_atributo_a(requisicao[0],nome_requisicao, equipamento_id)
+    update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
     update_estado_requisicao(requisicao_id, 'ativa')
     
     return jsonify({"status": "success"}), 200
