@@ -142,12 +142,51 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeModalLabel">Confirmação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza de que deseja remover este equipamento? Esta ação é irreversivel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmRemove">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const removeModal = document.getElementById('removeModal');
+            const confirmRemoveButton = document.getElementById('confirmRemove');
+            let targetUrl = '';
+        
+            // Set up the modal with the correct details
+            $('#removeModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget); // Button that triggered the modal
+                const equipmentId = button.data('id');
+                const category = button.data('category');
+                
+                // Build the URL dynamically
+                targetUrl = `/remove_equipment/${category}/${equipmentId}`;
+            });
+        
+            // Handle the confirmation button click
+            confirmRemoveButton.addEventListener('click', () => {
+                window.location.href = targetUrl; // Redirect to the removal route
+            });
+        });
         function fetchInventory() {
             const inventoryType = document.getElementById("inventoryType").value;
             const searchQuery = document.getElementById("searchInput").value.trim();
