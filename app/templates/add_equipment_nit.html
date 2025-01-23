@@ -99,6 +99,7 @@
             <h3>Adicionar equipamento para a categoria: {{ category }}</h3>
 
             <form action="{{ url_for('add_equipment', category=category) }}" method="post">
+                
                 <!-- Fields for Computadores -->
                 <div id="computadoresFields" class="category-fields" style="display: none;">
                     <div class="form-group">
@@ -307,6 +308,22 @@
         {% if success %}
             $('#successModal').modal('show');
         {% endif %}
+    </script>
+    <script>
+        // Function to enable only relevant fields before submitting the form
+        document.querySelector("form[action]").addEventListener("submit", function (e) {
+            const selectedCategory = "{{ category }}"; // Backend-selected category
+            const allFields = document.querySelectorAll(".category-fields input, .category-fields select");
+    
+            // Disable all fields by default
+            allFields.forEach(field => field.disabled = true);
+    
+            // Enable only the fields related to the selected category
+            if (selectedCategory) {
+                const activeFields = document.querySelectorAll(`#${selectedCategory}Fields input, #${selectedCategory}Fields select`);
+                activeFields.forEach(field => field.disabled = false);
+            }
+        });
     </script>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
