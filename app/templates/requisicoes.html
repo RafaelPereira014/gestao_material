@@ -161,6 +161,7 @@
                     <th>Nome</th>
                     <th>Tipo equipamento</th>
                     <th>Data Fim</th>
+                    <th>Ações</th>
                     
                 </tr>
             </thead>
@@ -182,6 +183,17 @@
                         </td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>{{ requisicao.data_fim }}</td>
+                        <td>
+                            <!-- Close Requisition Button -->
+                            <button 
+                                class="btn btn-danger btn-sm" 
+                                data-toggle="modal" 
+                                data-target="#closeRequisitionModal" 
+                                data-requisicao-id="{{ requisicao.id }}" 
+                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}">
+                                Encerrar
+                            </button>
+                        </td>
 
 
                         
@@ -195,6 +207,24 @@
             </tbody>
         </table>
         <!-- Pagination Controls -->
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="closeRequisitionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Confirmar Encerramento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza de que deseja encerrar esta requisição?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmCloseRequisition">Encerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>    
@@ -236,5 +266,39 @@
             });
         }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("closeRequisitionModal");
+            let requisicaoId = null;
+        
+            // When the modal is shown, set requisicaoId from the button's data attribute
+            $(modal).on("show.bs.modal", function (event) {
+                const button = $(event.relatedTarget); // Bootstrap 4 compatible
+                requisicaoId = button.data("requisicao-id");
+            });
+        
+            // Handle the "Encerrar" button click inside the modal
+            document.getElementById("confirmCloseRequisition").addEventListener("click", function () {
+                if (requisicaoId) {
+                    fetch(`/close_requisition/${requisicaoId}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Reload the page on success
+                        } else {
+                            alert("Falha ao encerrar a requisição.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro ao encerrar a requisição:", error);
+                    });
+                }
+            });
+        });
+        </script>
 </body>
 </html>

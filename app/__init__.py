@@ -359,6 +359,15 @@ def requisicoes():
                            all_requisicoes=all_requisicoes, 
                            available_equipments=available_equipments,
                            all_requisicoes_ativas=all_requisicoes_ativas)
+
+@app.route('/close_requisition/<int:requisicao_id>', methods=['POST'])
+def close_requisition(requisicao_id):
+    # Implement the logic to close the requisition using the provided ID
+    try:
+        update_equipment_from_requisicao(requisicao_id)
+        return jsonify({"message": "Requisição encerrada com sucesso."}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
 @app.route('/user_page/<string:user_name>')
 def user_page(user_name):
@@ -383,7 +392,6 @@ def user_page(user_name):
 @app.route('/assign-equipment', methods=['POST'])
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']
-    print(requisicao_id)
     equipamento_id = request.form['equipamento_id']
     
     # Ensure that requisicao_id and equipamento_id are integers
