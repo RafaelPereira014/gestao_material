@@ -364,8 +364,8 @@ def requisicoes():
 def close_requisition(requisicao_id):
     # Implement the logic to close the requisition using the provided ID
     try:
-        update_equipment_from_requisicao(requisicao_id)
         update_estado_requisicao(requisicao_id,'Resolvido')
+        update_equipment_from_requisicao(requisicao_id)
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
