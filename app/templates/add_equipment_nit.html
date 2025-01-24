@@ -91,8 +91,8 @@
                         <option value="computadores" {% if category == 'computadores' %}selected{% endif %}>Computadores</option>
                         <option value="monitores" {% if category == 'monitores' %}selected{% endif %}>Monitores</option>
                         <option value="cameras" {% if category == 'cameras' %}selected{% endif %}>Câmeras</option>
-                        <option value="voips" {% if category == 'voips' %}selected{% endif %}>VoIPs</option>
-                        <option value="headsets" {% if category == 'headsets' %}selected{% endif %}>Headsets</option>
+                        <option value="voip" {% if category == 'voip' %}selected{% endif %}>VoIPs</option>
+                        <option value="headset" {% if category == 'headset' %}selected{% endif %}>Headsets</option>
                     </select>
                 </div>
             </form>
@@ -202,7 +202,7 @@
                 </div>
 
                 <!-- Fields for VoIPs -->
-                <div id="voipsFields" class="category-fields" style="display: none;">
+                <div id="voipFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
@@ -232,7 +232,7 @@
                 </div>
 
                 <!-- Fields for Headsets -->
-                <div id="headsetsFields" class="category-fields" style="display: none;">
+                <div id="headsetFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">

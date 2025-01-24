@@ -648,14 +648,13 @@ def add_equipment(category=None):
         return "Categoria não selecionada", 400  # If no category is provided, return error
     
     # List of allowed categories to prevent SQL injection
-    allowed_categories = ['-','computadores', 'monitores', 'cameras', 'voips', 'headsets']
+    allowed_categories = ['-','computadores', 'monitores', 'cameras', 'voip', 'headset']
     
     if category not in allowed_categories:
         return "Categoria inválida", 400  # If the category is not in the allowed list, return error
 
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
-        print(form_data)  # Log form data for debugging
         
         try:
             # Connect to the database
@@ -668,6 +667,13 @@ def add_equipment(category=None):
 
             # Step 2: Filter the form data to include only the fields that exist in the table
             filtered_form_data = {key: value for key, value in form_data.items() if key in table_columns}
+
+            if 'atribuido_a' in filtered_form_data:
+                # Set 'estado' based on the value of 'atribuido_a'
+                if not filtered_form_data['atribuido_a'].strip():  # Check if 'atribuido_a' is empty or whitespace
+                    filtered_form_data['estado'] = 'disponivel'
+                else:
+                    filtered_form_data['estado'] = 'em uso'
 
             if not filtered_form_data:
                 return "No valid data to insert.", 400  # Handle the case where no valid data is present
