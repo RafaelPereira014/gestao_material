@@ -273,32 +273,33 @@ def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
 
     # Debugging: Print requisicao and tipo_equip
     print(f"Requisicao: {requisicao}, Tipo Equip: {tipo_equip}")
+    print(requisicao_id)
     
     # Conditional update based on the tipo_equip value
     if tipo_equip == 'camera':
         cursor.execute(
             "UPDATE cameras SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
-            (nome_requisicao, equipamento_id,requisicao_id)
+            (nome_requisicao, requisicao_id,equipamento_id)
         )
     elif tipo_equip == 'computador':
         cursor.execute(
             "UPDATE computadores SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
-            (nome_requisicao, equipamento_id,requisicao_id)
+            (nome_requisicao, requisicao_id,equipamento_id)
         )
     elif tipo_equip == 'monitor':
         cursor.execute(
             "UPDATE monitores SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
-            (nome_requisicao, equipamento_id,requisicao_id)
+            (nome_requisicao, requisicao_id,equipamento_id)
         )
     elif tipo_equip == 'headset':
         cursor.execute(
-            "UPDATE headsets SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
-            (nome_requisicao, equipamento_id,requisicao_id)
+            "UPDATE headset SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
+            (nome_requisicao, requisicao_id,equipamento_id)
         )
     elif tipo_equip == 'voip':
         cursor.execute(
-            "UPDATE voips SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
-            (nome_requisicao, equipamento_id,requisicao_id)
+            "UPDATE voip SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
+            (nome_requisicao, requisicao_id,equipamento_id)
         )
     else:
         print("Tipo de equipamento não encontrado ou inválido")
