@@ -311,7 +311,7 @@ def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
 
 def update_equipment_from_requisicao(requisicao_id):
     connection = connect_to_database()
-    cursor = connection.cursor()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
 
     # Get requisicao details
     requisicao = get_requisicao_by_id(requisicao_id)  # Function to fetch requisicao details
