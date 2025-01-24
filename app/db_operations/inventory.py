@@ -248,7 +248,7 @@ def get_monitores():
 
 def get_requisicao_by_id(requisicao_id):
     connection = connect_to_database()
-    cursor = connection.cursor()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
     cursor.execute("SELECT * FROM requisicoes WHERE id = %s", (requisicao_id,))
     
     # Fetch a single result (if exists)
@@ -333,19 +333,17 @@ def update_equipment_from_requisicao(requisicao_id):
         if equipamento_id:
         # Update the equipment table to reset its state
             cursor.execute(
-                "UPDATE cameras SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
+                "UPDATE cameras SET atribuido_a = 'NIT webcams', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
             
-           
-        
     elif tipo_equip == 'computador':
         cursor.execute("SELECT id FROM computadores WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
         equipamento_id = equipamento[0] if equipamento else None
         if equipamento_id:
             cursor.execute(
-                "UPDATE computadores SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
+                "UPDATE computadores SET atribuido_a = 'NIT portateis', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
            
@@ -355,7 +353,7 @@ def update_equipment_from_requisicao(requisicao_id):
         equipamento_id = equipamento[0] if equipamento else None
         if equipamento_id:
             cursor.execute(
-                "UPDATE monitores SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
+                "UPDATE monitores SET atribuido_a = 'NIT monitores', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
             
@@ -365,7 +363,7 @@ def update_equipment_from_requisicao(requisicao_id):
         equipamento_id = equipamento[0] if equipamento else None
         if equipamento_id:
             cursor.execute(
-                "UPDATE headset SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
+                "UPDATE headset SET atribuido_a = 'NIT headset', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
             
@@ -375,7 +373,7 @@ def update_equipment_from_requisicao(requisicao_id):
         equipamento_id = equipamento[0] if equipamento else None
         if equipamento_id:
             cursor.execute(
-                "UPDATE voip SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
+                "UPDATE voip SET atribuido_a = 'NIT voip', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
            
