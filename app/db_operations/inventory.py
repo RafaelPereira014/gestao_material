@@ -337,11 +337,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 (equipamento_id,)
             )
             
-            # Update the requisicoes table to mark the requisition as resolved
-            cursor.execute(
-                "UPDATE requisicoes SET estado='Resolvido' WHERE id = %s",
-                (requisicao_id,)
-            )
+           
         
     elif tipo_equip == 'computador':
         cursor.execute("SELECT id FROM computadores WHERE id_requisicao=%s", (requisicao_id,))
@@ -352,11 +348,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE computadores SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
-            # Update the requisicoes table to mark the requisition as resolved
-            cursor.execute(
-                "UPDATE requisicoes SET estado='Resolvido' WHERE id = %s",
-                (requisicao_id,)
-            )
+           
     elif tipo_equip == 'monitor':
         cursor.execute("SELECT id FROM monitores WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
@@ -366,11 +358,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE monitores SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
-            # Update the requisicoes table to mark the requisition as resolved
-            cursor.execute(
-                "UPDATE requisicoes SET estado='Resolvido' WHERE id = %s",
-                (requisicao_id,)
-            )
+            
     elif tipo_equip == 'headset':
         cursor.execute("SELECT id FROM headset WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
@@ -380,11 +368,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE headset SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
-            # Update the requisicoes table to mark the requisition as resolved
-            cursor.execute(
-                "UPDATE requisicoes SET estado='Resolvido' WHERE id = %s",
-                (requisicao_id,)
-            )
+            
     elif tipo_equip == 'voip':
         cursor.execute("SELECT id FROM voip WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
@@ -394,11 +378,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE voip SET atribuido_a = '', requisitado='0', estado='Disponivel', id_requisicao='' WHERE id = %s",
                 (equipamento_id,)
             )
-            # Update the requisicoes table to mark the requisition as resolved
-            cursor.execute(
-                "UPDATE requisicoes SET estado='Resolvido' WHERE id = %s",
-                (requisicao_id,)
-            )
+           
     else:
         print("Tipo de equipamento não encontrado ou inválido")
 
