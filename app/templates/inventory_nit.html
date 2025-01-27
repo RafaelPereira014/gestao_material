@@ -101,40 +101,194 @@
                 </select>
             </div>
 
-            <!-- Search fields -->
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Filtros de Pesquisa</h5>
+                    <button class="btn btn-primary btn-sm" id="toggleFiltersButton">Mostrar Filtros</button>
+                </div>
+                <div class="card-body" id="filtersSection" style="display: none;">
+                    <!-- General Search -->
+                    <div class="form-group">
+                        <label for="searchInput">Pesquisar "Atribuído a":</label>
+                        <input type="text" class="form-control custom-input" id="searchInput" placeholder="Digite o nome">
+                    </div>
             
-                <div class="form-group">
-                    <label for="searchInput">Pesquisar "Atribuído a":</label>
-                    <input type="text" class="form-control custom-input" id="searchInput" placeholder="Digite o nome">
+                    <!-- Additional Filters for Computadores -->
+                    <div id="computadoresFields" style="display: none;">
+                        <h6 class="mt-3">Filtros Avançados - Computadores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="marca_modelo">Marca/Modelo:</label>
+                                    <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codNit">Pesquisar "CodNIT":</label>
+                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dataAq">Data de Aquisição:</label>
+                                    <input type="text" class="form-control custom-input" id="dataAq" placeholder="Digite o ano de aquisição">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado:</label>
+                                    <select class="form-control custom-select" id="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Disponivel">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutencao">Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="monitoresFields" style="display: none;">
+                        <h6 class="mt-3">Filtros Avançados - monitores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="marca_modelo">Marca/Modelo:</label>
+                                    <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codNit">Pesquisar "CodNIT":</label>
+                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dataAq">Data de Aquisição:</label>
+                                    <input type="text" class="form-control custom-input" id="dataAq" placeholder="Digite o ano de aquisição">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado:</label>
+                                    <select class="form-control custom-select" id="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Disponivel">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutencao">Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="camerasFields" style="display: none;">
+                        <h6 class="mt-3">Filtros Avançados - Cameras</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="marca_modelo">Marca/Modelo:</label>
+                                    <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codNit">Pesquisar "CodNIT":</label>
+                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado:</label>
+                                    <select class="form-control custom-select" id="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Disponivel">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutencao">Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="voipFields" style="display: none;">
+                        <h6 class="mt-3">Filtros Avançados - Voips</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="marca_modelo">Marca/Modelo:</label>
+                                    <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codNit">Pesquisar "CodNIT":</label>
+                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="ext">Pesquisar "EXT":</label>
+                                    <input type="text" class="form-control custom-input" id="ext" placeholder="Digite a extensão">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado:</label>
+                                    <select class="form-control custom-select" id="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Disponivel">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutencao">Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="headsetFields" style="display: none;">
+                        <h6 class="mt-3">Filtros Avançados - Headsets</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="marca_modelo">Marca/Modelo:</label>
+                                    <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codNit">Pesquisar "CodNIT":</label>
+                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado:</label>
+                                    <select class="form-control custom-select" id="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Disponivel">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutencao">Manutenção</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="computadoresFields" style="display: none;">
-
-                    <div class="form-group">
-                        <label for="marca_mmodelo">Marca/modelo:</label>
-                        <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
-                    </div>
-                    <div class="form-group">
-                        <label for="codNit">Pesquisar "CodNIT":</label>
-                        <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="dataAq">Data de Aquisição:</label>
-                        <input type="text" class="form-control custom-input" id="dataAq" placeholder="Digite o ano de aquisição">
-                    </div>
-
-                   
-                    <div class="form-group">
-                        <label for="estado">Estado:</label>
-                        <select class="form-control custom-select" id="estado">
-                            <option value="">Todos</option>
-                            <option value="Disponivel">Disponível</option>
-                            <option value="Em uso">Em uso</option>
-                            <option value="Manutencao">Manutenção</option>
-                        </select>
-                    </div>
-                </div>
+            </div>
     
             <!-- Placeholder for the inventory table -->
             <div id="inventoryTable" class="mt-4">
@@ -199,6 +353,34 @@
             } else {
                 computadoresFields.style.display = "none";
             }
+
+            const monitoresFields = document.getElementById("monitoresFields");
+            if (inventoryType === "monitores") {
+                monitoresFields.style.display = "block";
+            } else {
+                monitoresFields.style.display = "none";
+            }
+            const camerasFields = document.getElementById("camerasFields");
+            if (inventoryType === "cameras") {
+                camerasFields.style.display = "block";
+            } else {
+                camerasFields.style.display = "none";
+            }
+
+            const headsetFields = document.getElementById("headsetFields");
+            if (inventoryType === "headset") {
+                headsetFields.style.display = "block";
+            } else {
+                headsetFields.style.display = "none";
+            }
+
+            const voipFields = document.getElementById("voipFields");
+            if (inventoryType === "voip") {
+                voipFields.style.display = "block";
+            } else {
+                voipFields.style.display = "none";
+            }
+            
         
             // Additional fields for computadores
             const codNit = document.getElementById("codNit").value.trim();
@@ -260,6 +442,18 @@
                         });
                 }
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleFiltersButton = document.getElementById('toggleFiltersButton');
+            const filtersSection = document.getElementById('filtersSection');
+    
+            toggleFiltersButton.addEventListener('click', () => {
+                const isVisible = filtersSection.style.display === 'block';
+                filtersSection.style.display = isVisible ? 'none' : 'block';
+                toggleFiltersButton.textContent = isVisible ? 'Mostrar Filtros' : 'Ocultar Filtros';
+            });
         });
     </script>
 </body>
