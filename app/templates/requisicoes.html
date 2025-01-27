@@ -182,7 +182,13 @@
                             </a>
                         </td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
-                        <td>{{ requisicao.data_fim }}</td>
+                        <td>
+                            {% if requisicao.data_fim %}
+                                {{ requisicao.data_fim }}
+                            {% else %}
+                                Sem data de fim
+                            {% endif %}
+                        </td>
                         <td>
                             <!-- Close Requisition Button -->
                             <button 

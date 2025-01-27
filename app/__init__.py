@@ -956,7 +956,12 @@ def receive_data():
     quantity = data['quantidade']
     reason = data['motivo']
     start_date = datetime.strptime(data['data_inicio'], '%Y-%m-%d')
-    end_date = datetime.strptime(data['data_fim'], '%Y-%m-%d')
+    # Handle 'data_fim' with None as default
+    end_date_str = data.get('data_fim')  # Get the 'data_fim' value
+    if end_date_str:  # If a value is provided, parse it
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+    else:  # Use None to represent an empty date
+        end_date = None
 
     try:
         connection = connect_to_database()
