@@ -233,14 +233,19 @@
                 modal.find('#modalGarantia').text(button.data('garantia'));
                 modal.find('#modalSO').text(button.data('so'));
                 modal.find('#modalMonitorFields').hide();
+                modal.find('#modalCamerasFields').hide();
+                modal.find('#modalVoipsFields').hide();
             } else if (category === 'Monitores') {
                 modal.find('#modalMonitorFields').show();
                 modal.find('#modalPolegadas').text(button.data('polegadas'));
                 modal.find('#modalComputadorFields').hide();
+                modal.find('#modalVoipsFields').hide();
             } else if (category === 'Cameras') {
                 modal.find('#modalCamerasFields').show();
                 modal.find('#modalComputadorFields').hide();
                 modal.find('#modalMonitorFields').hide();
+                modal.find('#modalVoipsFields').hide();
+
             } else if (category === 'VoIP'){
                 modal.find('#modalVoipsFields').show();
                 modal.find('#modalCamerasFields').hide();
