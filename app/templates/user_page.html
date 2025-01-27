@@ -109,7 +109,12 @@
                                             data-marca="{{ item['marca'] if category == 'Computadores' else '' }}"
                                             data-modelo="{{ item['modelo'] if category == 'Computadores' else '' }}"
                                             data-processador="{{ item['processador'] if category == 'Computadores' else '' }}"
-                                            data-peso="{{ item['peso'] if category == 'Monitores' else '' }}"
+                                            data-garantia = "{{ item['garantia']}}"
+                                            data-so= "{{ item['so']}}"
+                                            data-polegadas= "{{ item['polegadas']}}"
+                                            data-ext= "{{ item['ext']}}"
+                                            data-codnit-headset= "{{ item['headsets_cod_nit']}}"
+
                                             style="cursor: pointer;">
                                             {{ item['nome_ad'] or item['marca_modelo'] }}
                                         </strong> 
@@ -142,22 +147,37 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>Nome:</strong> <span id="modalNome"></span></p>
-                    <p><strong>Serial No:</strong> <span id="modalSerial"></span></p>
                     <p><strong>Cod NIT:</strong> <span id="modalCodNIT"></span></p>
                     <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
-                    <p><strong>Garantia:</strong> <span id="modalGarantia"></span></p>
 
                     
                     <!-- Additional fields based on category -->
                     <div id="modalComputadorFields" style="display:none;">
                         <p><strong>Marca:</strong> <span id="modalMarca"></span></p>
+                        <p><strong>Serial No:</strong> <span id="modalSerial"></span></p>
                         <p><strong>Modelo:</strong> <span id="modalModelo"></span></p>
+                        <p><strong>Garantia:</strong> <span id="modalGarantia"></span></p>
                         <p><strong>Processador:</strong> <span id="modalProcessador"></span></p>
                         <p><strong>S.O:</strong> <span id="modalSO"></span></p>
                     </div>
 
                     <div id="modalMonitorFields" style="display:none;">
                         <p><strong>Polegadas:</strong> <span id="modalPolegadas"></span></p>
+                        <p><strong>Serial No:</strong> <span id="modalSerial"></span></p>
+                        <p><strong>Garantia:</strong> <span id="modalGarantia"></span></p>
+
+
+                    </div>
+                    <div id="modalCamerasFields" style="display:none;">
+                        <p><strong>Marca/Modelo:</strong> <span id="modalMarca_Modelo"></span></p>
+
+                    </div>
+                    <div id="modalVoipsFields" style="display:none;">
+                        <p><strong>Marca/Modelo:</strong> <span id="modalMarca_Modelo"></span></p>
+                        <p><strong>Extensão:</strong> <span id="modalExt"></span></p>
+                        <p><strong>Serial No:</strong> <span id="modalSerial"></span></p>
+                        <p><strong>Cod.Nit Headsets:</strong> <span id="modalHeadset_codnit"></span></p>
+
                     </div>
 
                 </div>
@@ -182,13 +202,27 @@
             var codnit = button.data('codnit');
             var estado = button.data('estado');
             var category = button.data('category');
-
+            var so = button.data('so');
+            var garantia = button.data('garantia');
+            var polegadas = button.data('polegadas');
+            var nome_ad = button.data('nome-ad');
+            var ext = button.data('ext')
+            var headset_codnit = button.data('codnit-headset')
             // Update the modal's content
+
             var modal = $(this);
             modal.find('#modalNome').text(nome);
             modal.find('#modalSerial').text(nserie);
             modal.find('#modalCodNIT').text(codnit);
             modal.find('#modalEstado').text(estado);
+            modal.find('#modalGarantia').text(garantia)
+            modal.find('#modalSO').text(so)
+            modal.find('#modalPolegadas').text(polegadas)
+            modal.find('#modalMarca_Modelo').text(nome_ad)
+            modal.find('#modalExt').text(ext)
+            modal.find('#modalHeadset_codnit').text(headset_codnit)
+
+
 
             // Show category-specific fields
             if (category === 'Computadores') {
@@ -196,12 +230,26 @@
                 modal.find('#modalMarca').text(button.data('marca'));
                 modal.find('#modalModelo').text(button.data('modelo'));
                 modal.find('#modalProcessador').text(button.data('processador'));
+                modal.find('#modalGarantia').text(button.data('garantia'));
+                modal.find('#modalSO').text(button.data('so'));
                 modal.find('#modalMonitorFields').hide();
             } else if (category === 'Monitores') {
                 modal.find('#modalMonitorFields').show();
-                modal.find('#modalPeso').text(button.data('peso'));
+                modal.find('#modalPolegadas').text(button.data('polegadas'));
                 modal.find('#modalComputadorFields').hide();
+            } else if (category === 'Cameras') {
+                modal.find('#modalCamerasFields').show();
+                modal.find('#modalComputadorFields').hide();
+                modal.find('#modalMonitorFields').hide();
+            } else if (category === 'VoIP'){
+                modal.find('#modalVoipsFields').show();
+                modal.find('#modalCamerasFields').hide();
+                modal.find('#modalComputadorFields').hide();
+                modal.find('#modalMonitorFields').hide();
             } else {
+                modal.find('#modalMarca_Modelo').text(button.data('nome_ad'));
+                modal.find('#modalVoipsFields').hide();
+                modal.find('#modalCamerasFields').hide();
                 modal.find('#modalComputadorFields').hide();
                 modal.find('#modalMonitorFields').hide();
             }

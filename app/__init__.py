@@ -268,7 +268,7 @@ def fetch_inventory():
                            WHERE atribuido_a LIKE %s 
                            AND (%s = '' OR so LIKE %s)
                            AND (%s = '' OR modelo LIKE %s)
-                           LIMIT %s OFFSET %s""",
+                           LIMIT %s OFFSET %s""" ,
         "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
         "voip": "SELECT * FROM voip WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
