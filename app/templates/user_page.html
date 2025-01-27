@@ -118,7 +118,6 @@
                                             style="cursor: pointer;">
                                             {{ item['nome_ad'] or item['marca_modelo'] }}
                                         </strong> 
-                                        <strong style="cursor: pointer;">Serial No: {{ item['n_serie'] }}</strong>
                                         <span>Cod. NIT: {{ item['cod_nit'] }}</span>
                                         {% if item['requisitado']==1%}
                                         <small >*Este equipamento está requisitado <strong>[ID:{{item['id_requisicao']}}]</strong> pelo utilizador</small>
@@ -239,7 +238,8 @@
                 modal.find('#modalMonitorFields').show();
                 modal.find('#modalPolegadas').text(button.data('polegadas'));
                 modal.find('#modalComputadorFields').hide();
-                modal.find('#modalVoipsFields').hide();
+                modal.find('#modalComputadorFields').hide();
+                modal.find('#modalCamerasFields').hide();
             } else if (category === 'Cameras') {
                 modal.find('#modalCamerasFields').show();
                 modal.find('#modalComputadorFields').hide();
