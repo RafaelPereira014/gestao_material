@@ -116,7 +116,7 @@
                                         <strong style="cursor: pointer;">Serial No: {{ item['n_serie'] }}</strong>
                                         <span>Cod. NIT: {{ item['cod_nit'] }}</span>
                                         {% if item['requisitado']==1%}
-                                        <small style="text-decoration: underline;">Este equipamento está em requisição <strong>[ID:{{item['id_requisicao']}}]</strong> pelo utilizador</small>
+                                        <small >*Este equipamento está requisitado <strong>[ID:{{item['id_requisicao']}}]</strong> pelo utilizador</small>
                                         {%endif%}
                                     </li>
                                 {% endfor %}
