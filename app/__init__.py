@@ -355,6 +355,10 @@ def fetch_inventory():
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
+    except KeyError as e:
+        return f"<p class='text-danger'>Erro: Campo de pesquisa '{str(e)}' não encontrado. Verifique os filtros fornecidos.</p>", 400
+    except Exception as e:
+        return f"<p class='text-danger'>Erro inesperado: {str(e)}</p>", 500
     finally:
         if connection:
             connection.close()
