@@ -243,6 +243,10 @@
             
                         
                     </div>
+                    <!-- Botão para Limpar Filtros -->
+                <div class="text-right">
+                    <button class="btn btn-secondary btn-sm" id="clearFiltersButton">Limpar Filtros</button>
+                </div>
                 </div>
             </div>
     
@@ -383,6 +387,16 @@
                 toggleFiltersButton.textContent = isVisible ? 'Mostrar Filtros' : 'Ocultar Filtros';
             });
         });
+        // Clear filters and reset inventory table
+        document.getElementById('clearFiltersButton').addEventListener('click', function () {
+            // Clear all filter fields
+            document.querySelectorAll('#filtersSection input').forEach(input => input.value = '');
+            document.querySelectorAll('#filtersSection select').forEach(select => select.value = '');
+
+            // Call fetchInventory to refresh the table after clearing filters
+            fetchInventory();
+        });
     </script>
+    
 </body>
 </html>
