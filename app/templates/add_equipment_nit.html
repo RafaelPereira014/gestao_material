@@ -98,7 +98,7 @@
             </form>
             <h3>Adicionar equipamento para a categoria: {{ category }}</h3>
 
-            <form action="{{ url_for('add_equipment', category=category) }}" method="post">
+            <form action="{{ url_for('add_equipment', category=category) }}" method="post" onsubmit="showSuccessModal(event)">
                 
                 <!-- Fields for Computadores -->
                 <div id="computadoresFields" class="category-fields" style="display: none;">
@@ -255,20 +255,20 @@
         </div>
     </div>
     <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Equipamento Adicionado com Sucesso</h5>
+                    <h5 class="modal-title" id="successModalLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    O equipamento foi adicionado com sucesso à categoria {{ category }}.
+                    O equipamento foi Adicionado com sucesso!
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="redirectButton">OK</button>
                 </div>
             </div>
         </div>
@@ -304,10 +304,7 @@
         // Call the function on page load to initialize the correct display
         document.addEventListener("DOMContentLoaded", toggleCategoryFields);
 
-        // Trigger modal after successful form submission
-        {% if success %}
-            $('#successModal').modal('show');
-        {% endif %}
+        
     </script>
     <script>
         // Function to enable only relevant fields before submitting the form
@@ -325,8 +322,26 @@
             }
         });
     </script>
+    <script>
+        function showSuccessModal(event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            // Show the success modal
+            $('#successModal').modal('show');
+    
+            // Redirect after 3 seconds or when the user clicks the OK button
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 1500);
+    
+            document.getElementById('redirectButton').addEventListener('click', function() {
+                document.querySelector('form').submit();
+            });
+        }
+    </script>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
 </body>
 </html>

@@ -733,7 +733,7 @@ def add_equipment(category=None):
         finally:
             if connection:
                 connection.close()
-
+        
         # Redirect back to the form with the selected category, passing 'is_admin' in session
         return redirect(url_for('add_equipment', category=category))
 
@@ -924,7 +924,7 @@ def remove_equipment(category, equipment_id):
     finally:
         if connection:
             connection.close()
-    return redirect(url_for('inventory_nit'))
+    return redirect(url_for('inventory_nit',category=category))
 
 @app.route('/item_page')
 def item_page():
