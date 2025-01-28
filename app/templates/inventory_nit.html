@@ -112,6 +112,16 @@
                         <label for="searchInput">Pesquisar "Atribuído a":</label>
                         <input type="text" class="form-control custom-input" id="searchInput" placeholder="Digite o nome">
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select class="form-control custom-select" id="estado">
+                            <option value="">Todos</option>
+                            <option value="Disponivel">Disponível</option>
+                            <option value="Em uso">Em uso</option>
+                            <option value="Manutencao">Manutenção</option>
+                        </select>
+                    </div>
             
                     <!-- Additional Filters for Computadores -->
                     <div id="computadoresFields" style="display: none;">
@@ -138,21 +148,11 @@
                                     <input type="text" class="form-control custom-input" id="dataAq" placeholder="Digite o ano de aquisição">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estado">Estado:</label>
-                                    <select class="form-control custom-select" id="estado">
-                                        <option value="">Todos</option>
-                                        <option value="Disponivel">Disponível</option>
-                                        <option value="Em uso">Em uso</option>
-                                        <option value="Manutencao">Manutenção</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div id="monitoresFields" style="display: none;">
-                        <h6 class="mt-3">Filtros Avançados - monitores</h6>
+                        <h6 class="mt-3">Filtros Avançados - Monitores</h6>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -175,17 +175,7 @@
                                     <input type="text" class="form-control custom-input" id="dataAq" placeholder="Digite o ano de aquisição">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estado">Estado:</label>
-                                    <select class="form-control custom-select" id="estado">
-                                        <option value="">Todos</option>
-                                        <option value="Disponivel">Disponível</option>
-                                        <option value="Em uso">Em uso</option>
-                                        <option value="Manutencao">Manutenção</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div id="camerasFields" style="display: none;">
@@ -205,19 +195,7 @@
                             </div>
                         </div>
             
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estado">Estado:</label>
-                                    <select class="form-control custom-select" id="estado">
-                                        <option value="">Todos</option>
-                                        <option value="Disponivel">Disponível</option>
-                                        <option value="Em uso">Em uso</option>
-                                        <option value="Manutencao">Manutenção</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div id="voipFields" style="display: none;">
                         <h6 class="mt-3">Filtros Avançados - Voips</h6>
@@ -243,17 +221,7 @@
                                     <input type="text" class="form-control custom-input" id="ext" placeholder="Digite a extensão">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estado">Estado:</label>
-                                    <select class="form-control custom-select" id="estado">
-                                        <option value="">Todos</option>
-                                        <option value="Disponivel">Disponível</option>
-                                        <option value="Em uso">Em uso</option>
-                                        <option value="Manutencao">Manutenção</option>
-                                    </select>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div id="headsetFields" style="display: none;">
@@ -273,19 +241,7 @@
                             </div>
                         </div>
             
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estado">Estado:</label>
-                                    <select class="form-control custom-select" id="estado">
-                                        <option value="">Todos</option>
-                                        <option value="Disponivel">Disponível</option>
-                                        <option value="Em uso">Em uso</option>
-                                        <option value="Manutencao">Manutenção</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -344,54 +300,19 @@
         function fetchInventory() {
             const inventoryType = document.getElementById("inventoryType").value;
             const searchQuery = document.getElementById("searchInput").value.trim();
+            const estado = document.getElementById("estado").value; // Get the 'estado' value
             const inventoryTable = document.getElementById("inventoryTable");
         
-            // Show/hide fields for 'computadores'
+            // Show/hide fields for different inventory types
             const computadoresFields = document.getElementById("computadoresFields");
             if (inventoryType === "computadores") {
                 computadoresFields.style.display = "block";
             } else {
                 computadoresFields.style.display = "none";
             }
-
-            const monitoresFields = document.getElementById("monitoresFields");
-            if (inventoryType === "monitores") {
-                monitoresFields.style.display = "block";
-            } else {
-                monitoresFields.style.display = "none";
-            }
-            const camerasFields = document.getElementById("camerasFields");
-            if (inventoryType === "cameras") {
-                camerasFields.style.display = "block";
-            } else {
-                camerasFields.style.display = "none";
-            }
-
-            const headsetFields = document.getElementById("headsetFields");
-            if (inventoryType === "headset") {
-                headsetFields.style.display = "block";
-            } else {
-                headsetFields.style.display = "none";
-            }
-
-            const voipFields = document.getElementById("voipFields");
-            if (inventoryType === "voip") {
-                voipFields.style.display = "block";
-            } else {
-                voipFields.style.display = "none";
-            }
-            
         
-            // Additional fields for computadores
-            const codNit = document.getElementById("codNit").value.trim();
-            const dataAq = document.getElementById("dataAq").value;
-            const estado = document.getElementById("estado").value;
-        
-            // Build the fetch URL with new parameters
-            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}`;
-            if (inventoryType === "computadores") {
-                fetchUrl += `&codNit=${encodeURIComponent(codNit)}&dataAq=${encodeURIComponent(dataAq)}&estado=${encodeURIComponent(estado)}`;
-            }
+            // Build the fetch URL with 'estado' as an additional parameter
+            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estado)}`;
         
             if (inventoryType) {
                 fetch(fetchUrl)
@@ -406,6 +327,9 @@
                 inventoryTable.innerHTML = "<p class='text-warning'>Por favor, selecione uma categoria.</p>";
             }
         }
+        
+        // Attach event listener to the 'estado' dropdown
+        document.getElementById("estado").addEventListener("change", fetchInventory);
         
         // Show/hide additional search fields based on inventory type
         document.getElementById("inventoryType").addEventListener("change", function () {
@@ -430,9 +354,13 @@
                 const page = e.target.getAttribute("data-page");
                 const inventoryType = document.getElementById("inventoryType").value;
                 const searchQuery = document.getElementById("searchInput").value.trim();
+                const estadoQuery = document.getElementById("estado").value.trim();
         
                 if (page && inventoryType) {
-                    fetch(`/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}`)
+                    // Include all relevant parameters in the fetch URL
+                    const fetchUrl = `/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estadoQuery)}`;
+        
+                    fetch(fetchUrl)
                         .then(response => response.text())
                         .then(html => {
                             document.getElementById("inventoryTable").innerHTML = html;

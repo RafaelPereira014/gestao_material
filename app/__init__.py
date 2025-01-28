@@ -257,8 +257,9 @@ def inventory_nit():
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
     search_query = request.args.get('search', '').strip()  # Search term
-    so_query = request.args.get('so', '').strip()  # SO filter
-    modelo_query = request.args.get('modelo', '').strip()  # Marca/Modelo filter
+    estado_query = request.args.get('estado', '').strip()  # Estado filter
+    so_query = request.args.get('so', '').strip()  # SO filter (only for computadores)
+    modelo_query = request.args.get('modelo', '').strip()  # Marca/Modelo filter (only for computadores)
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
 
@@ -266,25 +267,53 @@ def fetch_inventory():
     query_templates = {
         "computadores": """SELECT * FROM computadores 
                            WHERE atribuido_a LIKE %s 
+                           AND (%s = '' OR estado = %s)
                            AND (%s = '' OR so LIKE %s)
                            AND (%s = '' OR modelo LIKE %s)
-                           LIMIT %s OFFSET %s""" ,
-        "monitores": "SELECT * FROM monitores WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "cameras": "SELECT * FROM cameras WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "voip": "SELECT * FROM voip WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "headset": "SELECT * FROM headset WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
-        "outros": "SELECT * FROM outros WHERE atribuido_a LIKE %s LIMIT %s OFFSET %s",
+                           LIMIT %s OFFSET %s""",
+        "monitores": """SELECT * FROM monitores 
+                        WHERE atribuido_a LIKE %s 
+                        AND (%s = '' OR estado = %s)
+                        LIMIT %s OFFSET %s""",
+        "cameras": """SELECT * FROM cameras 
+                      WHERE atribuido_a LIKE %s 
+                      AND (%s = '' OR estado = %s)
+                      LIMIT %s OFFSET %s""",
+        "voip": """SELECT * FROM voip 
+                   WHERE atribuido_a LIKE %s 
+                   AND (%s = '' OR estado = %s)
+                   LIMIT %s OFFSET %s""",
+        "headset": """SELECT * FROM headset 
+                      WHERE atribuido_a LIKE %s 
+                      AND (%s = '' OR estado = %s)
+                      LIMIT %s OFFSET %s""",
+        "outros": """SELECT * FROM outros 
+                     WHERE atribuido_a LIKE %s 
+                     AND (%s = '' OR estado = %s)
+                     LIMIT %s OFFSET %s""",
     }
+
     count_templates = {
         "computadores": """SELECT COUNT(*) AS count FROM computadores 
                            WHERE atribuido_a LIKE %s 
+                           AND (%s = '' OR estado = %s)
                            AND (%s = '' OR so LIKE %s)
                            AND (%s = '' OR modelo LIKE %s)""",
-        "monitores": "SELECT COUNT(*) AS count FROM monitores WHERE atribuido_a LIKE %s",
-        "cameras": "SELECT COUNT(*) AS count FROM cameras WHERE atribuido_a LIKE %s",
-        "voip": "SELECT COUNT(*) AS count FROM voip WHERE atribuido_a LIKE %s",
-        "headset": "SELECT COUNT(*) AS count FROM headset WHERE atribuido_a LIKE %s",
-        "outros": "SELECT COUNT(*) AS count FROM outros WHERE atribuido_a LIKE %s",
+        "monitores": """SELECT COUNT(*) AS count FROM monitores 
+                        WHERE atribuido_a LIKE %s 
+                        AND (%s = '' OR estado = %s)""",
+        "cameras": """SELECT COUNT(*) AS count FROM cameras 
+                      WHERE atribuido_a LIKE %s 
+                      AND (%s = '' OR estado = %s)""",
+        "voip": """SELECT COUNT(*) AS count FROM voip 
+                   WHERE atribuido_a LIKE %s 
+                   AND (%s = '' OR estado = %s)""",
+        "headset": """SELECT COUNT(*) AS count FROM headset 
+                      WHERE atribuido_a LIKE %s 
+                      AND (%s = '' OR estado = %s)""",
+        "outros": """SELECT COUNT(*) AS count FROM outros 
+                     WHERE atribuido_a LIKE %s 
+                     AND (%s = '' OR estado = %s)""",
     }
 
     # Validate the inventory type
@@ -297,6 +326,7 @@ def fetch_inventory():
 
         # Prepare search terms with wildcards
         search_term = f"%{search_query}%"
+        estado_term = estado_query if estado_query else ""
         so_term = f"%{so_query}%" if so_query else ""
         modelo_term = f"%{modelo_query}%" if modelo_query else ""
 
@@ -304,10 +334,10 @@ def fetch_inventory():
         if inventory_type == "computadores":
             cursor.execute(
                 count_templates[inventory_type],
-                (search_term, so_query, so_term, modelo_query, modelo_term),
+                (search_term, estado_term, estado_term, so_query, so_term, modelo_query, modelo_term),
             )
         else:
-            cursor.execute(count_templates[inventory_type], (search_term,))
+            cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term))
         total_items = cursor.fetchone().get('count', 0)
 
         # Calculate pagination details
@@ -318,10 +348,10 @@ def fetch_inventory():
         if inventory_type == "computadores":
             cursor.execute(
                 query_templates[inventory_type],
-                (search_term, so_query, so_term, modelo_query, modelo_term, per_page, offset),
+                (search_term, estado_term, estado_term, so_query, so_term, modelo_query, modelo_term, per_page, offset),
             )
         else:
-            cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
+            cursor.execute(query_templates[inventory_type], (search_term, estado_term, estado_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
