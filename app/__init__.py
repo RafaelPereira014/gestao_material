@@ -624,7 +624,12 @@ def add_equip():
 
                     numero_serie = row[0]
                     tipo = row[1]
-                    utilizacao = row[2]
+                    utilizacao = row[2]  # Assuming row[2] is the 'utilizacao' column
+
+                    # Check if 'digitais' is in utilizacao (case-insensitive)
+                    if utilizacao and "digitais" in utilizacao.lower():
+                        utilizacao = "Manuais digitais"
+                        
                     mac_addr = row[3] if row[3] else '-'
                     cc_aluno = row[4]
                     accessories = row[5] if len(row) > 5 else None  # Column for accessories
