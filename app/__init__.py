@@ -629,7 +629,7 @@ def add_equip():
                     # Check if 'digitais' is in utilizacao (case-insensitive)
                     if utilizacao and "digitais" in utilizacao.lower():
                         utilizacao = "Manuais digitais"
-                    else
+                    else:
                         utilizacao = '-'
                         
                     mac_addr = row[3] if row[3] else '-'
