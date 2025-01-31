@@ -486,7 +486,6 @@ def add_equip():
                 tipo = request.form['itemType']
                 mac_addr = request.form['MACaddr']
                 use_case = request.form['itemUse']
-                print(use_case)
 
                 # Automatically associate escola_id from user details
                 if not is_admin(session['user_id']):
