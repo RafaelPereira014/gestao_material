@@ -209,6 +209,8 @@ def inventory():
             equipamentos = [e for e in equipamentos if search_query.lower() in e['tipo'].lower()]
         elif search_type == 'cc_aluno':
             equipamentos = [e for e in equipamentos if search_query.lower() in (e['aluno_CC'] or '').lower()]
+        elif search_type == 'status':
+            equipamentos = [e for e in equipamentos if search_query.lower() in (e['status'] or '').lower()]
 
     per_page = 10  # Number of items per page
     page = int(request.args.get('page', 1))  # Get the current page, default to 1 if not specified

@@ -104,12 +104,14 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-info text-white mb-3">
-                    <div class="card-header">Equipamentos disponiveis</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ equipment_counts.get('Disponivel', 0) }}</h5>
+                <a href="http://127.0.0.1:8081/inventory?search=Disponivel&search_type=status" class="text-decoration-none">
+                    <div class="card bg-info text-white mb-3">
+                        <div class="card-header">Equipamentos disponiveis</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ equipment_counts.get('Disponivel', 0) }}</h5>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4">
                 <div class="card bg-success text-white mb-3">
