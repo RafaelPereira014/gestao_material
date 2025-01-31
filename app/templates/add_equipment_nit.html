@@ -93,6 +93,7 @@
                         <option value="cameras" {% if category == 'cameras' %}selected{% endif %}>Câmeras</option>
                         <option value="voip" {% if category == 'voip' %}selected{% endif %}>VoIPs</option>
                         <option value="headset" {% if category == 'headset' %}selected{% endif %}>Headsets</option>
+                        <option value="outros" {% if category == 'outros' %}selected{% endif %}>Outros</option>
                     </select>
                 </div>
             </form>
@@ -140,7 +141,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="text" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: Nexus123">
+                        <input type="text" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
                     </div>
                     <div class="form-group">
                         <label for="firma">Firma</label>
@@ -171,12 +172,12 @@
                         <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
                     </div>
                     <div class="form-group">
-                        <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
+                        <label for="n_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="text" class="form-control" id="data_aq" name="data_aq" >
+                        <input type="text" class="form-control" id="data_aq" name="data_aq"placeholder="Ex: 2015" >
                     </div>
                     <div class="form-group">
                         <label for="garantia">Garantia</label>
@@ -220,8 +221,8 @@
                         <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
                     </div>
                     <div class="form-group">
-                        <label for="no_serie">Nº Série</label>
-                        <input type="text" class="form-control" id="no_serie" name="no_serie" placeholder="Ex: SN123455">
+                        <label for="n_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
                     </div>
                     
                     <div class="form-group">
@@ -245,34 +246,43 @@
                         <label for="cod_nit">Codigo NIT</label>
                         <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
                     </div>
+                </div>
 
-                    
-                    
+                <!-- Fields for Headsets -->
+                <div id="outrosFields" class="category-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="atribuido_a">Atribuido a</label>
+                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_equipamento">Tipo Equipamento</label>
+                        <input type="text" class="form-control" id="tipo_equipamento" name="tipo_equipamento" placeholder="Ex: Leitor Cartoes">
+                    </div>
+                    <div class="form-group">
+                        <label for="marca_modelo">Marca/Modelo</label>
+                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                    </div>
+                    <div class="form-group">
+                        <label for="cod_nit">Codigo NIT</label>
+                        <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
+                    </div>
+                    <div class="form-group">
+                        <label for="n_serie">Nº Série</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
+                    </div>
+                    <div class="form-group">
+                        <label for="data_aq">Data aquisição</label>
+                        <input type="text" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
+                    </div>
+
+
                 </div>
 
                 <button type="submit" class="btn btn-primary">Adicionar equipamento</button>
             </form>
         </div>
     </div>
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    O equipamento foi Adicionado com sucesso!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="redirectButton">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     
 
     <script>
@@ -322,23 +332,7 @@
             }
         });
     </script>
-    <script>
-        function showSuccessModal(event) {
-            event.preventDefault(); // Prevent the default form submission
     
-            // Show the success modal
-            $('#successModal').modal('show');
-    
-            // Redirect after 3 seconds or when the user clicks the OK button
-            setTimeout(() => {
-                document.querySelector('form').submit();
-            }, 1500);
-    
-            document.getElementById('redirectButton').addEventListener('click', function() {
-                document.querySelector('form').submit();
-            });
-        }
-    </script>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

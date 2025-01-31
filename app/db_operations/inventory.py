@@ -246,6 +246,16 @@ def get_monitores():
     
     return monitores
 
+def get_outros():
+    connection = connect_to_database()  
+    cursor = connection.cursor()
+    cursor.execute("SELECT id,marca_modelo,n_serie FROM monitores WHERE estado = 'Disponivel' ")
+    result = cursor.fetchall()
+    monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2]} for row in result]
+    cursor.close()
+    connection.close()
+    
+    return monitores
 def get_requisicao_by_id(requisicao_id):
     connection = connect_to_database()
     cursor = connection.cursor()

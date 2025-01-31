@@ -691,13 +691,14 @@ def add_equipment(category=None):
         return "Categoria não selecionada", 400  # If no category is provided, return error
     
     # List of allowed categories to prevent SQL injection
-    allowed_categories = ['-','computadores', 'monitores', 'cameras', 'voip', 'headset']
+    allowed_categories = ['-','computadores', 'monitores', 'cameras', 'voip', 'headset','outros']
     
     if category not in allowed_categories:
         return "Categoria inválida", 400  # If the category is not in the allowed list, return error
 
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
+        
         
         try:
             # Connect to the database
