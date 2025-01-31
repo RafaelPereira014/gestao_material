@@ -486,6 +486,7 @@ def add_equip():
                 tipo = request.form['itemType']
                 mac_addr = request.form['MACaddr']
                 use_case = request.form['itemUse']
+                print(use_case)
 
                 # Automatically associate escola_id from user details
                 if not is_admin(session['user_id']):
@@ -496,13 +497,14 @@ def add_equip():
                     status = 'Em uso' if cc_aluno else 'Disponivel'
                     accessories = request.form.get('accessories', None)
                     
+                    
 
                     # Check if the serial number already exists
                     if is_serial_number_exists(numero_serie, escola_id):
                         flash(f"Equipment with serial number {numero_serie} already exists.", "danger")
                         return redirect(url_for('add_equip'))  # Redirect to the add equipment page
 
-                    print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id}")
+                    print(f"Inserting single equipment: {numero_serie}, {tipo}, {status}, {cc_aluno}, {escola_id},{mac_addr},{use_case}")
 
                     # Insert single equipment into the database
                     connection = connect_to_database()
@@ -624,7 +626,7 @@ def add_equip():
                     numero_serie = row[0]
                     tipo = row[1]
                     utilizacao = row[2]
-                    mac_addr = row[3]
+                    mac_addr = row[3] if row[3] else '-'
                     cc_aluno = row[4]
                     accessories = row[5] if len(row) > 5 else None  # Column for accessories
                     data_aquisicao = datetime.now().date()

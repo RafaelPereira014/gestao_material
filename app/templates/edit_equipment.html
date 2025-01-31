@@ -91,21 +91,15 @@
             </div>
             <div class="form-group">
                 <label for="itemType">Tipo equipamento:</label>
-                <select class="form-control" id="itemType" name="itemType" required>
-                    <option value="">Selecione o tipo de equipamento</option>
-                    <option value="tablet" {% if equipment['tipo'] == 'Tablet' %}selected{% endif %}>Tablet</option>
-                    <option value="computador" {% if equipment['tipo'] == 'Computador' %}selected{% endif %}>Computador</option>
-                    <option value="portatil" {% if equipment['tipo'] == 'Portatil' %}selected{% endif %}>Portátil</option>
-                    <option value="switch" {% if equipment['tipo'] == 'Switch' %}selected{% endif %}>Switch</option>
-                    <option value="AP" {% if equipment['tipo'] == 'AP' %}selected{% endif %}>AP</option>
-                </select>
+                <input type="text" class="form-control" id="itemType" name="itemType" value="{{ equipment['tipo'] }}" required>
+
             </div>
             
             <div class="form-group">
                 <label for="itemUse">Utilização:</label>
                 <select class="form-control" id="itemUse" name="itemUse" required>
                     <option value="">Selecione a utilização do equipamento</option>
-                    <option value="Manuais digitais" {% if equipment['use_case'] == 'Manuais Digitais' %}selected{% endif %}>Manuais digitais</option>
+                    <option value="Manuais digitais" {% if equipment['use_case'] == 'Manuais digitais' %}selected{% endif %}>Manuais digitais</option>
                     <option value="-" {% if equipment['use_case'] == '-' %}selected{% endif %}>- </option>
                 </select>
             </div>
