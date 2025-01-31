@@ -114,9 +114,10 @@
                                             data-polegadas= "{{ item['polegadas']}}"
                                             data-ext= "{{ item['ext']}}"
                                             data-codnit-headset= "{{ item['headsets_cod_nit']}}"
+                                            data-tipo-equipamento="{{item['tipo_equipamento']}}"
 
                                             style="cursor: pointer;">
-                                            {{ item['nome_ad'] or item['marca_modelo'] }}
+                                            {{ item['nome_ad'] or item['marca_modelo'] or item['tipo_equipamento'] }}
                                         </strong> 
                                         <span>Cod. NIT: {{ item['cod_nit'] }}</span>
                                         {% if item['requisitado']==1%}

@@ -412,6 +412,7 @@ def user_page(user_name):
     user_cameras = get_cameras_user(user_name)
     user_voip = get_voip_user(user_name)
     user_headset = get_headsets_user(user_name)
+    user_outros = get_outros_user(user_name)
 
     # Combine all equipment into one list for easier handling in the template
     all_items = {
@@ -419,7 +420,8 @@ def user_page(user_name):
         'Monitores': user_monitores,
         'Cameras': user_cameras,
         'VoIP': user_voip,
-        'Headsets': user_headset
+        'Headsets': user_headset,
+        'Outros': user_outros
     }
 
     return render_template('user_page.html', user_name=user_name, all_items=all_items,is_admin=is_admin(session['user_id']))
