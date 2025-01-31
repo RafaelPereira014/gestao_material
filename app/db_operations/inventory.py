@@ -401,6 +401,8 @@ def update_equipment_from_requisicao(requisicao_id):
     connection.close()
     print(f"Requisition {requisicao_id} closed successfully.")
     
+
+
 def update_estado_requisicao(requisicao_id, estado):
     connection = connect_to_database()
     cursor = connection.cursor()

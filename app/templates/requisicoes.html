@@ -199,6 +199,14 @@
                                 data-requisicao-tipo="{{ requisicao.tipo_equipamento }}">
                                 Encerrar
                             </button>
+                            <button 
+                                class="btn btn-warning btn-sm" 
+                                data-toggle="modal" 
+                                data-target="#reopenRequisitionModal" 
+                                data-requisicao-id="{{ requisicao.id }}" 
+                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}">
+                                Reabrir
+                            </button>
                         </td>
 
 
@@ -228,6 +236,25 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-danger" id="confirmCloseRequisition">Encerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="reopenRequisitionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Confirmar reabertura</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza de que deseja reabrir esta requisição?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmReopenRequisition">Reabrir</button>
                 </div>
             </div>
         </div>
@@ -305,6 +332,40 @@
                 }
             });
         });
-        </script>
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("reopenRequisitionModal");
+            let requisicaoId = null;
+        
+            // When the modal is shown, set requisicaoId from the button's data attribute
+            $(modal).on("show.bs.modal", function (event) {
+                const button = $(event.relatedTarget); // Bootstrap 4 compatible
+                requisicaoId = button.data("requisicao-id");
+            });
+        
+            // Handle the "Encerrar" button click inside the modal
+            document.getElementById("confirmReopenRequisition").addEventListener("click", function () {
+                if (requisicaoId) {
+                    fetch(`/reopen_requisition/${requisicaoId}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Reload the page on success
+                        } else {
+                            alert("Falha ao reabir a requisição.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro ao reabrir a requisição:", error);
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

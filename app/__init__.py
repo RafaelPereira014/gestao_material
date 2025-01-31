@@ -406,6 +406,16 @@ def close_requisition(requisicao_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@app.route('/reopen_requisition/<int:requisicao_id>', methods=['POST'])
+def reopen_requisition(requisicao_id):
+    # Implement the logic to close the requisition using the provided ID
+    try:
+        update_estado_requisicao(requisicao_id,'Pendente')
+        update_equipment_from_requisicao(requisicao_id)
+        return jsonify({"message": "Requisição encerrada com sucesso."}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 @app.route('/user_page/<string:user_name>')
 def user_page(user_name):
     # Fetch the equipment assigned to the user
@@ -991,7 +1001,6 @@ def receive_data():
     print("Received data:", data)
 
     material_types = data.get('material_type', [])  # Safely get material_type, default to an empty list if not found
-    print("Material types:", material_types)  # Check the material_types field
 
     if not material_types:
         return "Material types are required.", 400  # Return an error if material_types is empty
