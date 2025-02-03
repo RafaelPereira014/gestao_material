@@ -79,7 +79,7 @@ def check_due_requisitions():
 
     # Modify the SQL query to extract the date part of `data_fim`
     query = """
-        SELECT id, email, data_fim, tipo_equipamento, nome
+        SELECT id, email, data_fim, tipo_equipamento, nome,ticket_id
         FROM requisicoes
         WHERE DATE(data_fim) = %s AND estado = 'ativa'
     """
@@ -89,13 +89,42 @@ def check_due_requisitions():
 
     cursor.close()
     connection.close()
+    
+    
 
     return overdue_requisitions
+
+
+def get_equip_details(equipment_type, nome, requisicao_id):
+    table_mapping = {
+    "computador": "computadores",
+    "monitor": "monitores",
+    "camera": "cameras",
+    "voip": "voip",
+    "headset": "headset"
+    }
+
+    table_name = table_mapping.get(equipment_type.lower())
+    if not table_name:
+        return {"error": "Tipo de equipamento inválido"}
+    
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    query = f"SELECT * FROM {table_name} WHERE atribuido_a=%s AND id_requisicao=%s"
+    cursor.execute(query, (nome, requisicao_id))
+    result = cursor.fetchone()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
 
 # Function to send reminders for overdue requisitions
 def send_reminders():
     overdue_requisitions = check_due_requisitions()
-
+    
+    
     if not overdue_requisitions:
         print("No overdue requisitions found.")
         return
@@ -104,10 +133,13 @@ def send_reminders():
         requisicao_id = requisition['id']
         user_email = [requisition['email'], 'srec.nit.edu@azores.gov.pt']
         material_type = requisition['tipo_equipamento']
-        material_name = requisition['nome']
+        name = requisition['nome']
         due_date = requisition['data_fim']
+        ticket_id= requisition['ticket_id']
+        details = get_equip_details(material_type,name,requisicao_id)
+        nome_equipamento = details[2]
         
-        subject = f"Requisição de material #{requisicao_id} - Devolução pendente"
+        subject = f"Requisição de material #{ticket_id} - Devolução pendente"
         message = f"""
         <html>
         <head>
@@ -123,14 +155,14 @@ def send_reminders():
             <div class="email-container">
                 <div class="header">Atenção: Devolução de material pendente</div>
                 <div class="content">
-                    <p>Prezado utilizador,</p>
-                    <p>O material referente à sua requisição <strong>#{requisicao_id}</strong> deveria ter sido devolvido até <strong>{due_date}</strong>. Até o momento, não foi registrado como devolvido.</p>
+                    <p>Caro(a) utilizador(a) {name} ,</p>
+                    <p>O material referente à sua requisição <strong>#{ticket_id}</strong> deveria ter sido devolvido até <strong>{due_date}</strong>. Até o momento, não foi registrado como devolvido.</p>
                     <p>Detalhes do material:</p>
                     <ul>
                         <li>Tipo de equipamento: <strong>{material_type}</strong></li>
-                        <li>Equipamento: <strong>{material_name}</strong></li>
+                        <li>Equipamento: <strong>{nome_equipamento}</strong></li>
                     </ul>
-                    <p>Por favor, devolva o material o mais breve possível. Para mais informações, consulte a plataforma através do seguinte link: <a href="http://helpdesk.com/{requisicao_id}">Consulta de Requisição</a></p>
+                    <p>Por favor, devolva o material o mais breve possível. Para mais informações, consulte a plataforma através do seguinte link: <a href="https://helpdesk.edu.azores.gov.pt/{ticket_id}">Consulta de Requisição</a></p>
                 </div>
                 <div class="footer">
                     <p>Obrigado,<br>A Equipa REDA</p>
@@ -141,6 +173,6 @@ def send_reminders():
         """
         
         send_email(user_email, subject, message)
-        print(f"Reminder sent for requisition #{requisicao_id} to {user_email}.")
+        
 
 send_reminders()

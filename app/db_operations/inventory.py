@@ -509,3 +509,4 @@ def get_equip_details(equipment_type, equipment_id, requisicao_id):
     connection.close()
     
     return result
+
