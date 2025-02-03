@@ -156,7 +156,7 @@ def send_reminders():
                 <div class="header">Atenção: Devolução de material pendente</div>
                 <div class="content">
                     <p>Caro(a) utilizador(a) {name} ,</p>
-                    <p>O material referente à sua requisição <strong>#{ticket_id}</strong> deveria ter sido devolvido até <strong>{due_date}</strong>. Até ao momento, não foi registada qualquer devolução.</p>
+                    <p>O material referente à sua requisição <strong>#{ticket_id}</strong> deve ser devolvido até hoje, <strong>{due_date}</strong>. Até ao momento, não foi registada qualquer devolução.</p>
                     <p>Detalhes do material:</p>
                     <ul>
                         <li>Tipo de equipamento: <strong>{material_type}</strong></li>
