@@ -140,7 +140,7 @@ def send_reminders():
         </html>
         """
         
-        send_email([user_email], subject, message)
+        send_email(user_email, subject, message)
         print(f"Reminder sent for requisition #{requisicao_id} to {user_email}.")
 
 send_reminders()
