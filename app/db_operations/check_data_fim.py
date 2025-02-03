@@ -67,105 +67,7 @@ def send_email(to_emails, subject, message, attachments=[]):
         print(f"Failed to send email: {e}")
         
         
-def send_email_on_material_assign(ticket_id, username,recipient_emails,material_type,material_name,material_link):
-    subject = f"Requisição de material: #{ticket_id}."
-    message = f"""
-    <html>
-    <head>
-        <style>
-            body {{ font-family: Arial, sans-serif; }}
-            .email-container {{ padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }}
-            .header {{ font-size: 18px; font-weight: bold; color: #333; }}
-            .content {{ margin-top: 10px; }}
-            .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
-        </style>
-    </head>
-    <body>
-        <div class="email-container">
-            <div class="header">Material atribuído ao utilizador <strong>{username}</strong></div>
-            <div class="content">
-                <p>Foi-lhe atribuído o seguinte material, referente ao pedido de requisicao #{ticket_id}.</p>
-                <p>Detalhes do material:</p>
-                <ul>
-                    <li>Tipo de equipamento:<strong></strong> {material_type}</li>
-                    <li>Equipamento:<strong></strong> {material_name}</li>
-                </ul>
-                <p>Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
-            </div>
-            <div class="footer">
-                <p>Obrigado,<br>NIT</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    send_email(recipient_emails, subject, message)
-    
-def send_email_on_material_return_due(ticket_id, username, recipient_emails, material_type, material_name, return_date, material_link):
-    subject = f"Devolução de material: #{ticket_id} - Prazo de entrega atingido"
-    message = f"""
-    <html>
-    <head>
-        <style>
-            body {{ font-family: Arial, sans-serif; }}
-            .email-container {{ padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }}
-            .header {{ font-size: 18px; font-weight: bold; color: #333; }}
-            .content {{ margin-top: 10px; }}
-            .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
-        </style>
-    </head>
-    <body>
-        <div class="email-container">
-            <div class="header">Lembrete: Devolução de material atribuído</div>
-            <div class="content">
-                <p>Caro(a) {username},</p>
-                <p>Este email serve como lembrete de que o prazo para a devolução do material atribuído está a terminar.</p>
-                <p>Detalhes do material:</p>
-                <ul>
-                    <li><strong>Pedido de requisição:</strong> #{ticket_id}</li>
-                    <li><strong>Tipo de equipamento:</strong> {material_type}</li>
-                    <li><strong>Equipamento:</strong> {material_name}</li>
-                    <li><strong>Data limite para devolução:</strong> {return_date}</li>
-                </ul>
-                <p>Por favor, garanta que o material é devolvido até à data indicada. Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
-            </div>
-            <div class="footer">
-                <p>Obrigado,<br>Equipa NIT</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    send_email(recipient_emails, subject, message)
-    
-def send_email_on_material_closure(ticket_id,recipient_emails,material_link):
-    subject = f"Requisição de material: #{ticket_id}."
-    message = f"""
-    <html>
-    <head>
-        <style>
-            body {{ font-family: Arial, sans-serif; }}
-            .email-container {{ padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }}
-            .header {{ font-size: 18px; font-weight: bold; color: #333; }}
-            .content {{ margin-top: 10px; }}
-            .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
-        </style>
-    </head>
-    <body>
-        <div class="email-container">
-            <div class="header">Encerramento do pedido de requisição.</strong></div>
-            <div class="content">
-                <p>Este email confirma o encerramento da requisição e a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
-                <p>Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
-            </div>
-            <div class="footer">
-                <p>Obrigado,<br>NIT</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    send_email(recipient_emails, subject, message)
+
 
 # Function to check requisitions and send reminders
 def check_due_requisitions():
@@ -237,3 +139,5 @@ def send_reminders():
         
         send_email(user_email, subject, message)
         print(f"Reminder sent for requisition #{requisicao_id} to {user_email}.")
+
+send_reminders()
