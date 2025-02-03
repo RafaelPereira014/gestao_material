@@ -12,6 +12,7 @@ from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
 from app.db_operations.profile import *
 from app.db_operations.statistics import *
+from app.db_operations.notifications import *
 from config import DB_CONFIG
 from flask_limiter.util import get_remote_address
 
@@ -400,8 +401,22 @@ def requisicoes():
 def close_requisition(requisicao_id):
     # Implement the logic to close the requisition using the provided ID
     try:
+            
+        requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
+
+        # Check what requisicao returns
+        if not requisicao:
+            return jsonify({"status": "error", "message": "Requisition not found."}), 404
+        
+        user_email = requisicao[2]
+        ticket_id = requisicao[10]
+        material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
+        recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
+        
         update_estado_requisicao(requisicao_id,'Resolvido')
         update_equipment_from_requisicao(requisicao_id)
+        send_email_on_material_closure(ticket_id,recipients,material_link)
+        
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -410,8 +425,21 @@ def close_requisition(requisicao_id):
 def reopen_requisition(requisicao_id):
     # Implement the logic to close the requisition using the provided ID
     try:
+        requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
+
+        # Check what requisicao returns
+        if not requisicao:
+            return jsonify({"status": "error", "message": "Requisition not found."}), 404
+        
+        user_email = requisicao[2]
+        ticket_id = requisicao[10]
+        material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
+        recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
+        
         update_estado_requisicao(requisicao_id,'Pendente')
         update_equipment_from_requisicao(requisicao_id)
+        send_email_on_material_closure(ticket_id,recipients,material_link)
+        
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -459,11 +487,25 @@ def assign_equipment():
     
     
     # Get the necessary fields from requisicao
-    nome_requisicao = requisicao[1]  # Assuming the name is at index 1, make sure this is correct.
+    nome_requisicao = requisicao[1]  
+    user_email = requisicao[2]
+    material_type = requisicao[3]
+    ticket_id = requisicao[10]
     
-    # Update equipment attributes and requisition state
+    
+    
+    
+    
+    
+
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
     update_estado_requisicao(requisicao_id, 'ativa')
+    details = get_equip_details(material_type,equipamento_id,requisicao_id)
+    user_name = details[1]
+    material_name=details[2]
+    material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
+    recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
+    send_email_on_material_assign(ticket_id,user_name,recipients,material_type,material_name,material_link)
     
     return jsonify({"status": "success"}), 200
 

@@ -1,5 +1,6 @@
 
 import pymysql
+import pymysql.cursors
 from config import DB_CONFIG
 
 
@@ -256,6 +257,7 @@ def get_outros():
     connection.close()
     
     return monitores
+
 def get_requisicao_by_id(requisicao_id):
     connection = connect_to_database()
     cursor = connection.cursor()
@@ -483,3 +485,27 @@ def get_voip_user(user_name):
     
     return result
 
+def get_equip_details(equipment_type, equipment_id, requisicao_id):
+    table_mapping = {
+    "computador": "computadores",
+    "monitor": "monitores",
+    "camera": "cameras",
+    "voip": "voip",
+    "headset": "headset"
+    }
+
+    table_name = table_mapping.get(equipment_type.lower())
+    if not table_name:
+        return {"error": "Tipo de equipamento inválido"}
+    
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    query = f"SELECT * FROM {table_name} WHERE id=%s AND id_requisicao=%s"
+    cursor.execute(query, (equipment_id, requisicao_id))
+    result = cursor.fetchone()
+    
+    cursor.close()
+    connection.close()
+    
+    return result
