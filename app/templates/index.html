@@ -104,7 +104,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <a href="http://127.0.0.1:8081/inventory?search=Disponivel&search_type=status" class="text-decoration-none">
+                <a href="{{ request.host_url }}/inventory?search=Disponivel&search_type=status" class="text-decoration-none">
                     <div class="card bg-info text-white mb-3">
                         <div class="card-header">Equipamentos disponiveis</div>
                         <div class="card-body">
@@ -114,7 +114,7 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="http://127.0.0.1:8081/inventory?search=Em uso&search_type=status" class="text-decoration-none">
+                <a href="{{ request.host_url }}/inventory?search=Em uso&search_type=status" class="text-decoration-none">
                     <div class="card bg-success text-white mb-3">
                         <div class="card-header">Equipamentos em uso</div>
                         <div class="card-body">
@@ -124,7 +124,7 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="http://127.0.0.1:8081/inventory?search=Em manutenção&search_type=status" class="text-decoration-none">
+                <a href="{{ request.host_url }}/inventory?search=Em manutenção&search_type=status" class="text-decoration-none">
                     <div class="card bg-warning text-white mb-3">
                         <div class="card-header">Equipamentos em manutenção</div>
                         <div class="card-body">
@@ -135,7 +135,7 @@
             </div>
             
             <div class="col-md-4">
-                <a href="http://127.0.0.1:8081/inventory?search=Extraviado&search_type=status" class="text-decoration-none">
+                <a href="{{ request.host_url }}/inventory?search=Extraviado&search_type=status" class="text-decoration-none">
                     <div class="card bg-danger text-white mb-3">
                         <div class="card-header">Equipamentos extraviados</div>
                         <div class="card-body">
