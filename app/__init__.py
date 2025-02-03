@@ -98,6 +98,7 @@ def index():
     equipment_counts = get_equipment_counts(user_data.get('escola_id'))
     total_equipm = total_equip(user_data.get('escola_id'))
     
+    
     return render_template('index.html',year=year,is_admin=is_admin(session['user_id']),equipment_counts=equipment_counts,total_equipm=total_equipm,escola_nome=escola_nome)
 
 
@@ -379,7 +380,7 @@ def requisicoes():
     user_id = session.get('user_id')  # Get the user_id from session
     if user_id is None:
         return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
-    
+    today_date = datetime.today().date()
     # Get all requisicoes (all requests)
     all_requisicoes = get_all_requisicoes()
     all_requisicoes_ativas = get_all_requisicoes_ativas()
@@ -395,7 +396,7 @@ def requisicoes():
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
                            available_equipments=available_equipments,
-                           all_requisicoes_ativas=all_requisicoes_ativas)
+                           all_requisicoes_ativas=all_requisicoes_ativas,today_date=today_date)
 
 @app.route('/close_requisition/<int:requisicao_id>', methods=['POST'])
 def close_requisition(requisicao_id):

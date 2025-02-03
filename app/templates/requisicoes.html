@@ -184,13 +184,17 @@
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>
                             {% if requisicao.data_fim %}
-                                {{ requisicao.data_fim }}
+                                {% if requisicao.data_fim == today_date %}
+                                    {{ requisicao.data_fim }} - Requisição deve ser devolvida
+                                {% else %}
+                                    {{ requisicao.data_fim }}
+                                {% endif %}
                             {% else %}
                                 Sem data de fim
                             {% endif %}
                         </td>
                         <td>
-                            <!-- Close Requisition Button -->
+                            
                             <button 
                                 class="btn btn-danger btn-sm" 
                                 data-toggle="modal" 
