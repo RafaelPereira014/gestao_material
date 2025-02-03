@@ -6,9 +6,14 @@ from email.mime.text import MIMEText
 import os
 import smtplib
 import pymysql
-from config import DB_CONFIG
 
-
+# Database configuration
+DB_CONFIG = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'passroot',
+    'database': 'material_management'
+}
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
@@ -27,11 +32,10 @@ def send_email(to_emails, subject, message, attachments=[]):
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()  # Upgrade the connection to a secure encrypted SSL/TLS connection
             server.login(user, password)
-            print(f"Sending email to: {to_emails}")  # Add this to debug the recipient email
+            print(f"Sending email to: {to_emails}")  # Debugging statement
 
             for to_email in to_emails:
-                # Create a MIMEMultipart object to represent the email
-                print(f"Sending email to: {to_email}")  # Add this to debug the recipient email
+                print(f"Sending email to: {to_email}")  # Debugging statement
 
                 msg = MIMEMultipart()
                 msg['From'] = from_email
@@ -65,26 +69,21 @@ def send_email(to_emails, subject, message, attachments=[]):
 
     except Exception as e:
         print(f"Failed to send email: {e}")
-        
-        
-
 
 # Function to check requisitions and send reminders
 def check_due_requisitions():
-    # Get today's date
     today_date = datetime.today().date()
-    
+
     connection = connect_to_database()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # SQL query to fetch requisitions that are due or overdue
+    # Correct the SQL query to use = instead of ==
     query = """
-        SELECT id,email, data_fim, tipo_equipamento, nome
-        FROM requisicoes 
-        WHERE data_fim < %s AND estado == 'ativa'
+        SELECT id, email, data_fim, tipo_equipamento, nome
+        FROM requisicoes
+        WHERE data_fim < %s AND estado = 'ativa'
     """
     
-    # Execute the query to fetch overdue requisitions
     cursor.execute(query, (today_date,))
     overdue_requisitions = cursor.fetchall()
 
@@ -96,6 +95,10 @@ def check_due_requisitions():
 # Function to send reminders for overdue requisitions
 def send_reminders():
     overdue_requisitions = check_due_requisitions()
+
+    if not overdue_requisitions:
+        print("No overdue requisitions found.")
+        return
 
     for requisition in overdue_requisitions:
         requisicao_id = requisition['id']
@@ -137,7 +140,7 @@ def send_reminders():
         </html>
         """
         
-        send_email(user_email, subject, message)
+        send_email([user_email], subject, message)
         print(f"Reminder sent for requisition #{requisicao_id} to {user_email}.")
 
 send_reminders()
