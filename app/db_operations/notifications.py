@@ -7,7 +7,7 @@ import os
 import smtplib
 import pymysql
 
-from ...config import DB_CONFIG
+from config import DB_CONFIG
 
 
 
