@@ -73,15 +73,15 @@ def send_email(to_emails, subject, message, attachments=[]):
 # Function to check requisitions and send reminders
 def check_due_requisitions():
     today_date = datetime.today().date()
-
+    print(f"Today's date: {today_date}")
     connection = connect_to_database()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # Correct the SQL query to use = instead of ==
+    # Modify the SQL query to extract the date part of `data_fim`
     query = """
         SELECT id, email, data_fim, tipo_equipamento, nome
         FROM requisicoes
-        WHERE data_fim < %s AND estado = 'ativa'
+        WHERE DATE(data_fim) = %s AND estado = 'ativa'
     """
     
     cursor.execute(query, (today_date,))
