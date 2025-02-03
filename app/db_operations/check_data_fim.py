@@ -9,10 +9,10 @@ import pymysql
 
 # Database configuration
 DB_CONFIG = {
-    'host': 'localhost',
+    'host': 'db',
     'user': 'root',
-    'password': 'passroot',
-    'database': 'material_management'
+    'password': 'dpf37ek>N49E',
+    'database': 'gestao_material'
 }
 
 def connect_to_database():
