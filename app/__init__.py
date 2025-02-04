@@ -275,37 +275,46 @@ def fetch_tabelas():
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
 
-    # Query templates for counting and fetching data
     query_templates = {
-        "marcas": """SELECT * FROM marcas
-                           WHERE nome LIKE %s 
-                           LIMIT %s OFFSET %s""",
-        "modelos": """SELECT * FROM modelos
-                           WHERE nome LIKE %s 
-                           LIMIT %s OFFSET %s""",
-        "utilizadores": """SELECT * FROM users_a_atribuir
-                           WHERE nome LIKE %s 
-                           LIMIT %s OFFSET %s""",
-        "marcas": """SELECT * FROM marcas
-                           WHERE nome LIKE %s 
-                           LIMIT %s OFFSET %s""",
-        "marcas": """SELECT * FROM marcas
-                           WHERE nome LIKE %s 
-                           LIMIT %s OFFSET %s""",
-        
+        key: f"SELECT * FROM {table} WHERE nome LIKE %s LIMIT %s OFFSET %s"
+        for key, table in {
+            "marcas": "marcas",
+            "modelos": "modelos",
+            "utilizadores": "users_a_atribuir",
+            "discos": "discos",
+            "processadores": "processadores",
+            "rams": "rams",
+            "tipo_monitor": "tipo_monitor",
+            "polegadas": "polegadas",
+            "tipo_voip": "tipo_voip",
+            "sistema_operativo": "sistema_operativo",
+            "office": "office",
+            "firma": "firma",
+            "garantias": "garantia",
+            "tipo_camera": "tipo_camera",
+            "tipo_headset": "tipo_headset",
+        }.items()
     }
 
     count_templates = {
-        "marcas": """SELECT COUNT(*) AS count FROM marcas
-                           WHERE nome LIKE %s 
-                           """,
-        "modelos": """SELECT COUNT(*) AS count FROM modelos
-                           WHERE nome LIKE %s 
-                           """,
-        "utilizadores": """SELECT COUNT(*) AS count FROM users_a_atribuir
-                           WHERE nome LIKE %s 
-                           """,
-        
+        key: f"SELECT COUNT(*) AS count FROM {table} WHERE nome LIKE %s"
+        for key, table in {
+            "marcas": "marcas",
+            "modelos": "modelos",
+            "utilizadores": "users_a_atribuir",
+            "discos": "discos",
+            "processadores": "processadores",
+            "rams": "rams",
+            "tipo_monitor": "tipo_monitor",
+            "polegadas": "polegadas",
+            "tipo_voip": "tipo_voip",
+            "sistema_operativo": "sistema_operativo",
+            "office": "office",
+            "firma": "firma",
+            "garantias": "garantia",
+            "tipo_camera": "tipo_camera",
+            "tipo_headset": "tipo_headset",
+        }.items()
     }
 
     # Validate the inventory type
