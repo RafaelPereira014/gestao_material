@@ -844,6 +844,8 @@ def add_equipment(category=None):
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
+    
+    
     if request.method == 'POST':
         serial_number = request.form.get('SerialNo')
         equipment_type = request.form.get('itemType')
@@ -939,6 +941,23 @@ def edit_item(category, item_id):
     if category not in valid_categories:
         return "Categoria inválida", 400
 
+
+    marcas = get_marcas()
+    modelos = get_modelos()
+    processadores = get_processadores()
+    rams = get_rams()
+    monitores = get_tipo_monitores()
+    polegadas = get_polegadas()
+    voips = get_tipo_voips()
+    discos = get_discos()
+    sistemas_operativos = get_sistemas_operativos()
+    offices = get_offices()
+    firmas = get_firmas()
+    garantias = get_garantias()
+    tipos_camera = get_tipos_camera()
+    tipos_headset = get_tipos_headset()
+    users = get_atribuidos_a()
+    
     if request.method == 'POST':
         # Get form data
         form_data = request.form.to_dict()
@@ -987,7 +1006,26 @@ def edit_item(category, item_id):
             connection.close()
 
     # Render the template for editing
-    return render_template('edit_item.html', item=item, category=category, is_admin=is_admin(session['user_id']))
+    return render_template(
+        'edit_item.html', 
+        item=item, 
+        category=category, 
+        is_admin=is_admin(session['user_id']),
+        marcas=marcas,
+        modelos=modelos,
+        processadores=processadores,
+        rams=rams,
+        monitores=monitores,
+        polegadas=polegadas,
+        voips=voips,
+        sistemas_operativos=sistemas_operativos,
+        offices=offices,
+        firmas=firmas,
+        garantias=garantias,
+        tipos_camera=tipos_camera,
+        tipos_headset=tipos_headset,
+        discos = discos,
+        users=users)
 
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):
