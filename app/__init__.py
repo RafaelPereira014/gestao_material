@@ -13,7 +13,9 @@ from app.db_operations.inventory import *
 from app.db_operations.profile import *
 from app.db_operations.statistics import *
 from app.db_operations.notifications import *
+from app.db_operations.add_equip import *
 from config import DB_CONFIG
+
 from flask_limiter.util import get_remote_address
 
 
@@ -760,7 +762,23 @@ def add_equipment(category=None):
     
     if category not in allowed_categories:
         return "Categoria inválida", 400  # If the category is not in the allowed list, return error
-
+    
+    marcas = get_marcas()
+    modelos = get_modelos()
+    processadores = get_processadores()
+    rams = get_rams()
+    monitores = get_tipo_monitores()
+    polegadas = get_polegadas()
+    voips = get_tipo_voips()
+    discos = get_discos()
+    sistemas_operativos = get_sistemas_operativos()
+    offices = get_offices()
+    firmas = get_firmas()
+    garantias = get_garantias()
+    tipos_camera = get_tipos_camera()
+    tipos_headset = get_tipos_headset()
+    users = get_atribuidos_a()
+    
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
         
@@ -804,7 +822,25 @@ def add_equipment(category=None):
         return redirect(url_for('add_equipment', category=category))
 
     # Render the template with the 'category' and 'is_admin' session data
-    return render_template('add_equipment_nit.html', category=category, is_admin=is_admin(session['user_id']))
+    return render_template(
+        'add_equipment_nit.html', 
+        category=category, 
+        is_admin=is_admin(session['user_id']),
+        marcas=marcas,
+        modelos=modelos,
+        processadores=processadores,
+        rams=rams,
+        monitores=monitores,
+        polegadas=polegadas,
+        voips=voips,
+        sistemas_operativos=sistemas_operativos,
+        offices=offices,
+        firmas=firmas,
+        garantias=garantias,
+        tipos_camera=tipos_camera,
+        tipos_headset=tipos_headset,
+        discos = discos,
+        users=users)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():

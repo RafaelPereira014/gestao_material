@@ -105,7 +105,12 @@
                 <div id="computadoresFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="nome_ad">Nome AD</label>
@@ -113,23 +118,48 @@
                     </div>
                     <div class="form-group">
                         <label for="marca">Marca</label>
-                        <input type="text" class="form-control" id="marca" name="marca" placeholder="Ex: Nexus123">
+                        <select class="form-control" id="marca" name="marca" >
+                            <option value="" disabled selected>Selecione uma marca</option>
+                            {% for marca in marcas %}
+                                <option value="{{ marca }}">{{ marca }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="modelo">Modelo</label>
-                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ex: AS123">
+                        <select class="form-control" id="modelo" name="modelo" >
+                            <option value="" disabled selected>Selecione um modelo</option>
+                            {% for modelo in modelos %}
+                                <option value="{{ modelo }}">{{ modelo }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="processador">Processador</label>
-                        <input type="text" class="form-control" id="processador" name="processador" placeholder="Ex: Intel i7">
+                        <select class="form-control" id="processador" name="processador" >
+                            <option value="" disabled selected>Selecione um processador</option>
+                            {% for processador in processadores %}
+                                <option value="{{ processador }}">{{ processador }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="ram">Memória RAM</label>
-                        <input type="text" class="form-control" id="ram" name="ram" placeholder="Ex: 16GB">
+                        <label for="ram">Ram</label>
+                        <select class="form-control" id="ram" name="ram" >
+                            <option value="" disabled selected>Selecione uma ram</option>
+                            {% for ram in rams %}
+                                <option value="{{ ram }}">{{ ram }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="disco">Armazenamento</label>
-                        <input type="text" class="form-control" id="disco" name="disco" placeholder="Ex: 512GB SSD">
+                        <label for="disco">Discos</label>
+                        <select class="form-control" id="disco" name="disco" >
+                            <option value="" disabled selected>Selecione um disco</option>
+                            {% for disco in discos %}
+                                <option value="{{ disco }}">{{ disco }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="n_serie">Nº Série</label>
@@ -145,11 +175,30 @@
                     </div>
                     <div class="form-group">
                         <label for="firma">Firma</label>
-                        <input type="text" class="form-control" id="firma" name="firma" placeholder="Ex: Escritorio Digital">
+                        <select class="form-control" id="firma" name="firma" >
+                            <option value="" disabled selected>Selecione uma firma</option>
+                            {% for firma in firmas %}
+                                <option value="{{ firma }}">{{ firma }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="so">SO</label>
-                        <input type="text" class="form-control" id="so" name="so" placeholder="Ex: Windows 11">
+                        <label for="so">Sistema Operativo</label>
+                        <select class="form-control" id="so" name="so" >
+                            <option value="" disabled selected>Selecione um Sistema Operativo</option>
+                            {% for so in sistemas_operativos %}
+                                <option value="{{ so }}">{{ so }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="garantia">Garantia</label>
+                        <select class="form-control" id="garantia" name="garantia" >
+                            <option value="" disabled selected>Selecione a Garatia</option>
+                            {% for garantia in garantias %}
+                                <option value="{{ garantia }}">{{ garantia }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 
                 </div>
@@ -160,12 +209,22 @@
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
                     </div>
                     <div class="form-group">
-                        <label for="marca_modelo">Marca/Modelo</label>
-                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                        <label for="marca">Marca/Modelo</label>
+                        <select class="form-control" id="marca" name="marca" >
+                            <option value="" disabled selected>Selecione uma marca/modelo</option>
+                            {% for marca in monitores %}
+                                <option value="{{ marca }}">{{ marca }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="polegadas">Polegadas</label>
-                        <input type="text" class="form-control" id="polegadas" name="polegadas" placeholder="Ex: 22''">
+                        <select class="form-control" id="polegadas" name="polegadas" >
+                            <option value="" disabled selected>Selecione as polegadas</option>
+                            {% for polegadas in polegadas %}
+                                <option value="{{ polegadas }}">{{ polegadas }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -181,7 +240,12 @@
                     </div>
                     <div class="form-group">
                         <label for="garantia">Garantia</label>
-                        <input type="text" class="form-control" id="garantia" name="garantia" placeholder="Ex: 3 anos">
+                        <select class="form-control" id="garantia" name="garantia" >
+                            <option value="" disabled selected>Selecione a garantia</option>
+                            {% for garantia in garantias %}
+                                <option value="{{ garantia }}">{{ garantia }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                 </div>
@@ -193,8 +257,13 @@
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
                     </div>
                     <div class="form-group">
-                        <label for="marca_modelo">Marca/Modelo</label>
-                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                        <label for="marca_modelo">Modelo</label>
+                        <select class="form-control" id="marca_modelo" name="marca_modelo" >
+                            <option value="" disabled selected>Selecione um modelo</option>
+                            {% for marca_modelo in tipos_camera %}
+                                <option value="{{ marca_modelo }}">{{ marca_modelo }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -209,8 +278,13 @@
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
                     </div>
                     <div class="form-group">
-                        <label for="marca_modelo">Marca/Modelo</label>
-                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                        <label for="marca_modelo">Modelo</label>
+                        <select class="form-control" id="marca_modelo" name="marca_modelo" >
+                            <option value="" disabled selected>Selecione um modelo</option>
+                            {% for marca_modelo in voips %}
+                                <option value="{{ marca_modelo }}">{{ marca_modelo }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="ext">Extensão</label>
@@ -232,15 +306,19 @@
                     
                 </div>
 
-                <!-- Fields for Headsets -->
                 <div id="headsetFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
                     </div>
                     <div class="form-group">
-                        <label for="marca_modelo">Marca/Modelo</label>
-                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
+                        <label for="marca_modelo">Modelo</label>
+                        <select class="form-control" id="marca_modelo" name="marca_modelo" >
+                            <option value="" disabled selected>Selecione um modelo</option>
+                            {% for marca_modelo in tipos_headset %}
+                                <option value="{{ marca_modelo }}">{{ marca_modelo }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
@@ -248,23 +326,13 @@
                     </div>
                 </div>
 
-                <!-- Fields for Headsets -->
                 <div id="outrosFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
                         <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
                     </div>
-                    <div class="form-group">
-                        <label for="tipo_equipamento">Tipo Equipamento</label>
-                        <select class="form-control" id="tipo_equipamento" name="tipo_equipamento" required>
-                            <option value="" disabled selected>Selecione o tipo de equipamento</option>
-                            
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="marca_modelo">Marca/Modelo</label>
-                        <input type="text" class="form-control" id="marca_modelo" name="marca_modelo" placeholder="Ex: NSA123">
-                    </div>
+                    
+
                     <div class="form-group">
                         <label for="cod_nit">Codigo NIT</label>
                         <input type="text" class="form-control" id="cod_nit" name="cod_nit" placeholder="Ex: 123">
