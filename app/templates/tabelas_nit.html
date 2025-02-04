@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário NIT</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/1664515319272.jpeg') }}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css')}}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <!-- Sidebar Icon/Logo -->
+        <div class="sidebar-icon">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
+        </div>
+    
+        <!-- Navigation Items -->
+        <ul class="nav flex-column">
+            
+            <!-- Dashboard Group -->
+            <li class="nav-item">
+                <a class="nav-link active" href="/index" title="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            {% if is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/requisicoes" title="Requisições">
+                        <i class="fas fa-clipboard"></i> Requisições
+                    </a>
+                </li>
+            
+                
+                
+            {% endif %}
+    
+            <!-- Inventário Group with Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="inventarioDropdown" role="button" data-toggle="collapse" data-target="#inventarioCollapse" aria-expanded="false" aria-controls="inventarioCollapse">
+                    <i class="fas fa-box"></i> Inventário
+                </a>
+                <div class="collapse" id="inventarioCollapse">
+                    <ul class="nav flex-column pl-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inventory" title="Inventário">
+                                <i class="fas fa-box"></i> Inventário
+                            </a>
+                        </li>
+                        
+                        {% if is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inventory_nit" title="Inventário NIT">
+                                <i class="fas fa-boxes"></i> Inventário NIT
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+    
+            <!-- Adicionar Group with Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="adicionarDropdown" role="button" data-toggle="collapse" data-target="#adicionarCollapse" aria-expanded="false" aria-controls="adicionarCollapse">
+                    <i class="fas fa-plus"></i> Adicionar
+                </a>
+                <div class="collapse" id="adicionarCollapse">
+                    <ul class="nav flex-column pl-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/adicionar_equipamento" title="Adicionar Equipamento">
+                                <i class="fas fa-plus"></i> Adicionar equipamento
+                            </a>
+                        </li>
+                        
+                        {% if is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/adicionar_equipamento_nit/-" title="Adicionar Equipamento NIT">
+                                <i class="fas fa-plus"></i> Adicionar equipamento NIT
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            
+            <!-- Perfil Group -->
+            <li class="nav-item">
+                <a class="nav-link" href="/perfil" title="Perfil utilizador">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+            </li>
+            
+    
+            <!-- Admin Only Group -->
+            {% if is_admin %}
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Adicionar utilizador">
+                        <i class="fas fa-user-plus"></i> Adicionar utilizador
+                    </a>
+                </li>
+            {% endif %}
+            
+            <!-- Logout -->
+            <li class="nav-item">
+                <a class="nav-link" href="/logout" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div id = "main-content">
+        <div class="container mt-4">
+            <h2>Tabelas NIT</h2>
+    
+            <!-- Dropdown for selecting inventory type -->
+            <div class="form-group">
+                <label for="inventoryType">Escolha uma categoria:</label>
+                <select class="form-control" id="inventoryType" onchange="fetchInventory()">
+                    <option value="">Selecione</option>
+                    <option value="marcas">Marcas</option>
+                    <option value="modelos">Modelos</option>
+                    <option value="processadores">Processadores</option>
+                    <option value="rams">Rams</option>
+                    <option value="discos">Discos</option>
+                    <option value="office">Office</option>
+                    <option value="garantias">Garantia</option>
+                    <option value="firma">Firma</option>
+                    <option value="tipo_voip">Voips</option>
+                    <option value="tipo_headset">Headsets</option>
+                    <option value="tipo_camera">Cameras</option>
+                    <option value="tipo_monitor">Monitores</option>
+                    <option value="users_a_atribuir">Utilizadores</option>
+
+
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Filtros de Pesquisa</h5>
+                    <button class="btn btn-primary btn-sm" id="toggleFiltersButton">Mostrar Filtros</button>
+                </div>
+                <div class="card-body" id="filtersSection" style="display: none;">
+                    <!-- General Search -->
+                    <div class="form-group">
+                        <label for="searchInput">Pesquisar "Nome":</label>
+                        <input type="text" class="form-control custom-input" id="searchInput" placeholder="Digite o nome">
+                    </div>
+                    
+                    
+        
+                </div>
+                    <!-- Botão para Limpar Filtros -->
+                <div class="text-right">
+                    <button class="btn btn-secondary btn-sm" id="clearFiltersButton">Limpar Filtros</button>
+                </div>
+                </div>
+            </div>
+    
+            <!-- Placeholder for the inventory table -->
+            <div id="NIT_table" class="mt-4">
+                <!-- Dynamic content will be rendered here -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeModalLabel">Confirmação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem a certeza de que deseja remover este equipamento? Esta ação é irreversivel.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmRemove">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const removeModal = document.getElementById('removeModal');
+            const confirmRemoveButton = document.getElementById('confirmRemove');
+            let targetUrl = '';
+        
+            // Set up the modal with the correct details
+            $('#removeModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget); // Button that triggered the modal
+                const equipmentId = button.data('id');
+                const category = button.data('category');
+                
+                // Build the URL dynamically
+                targetUrl = `/remove_equipment/${category}/${equipmentId}`;
+            });
+        
+            // Handle the confirmation button click
+            confirmRemoveButton.addEventListener('click', () => {
+                window.location.href = targetUrl; // Redirect to the removal route
+            });
+        });
+        function fetchInventory() {
+            const inventoryType = document.getElementById("inventoryType").value;
+            const searchQuery = document.getElementById("searchInput").value.trim();
+            const estado = document.getElementById("estado").value; // Get the 'estado' value
+            const inventoryTable = document.getElementById("inventoryTable");
+        
+            // Show/hide fields for different inventory types
+            const computadoresFields = document.getElementById("computadoresFields");
+            if (inventoryType === "computadores") {
+                computadoresFields.style.display = "block";
+            } else {
+                computadoresFields.style.display = "none";
+            }
+        
+            // Build the fetch URL with 'estado' as an additional parameter
+            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estado)}`;
+        
+            if (inventoryType) {
+                fetch(fetchUrl)
+                    .then(response => response.text())
+                    .then(html => {
+                        inventoryTable.innerHTML = html;
+                    })
+                    .catch(error => {
+                        inventoryTable.innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
+                    });
+            } else {
+                inventoryTable.innerHTML = "<p class='text-warning'>Por favor, selecione uma categoria.</p>";
+            }
+        }
+        
+        // Attach event listener to the 'estado' dropdown
+        document.getElementById("estado").addEventListener("change", fetchInventory);
+        
+        // Show/hide additional search fields based on inventory type
+        document.getElementById("inventoryType").addEventListener("change", function () {
+            const inventoryType = this.value;
+            const additionalSearchFields = document.getElementById("additionalSearchFields");
+            if (inventoryType === "computadores") {
+                additionalSearchFields.style.display = "block";
+            } else {
+                additionalSearchFields.style.display = "none";
+            }
+        });
+        
+        // Trigger fetchInventory when input changes
+        document.getElementById("searchInput").addEventListener("input", fetchInventory);
+        document.getElementById("searchSO")?.addEventListener("input", fetchInventory);
+        document.getElementById("searchModelo")?.addEventListener("input", fetchInventory);
+
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("page-link")) {
+                e.preventDefault();
+        
+                const page = e.target.getAttribute("data-page");
+                const inventoryType = document.getElementById("inventoryType").value;
+                const searchQuery = document.getElementById("searchInput").value.trim();
+                const estadoQuery = document.getElementById("estado").value.trim();
+        
+                if (page && inventoryType) {
+                    // Include all relevant parameters in the fetch URL
+                    const fetchUrl = `/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estadoQuery)}`;
+        
+                    fetch(fetchUrl)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById("inventoryTable").innerHTML = html;
+                        })
+                        .catch(error => {
+                            document.getElementById("inventoryTable").innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
+                        });
+                }
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleFiltersButton = document.getElementById('toggleFiltersButton');
+            const filtersSection = document.getElementById('filtersSection');
+    
+            toggleFiltersButton.addEventListener('click', () => {
+                const isVisible = filtersSection.style.display === 'block';
+                filtersSection.style.display = isVisible ? 'none' : 'block';
+                toggleFiltersButton.textContent = isVisible ? 'Mostrar Filtros' : 'Ocultar Filtros';
+            });
+        });
+        // Clear filters and reset inventory table
+        document.getElementById('clearFiltersButton').addEventListener('click', function () {
+            // Clear all filter fields
+            document.querySelectorAll('#filtersSection input').forEach(input => input.value = '');
+            document.querySelectorAll('#filtersSection select').forEach(select => select.value = '');
+
+            // Call fetchInventory to refresh the table after clearing filters
+            fetchInventory();
+        });
+    </script>
+    
+</body>
+</html>

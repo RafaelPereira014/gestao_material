@@ -259,6 +259,15 @@ def inventory_nit():
     
     return render_template('inventory_nit.html',is_admin=is_admin(session['user_id']))
 
+@app.route('/tabelas')
+def tabelas_nit():
+    user_id = session.get('user_id')  # Get the user_id from session
+    if user_id is None:
+        return redirect(url_for('login'))  # Redirect to login if the user is not authenticated
+    
+    
+    return render_template('tabelas_nit.html',is_admin=is_admin(session['user_id']))
+
 @app.route('/fetch_inventory')
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
