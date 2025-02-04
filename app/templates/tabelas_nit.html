@@ -136,7 +136,7 @@
                     <option value="tipo_headset">Headsets</option>
                     <option value="tipo_camera">Cameras</option>
                     <option value="tipo_monitor">Monitores</option>
-                    <option value="users_a_atribuir">Utilizadores</option>
+                    <option value="utilizadores">Utilizadores</option>
 
 
                     <option value="outros">Outros</option>
@@ -154,15 +154,13 @@
                         <label for="searchInput">Pesquisar "Nome":</label>
                         <input type="text" class="form-control custom-input" id="searchInput" placeholder="Digite o nome">
                     </div>
-                    
-                    
-        
+    
                 </div>
                     <!-- Botão para Limpar Filtros -->
                 <div class="text-right">
                     <button class="btn btn-secondary btn-sm" id="clearFiltersButton">Limpar Filtros</button>
                 </div>
-                </div>
+                
             </div>
     
             <!-- Placeholder for the inventory table -->
@@ -217,23 +215,12 @@
             });
         });
         function fetchInventory() {
-            const inventoryType = document.getElementById("inventoryType").value;
+            const inventoryType = document.getElementById("inventoryType").value; // Use the correct ID
             const searchQuery = document.getElementById("searchInput").value.trim();
-            const estado = document.getElementById("estado").value; // Get the 'estado' value
-            const inventoryTable = document.getElementById("inventoryTable");
-        
-            // Show/hide fields for different inventory types
-            const computadoresFields = document.getElementById("computadoresFields");
-            if (inventoryType === "computadores") {
-                computadoresFields.style.display = "block";
-            } else {
-                computadoresFields.style.display = "none";
-            }
-        
-            // Build the fetch URL with 'estado' as an additional parameter
-            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estado)}`;
+            const inventoryTable = document.getElementById("NIT_table");
         
             if (inventoryType) {
+                const fetchUrl = `/fetch_tabelas?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}`;
                 fetch(fetchUrl)
                     .then(response => response.text())
                     .then(html => {
@@ -247,37 +234,23 @@
             }
         }
         
-        // Attach event listener to the 'estado' dropdown
-        document.getElementById("estado").addEventListener("change", fetchInventory);
         
-        // Show/hide additional search fields based on inventory type
-        document.getElementById("inventoryType").addEventListener("change", function () {
-            const inventoryType = this.value;
-            const additionalSearchFields = document.getElementById("additionalSearchFields");
-            if (inventoryType === "computadores") {
-                additionalSearchFields.style.display = "block";
-            } else {
-                additionalSearchFields.style.display = "none";
-            }
-        });
-        
+    
         // Trigger fetchInventory when input changes
         document.getElementById("searchInput").addEventListener("input", fetchInventory);
-        document.getElementById("searchSO")?.addEventListener("input", fetchInventory);
-        document.getElementById("searchModelo")?.addEventListener("input", fetchInventory);
+       
 
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("page-link")) {
                 e.preventDefault();
         
                 const page = e.target.getAttribute("data-page");
-                const inventoryType = document.getElementById("inventoryType").value;
+                const inventoryType = document.getElementById("NIT_table").value;
                 const searchQuery = document.getElementById("searchInput").value.trim();
-                const estadoQuery = document.getElementById("estado").value.trim();
         
                 if (page && inventoryType) {
                     // Include all relevant parameters in the fetch URL
-                    const fetchUrl = `/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estadoQuery)}`;
+                    const fetchUrl = `/fetch_tabelas?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}}`;
         
                     fetch(fetchUrl)
                         .then(response => response.text())
@@ -291,27 +264,7 @@
             }
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleFiltersButton = document.getElementById('toggleFiltersButton');
-            const filtersSection = document.getElementById('filtersSection');
     
-            toggleFiltersButton.addEventListener('click', () => {
-                const isVisible = filtersSection.style.display === 'block';
-                filtersSection.style.display = isVisible ? 'none' : 'block';
-                toggleFiltersButton.textContent = isVisible ? 'Mostrar Filtros' : 'Ocultar Filtros';
-            });
-        });
-        // Clear filters and reset inventory table
-        document.getElementById('clearFiltersButton').addEventListener('click', function () {
-            // Clear all filter fields
-            document.querySelectorAll('#filtersSection input').forEach(input => input.value = '');
-            document.querySelectorAll('#filtersSection select').forEach(select => select.value = '');
-
-            // Call fetchInventory to refresh the table after clearing filters
-            fetchInventory();
-        });
-    </script>
     
 </body>
 </html>

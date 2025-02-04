@@ -268,6 +268,91 @@ def tabelas_nit():
     
     return render_template('tabelas_nit.html',is_admin=is_admin(session['user_id']))
 
+@app.route('/fetch_tabelas')
+def fetch_tabelas():
+    inventory_type = request.args.get('type', 'marcas')  # Default category
+    search_query = request.args.get('search', '').strip()  # Search term
+    current_page = int(request.args.get('page', 1))  # Current page
+    per_page = 10  # Items per page
+
+    # Query templates for counting and fetching data
+    query_templates = {
+        "marcas": """SELECT * FROM marcas
+                           WHERE nome LIKE %s 
+                           LIMIT %s OFFSET %s""",
+        "modelos": """SELECT * FROM modelos
+                           WHERE nome LIKE %s 
+                           LIMIT %s OFFSET %s""",
+        "utilizadores": """SELECT * FROM users_a_atribuir
+                           WHERE nome LIKE %s 
+                           LIMIT %s OFFSET %s""",
+        "marcas": """SELECT * FROM marcas
+                           WHERE nome LIKE %s 
+                           LIMIT %s OFFSET %s""",
+        "marcas": """SELECT * FROM marcas
+                           WHERE nome LIKE %s 
+                           LIMIT %s OFFSET %s""",
+        
+    }
+
+    count_templates = {
+        "marcas": """SELECT COUNT(*) AS count FROM marcas
+                           WHERE nome LIKE %s 
+                           """,
+        "modelos": """SELECT COUNT(*) AS count FROM modelos
+                           WHERE nome LIKE %s 
+                           """,
+        "utilizadores": """SELECT COUNT(*) AS count FROM users_a_atribuir
+                           WHERE nome LIKE %s 
+                           """,
+        
+    }
+
+    # Validate the inventory type
+    if inventory_type not in query_templates:
+        return "<p class='text-danger'>Categoria inválida.</p>", 400
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        # Prepare search terms with wildcards
+        search_term = f"%{search_query}%"
+        
+
+        if inventory_type == "marcas":
+            cursor.execute(count_templates[inventory_type], (search_term,))
+        else:
+            cursor.execute(count_templates[inventory_type], (search_term,))
+        total_items = cursor.fetchone().get('count', 0)
+
+        # Calculate pagination details
+        total_pages = (total_items + per_page - 1) // per_page
+        offset = (current_page - 1) * per_page
+
+        if inventory_type == "marcas":
+            cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
+        else:
+            cursor.execute(query_templates[inventory_type], (search_term, per_page, offset))
+        inventory_data = cursor.fetchall()
+    except pymysql.MySQLError as e:
+        return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
+    except KeyError as e:
+        return f"<p class='text-danger'>Erro: Campo de pesquisa '{str(e)}' não encontrado. Verifique os filtros fornecidos.</p>", 400
+    except Exception as e:
+        return f"<p class='text-danger'>Erro inesperado: {str(e)}</p>", 500
+    finally:
+        if connection:
+            connection.close()
+
+    # Render the inventory table
+    return render_template(
+        'NIT_table.html',
+        items=inventory_data,
+        current_page=current_page,
+        total_pages=total_pages,
+        inventory_type=inventory_type,
+    )
 @app.route('/fetch_inventory')
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category

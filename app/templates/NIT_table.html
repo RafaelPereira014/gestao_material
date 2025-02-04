@@ -3,91 +3,30 @@
     <table class="table table-bordered" id="dataTable">
         <thead>
             <tr>
-                <th>Atribuido a</th>
-                {% if items[0].nome_ad %}
                 <th>Nome</th>
-                {% endif %}
-                {% if items[0].modelo or items[0].marca_modelo %}
-                <th>Marca/Modelo</th>
-                {% endif %}
-                {% if items[0].so %}
-                <th>SO</th>
-                {% endif %}
-                {% if items[0].cod_nit %}
-                <th>COD Nit</th>
-                {% endif %}
-                {% if items[0].data_aq %}
-                <th>Data aq.</th>
-                {% endif %}
-                {% if items[0].ext %}
-                <th>Ext</th>
-                {% endif %}
-                <th>Estado</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in items %}
-            <tr>
-                <td>
-                    <a href="{{ url_for('user_page', user_name=item.atribuido_a) }}">
-                        {{ item.atribuido_a }}
-                    </a>
-                </td>
-                {% if item.nome_ad %}
-                <td>{{ item.nome_ad }}</td>
-                {% endif %}
-                {% if item.modelo or item.marca_modelo %}
-                    <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
-                {% else %}
-                    <td>-</td>
-                {% endif %}
-                {% if item.so  %}
-                    <td>{{ item.so }}</td>
-                {% elif item.so == '' %}
-                    <td>{{ '-' }}</td>
-                {%endif%}
-                {% if item.cod_nit %}
-                    <td>{{ item.cod_nit }}</td>
-                {% elif item.cod_nit == '' %}   
-                    <td>{{ '-' }}</td>
-                {%endif%}
-                {% if item.data_aq %}
-                    <td>{{ item.data_aq }}</td>
-                {% elif item.data_aq == '' %}
-                    <td>{{ '-' }}</td>
-                {%endif%}
-                {% if item.ext %}
-                <td>{{ item.ext }}</td>
-                {% endif %}
-                <td>
-                    {% if item.estado == 'Em uso' %}
-                        <span class="badge badge-success rounded-pill">Em uso</span>
-                    {% elif item.estado == 'Extraviado' %}
-                        <span class="badge badge-danger rounded-pill">Extraviado</span>
-                    {% elif item.estado == 'Em manutenção' %}
-                        <span class="badge badge-warning rounded-pill">Manutenção</span>
-                    {% elif item.estado == 'Disponivel' %}
-                        <span class="badge badge-info rounded-pill">Disponível</span>
-                    {% else %}
-                        <span class="badge badge-secondary rounded-pill">Unknown</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a class="btn btn-sm btn-warning" href="{{ url_for('edit_item', category=inventory_type, item_id=item['id']) }}">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a class="btn btn-sm btn-danger" 
-                        data-toggle="modal" 
-                        data-target="#removeModal" 
-                        data-id="{{ item['id'] }}" 
-                        data-category="{{ inventory_type }}">
-                        <i class="fas fa-trash"></i> Remover
-                    </a>
-
-                </td>
-            </tr>
-            {% endfor %}
+            {% if items %}
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.nome }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" href="{{ url_for('edit_item', category=inventory_type, item_id=item['id']) }}">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal" data-id="{{ item['id'] }}" data-category="{{ inventory_type }}">
+                            <i class="fas fa-trash"></i> Remover
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2" class="text-center">Nenhum dado encontrado para "{{ inventory_type }}".</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
     
@@ -100,8 +39,7 @@
                 <a class="page-link" href="#" 
                 data-page="{{ current_page - 1 }}" 
                 data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
+                >
                     Anterior
                 </a>
             </li>
@@ -111,8 +49,7 @@
                 <a class="page-link" href="#" 
                 data-page="{{ page }}" 
                 data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
+                >
                     {{ page }}
                 </a>
             </li>
@@ -122,8 +59,7 @@
                 <a class="page-link" href="#" 
                 data-page="{{ current_page + 1 }}" 
                 data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
+                >
                     Próximo
                 </a>
             </li>
