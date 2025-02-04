@@ -18,61 +18,94 @@
         <div class="sidebar-icon">
             <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="Logo">
         </div>
-
+    
         <!-- Navigation Items -->
         <ul class="nav flex-column">
+            
+            <!-- Dashboard Group -->
             <li class="nav-item">
                 <a class="nav-link active" href="/index" title="Dashboard">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
             {% if is_admin %}
-               
                 <li class="nav-item">
-                    <a class="nav-link" href="/requisicoes" title="Inventory">
+                    <a class="nav-link" href="/requisicoes" title="Requisições">
                         <i class="fas fa-clipboard"></i> Requisições
                     </a>
                 </li>
+            
+                
+                
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="/inventory" title="Inventory">
+    
+            <!-- Inventário Group with Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="inventarioDropdown" role="button" data-toggle="collapse" data-target="#inventarioCollapse" aria-expanded="false" aria-controls="inventarioCollapse">
                     <i class="fas fa-box"></i> Inventário
                 </a>
+                <div class="collapse" id="inventarioCollapse">
+                    <ul class="nav flex-column pl-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inventory" title="Inventário">
+                                <i class="fas fa-box"></i> Inventário
+                            </a>
+                        </li>
+                        
+                        {% if is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inventory_nit" title="Inventário NIT">
+                                <i class="fas fa-boxes"></i> Inventário NIT
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </li>
-            {% if is_admin %}
-               
-                <li class="nav-item">
-                    <a class="nav-link" href="/inventory_nit" title="Inventory">
-                        <i class="fas fa-boxes"></i> Inventário NIT
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_equipamento_nit/-" title="Add Equipment">
-                        <i class="fas fa-plus"></i> Adicionar equipamento NIT
-                    </a>
-                </li>
-            {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="/adicionar_equipamento" title="Add Equipment">
-                    <i class="fas fa-plus"></i> Adicionar equipamento
+    
+            <!-- Adicionar Group with Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="adicionarDropdown" role="button" data-toggle="collapse" data-target="#adicionarCollapse" aria-expanded="false" aria-controls="adicionarCollapse">
+                    <i class="fas fa-plus"></i> Adicionar
                 </a>
+                <div class="collapse" id="adicionarCollapse">
+                    <ul class="nav flex-column pl-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/adicionar_equipamento" title="Adicionar Equipamento">
+                                <i class="fas fa-plus"></i> Adicionar equipamento
+                            </a>
+                        </li>
+                        
+                        {% if is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/adicionar_equipamento_nit/-" title="Adicionar Equipamento NIT">
+                                <i class="fas fa-plus"></i> Adicionar equipamento NIT
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </li>
             
+            <!-- Perfil Group -->
             <li class="nav-item">
                 <a class="nav-link" href="/perfil" title="Perfil utilizador">
                     <i class="fas fa-user"></i> Perfil
                 </a>
             </li>
+            
+    
+            <!-- Admin Only Group -->
             {% if is_admin %}
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="/adicionar_utilizador" title="Add User">
+                    <a class="nav-link" href="/adicionar_utilizador" title="Adicionar utilizador">
                         <i class="fas fa-user-plus"></i> Adicionar utilizador
                     </a>
                 </li>
-
-                
             {% endif %}
             
+            <!-- Logout -->
             <li class="nav-item">
                 <a class="nav-link" href="/logout" title="Logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
