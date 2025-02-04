@@ -301,7 +301,7 @@ def fetch_tabelas():
         for key, table in {
             "marcas": "marcas",
             "modelos": "modelos",
-            "utilizadores": "users_a_atribuir",
+            "users_a_atribuir": "users_a_atribuir",
             "discos": "discos",
             "processadores": "processadores",
             "rams": "rams",
