@@ -1039,7 +1039,11 @@ def edit_equip():
 @app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET', 'POST'])
 def edit_item(category, item_id):
     # Ensure the category is valid to prevent SQL injection
-    valid_categories = ['computadores', 'monitores', 'cameras', 'voip', 'headset', 'outros']
+    valid_categories = ['computadores', 'monitores', 
+                        'cameras', 'voip', 
+                        'headset', 'outros','marcas',
+                        'modelos','processadores','rams','discos','tipo_monitor','tipo_camera','tipo_headset',
+                        'tipo_voip','polegadas','garantia','office','firma','users_a_atribuir']
     
     if category not in valid_categories:
         return "Categoria inválida", 400

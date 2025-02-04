@@ -119,14 +119,19 @@
             <h2>Editar equipamento - Categoria: {{ category }}</h2>
             <form action="{{ url_for('edit_item', category=category, item_id=item.id) }}" method="POST" onsubmit="showSuccessModal(event)">               
                 <div class="form-group">
-                    <label for="atribuido_a">Atribuído a:</label>
-                    <select class="form-control" id="atribuido_a" name="atribuido_a">
-                        {% for user in users %}
-                            <option value="{{ user }}" {% if item.atribuido_a == user %}selected{% endif %}>
-                                {{ user }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    {% if item.atribuido_a %}
+                        <label for="atribuido_a">Atribuído a:</label>
+                        <select class="form-control" id="atribuido_a" name="atribuido_a">
+                            {% for user in users %}
+                                <option value="{{ user }}" {% if item.atribuido_a == user %}selected{% endif %}>
+                                    {{ user }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <label for="nome">Nome</label>
+                        <input type="text" class="form-control" id="nome" name="nome" value="{{ item.nome }}">
+                    {% endif %}
                 </div>
                 
                 {% if category == 'computadores' %}
@@ -336,14 +341,16 @@
                 {% endif %}
         
                 <div class="form-group">
-                    <label for="estado">Estado:</label>
-                    <select class="form-control" id="estado" name="estado">
-                        <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
-                        <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
-                        <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
-                        <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
-                        <option value="Abatido" {% if item.estado == 'Abatido' %}selected{% endif %}>Abatido</option>
-                    </select>
+                    {%if item.estado %}
+                        <label for="estado">Estado:</label>
+                        <select class="form-control" id="estado" name="estado">
+                            <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
+                            <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
+                            <option value="Em manutenção" {% if item.estado == 'Em manutenção' %}selected{% endif %}>Em manutenção</option>
+                            <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
+                            <option value="Abatido" {% if item.estado == 'Abatido' %}selected{% endif %}>Abatido</option>
+                        </select>
+                    {%endif%}
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Guardar</button>
