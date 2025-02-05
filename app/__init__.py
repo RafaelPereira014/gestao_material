@@ -886,10 +886,10 @@ def add_item():
             cursor.close()
             
             # Return a success response
-            return jsonify({"success": True, "message": f"Equipamento '{equipment_name}' adicionado com sucesso!"})
+            return jsonify({"success": True, "message": f"Item '{equipment_name}' adicionado com sucesso!"})
         except Exception as e:
             print(f"Database Error: {e}")
-            return jsonify({"success": False, "message": "Erro ao adicionar o equipamento."}), 500
+            return jsonify({"success": False, "message": "Erro ao adicionar o item."}), 500
         finally:
             connection.close()
     else:
