@@ -854,6 +854,32 @@ def add_equip():
 
     return render_template('add_equipment.html', escolas=escolas, success=success, is_admin=is_admin(session['user_id']), user_details=user_details)
 
+@app.route('/add_equipment', methods=['POST'])
+def add_item():
+    equipment_name = request.form.get('equipment_name')
+    inventory_type = request.form.get('inventory_type')
+
+    if equipment_name and inventory_type:
+        try:
+            # Add logic to insert the equipment into the database
+            query = f"INSERT INTO {inventory_type} (nome) VALUES (%s)"
+            
+            # Connect to the database
+            connection = connect_to_database()
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(query, (equipment_name,))
+            connection.commit()
+            cursor.close()
+            
+            # Return a success response
+            return jsonify({"success": True, "message": f"Equipamento '{equipment_name}' adicionado com sucesso!"})
+        except Exception as e:
+            print(f"Database Error: {e}")
+            return jsonify({"success": False, "message": "Erro ao adicionar o equipamento."}), 500
+        finally:
+            connection.close()
+    else:
+        return jsonify({"success": False, "message": "Dados fornecidos incompletos."}), 400
 
 @app.route('/adicionar_equipamento_nit/<category>', methods=['GET', 'POST'])
 def add_equipment(category=None):

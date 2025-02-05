@@ -19,3 +19,49 @@
     color: white;
     font-size: 24px;
 }
+/* Style for the button container */
+.d-flex.justify-content-end.mb-3 {
+    margin-bottom: 1.5rem; /* Adjust spacing below the button */
+}
+
+/* Style for the button */
+.btn-success {
+    background-color: #28a745; /* Green color */
+    border-color: #28a745; /* Border matching the background */
+    color: white; /* Text color */
+    font-weight: bold; /* Bold text for emphasis */
+    padding: 10px 20px; /* Adjust padding for a larger button */
+    font-size: 12px; /* Slightly larger font */
+    border-radius: 2px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: all 0.3s ease; /* Smooth hover effect */
+   
+}
+
+/* Hover effect */
+.btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #1e7e34; /* Match the darker hover color */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Focus effect */
+.btn-success:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5); /* Custom focus ring */
+}
+
+/* Icon inside the button */
+.btn-success i {
+    margin-right: 5px; /* Spacing between the icon and text */
+    font-size: 18px; /* Adjust icon size */
+
+}
+
+/* Button alignment (ensure it's aligned properly within the flex container) */
+.d-flex.justify-content-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
