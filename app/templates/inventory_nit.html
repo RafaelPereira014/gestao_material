@@ -323,20 +323,39 @@
             const removeModal = document.getElementById('removeModal');
             const confirmRemoveButton = document.getElementById('confirmRemove');
             let targetUrl = '';
-        
+            let targetRow = null;  // Store the target row for removal
+            
             // Set up the modal with the correct details
             $('#removeModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Button that triggered the modal
                 const equipmentId = button.data('id');
                 const category = button.data('category');
+                targetRow = button.closest('tr');  // Get the row to be removed
                 
                 // Build the URL dynamically
                 targetUrl = `/remove_equipment/${category}/${equipmentId}`;
             });
-        
+            
             // Handle the confirmation button click
             confirmRemoveButton.addEventListener('click', () => {
-                window.location.href = targetUrl; // Redirect to the removal route
+                // Perform AJAX request for removal
+                fetch(targetUrl, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the row from the table
+                            if (targetRow) {
+                                targetRow.remove();
+                            }
+                            $('#removeModal').modal('hide');  // Hide the modal
+                            alert(data.message);  // Show success message
+                        } else {
+                            alert('Erro ao remover o equipamento.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Erro ao processar o pedido.');
+                    });
             });
         });
         function fetchInventory() {

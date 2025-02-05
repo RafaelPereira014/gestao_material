@@ -1197,7 +1197,7 @@ def remove_equip(serial_number, escola_id):
             connection.close()
     return redirect(url_for('inventory'))
 
-@app.route('/remove_equipment/<category>/<int:equipment_id>', methods=['GET', 'POST'])
+@app.route('/remove_equipment/<category>/<int:equipment_id>', methods=['DELETE'])
 def remove_equipment(category, equipment_id):
     try:
         connection = connect_to_database()
@@ -1205,13 +1205,12 @@ def remove_equipment(category, equipment_id):
         query = f"DELETE FROM {category} WHERE id = %s"
         cursor.execute(query, (equipment_id,))
         connection.commit()
-        flash("Equipamento removido com sucesso!", "success")
+        return jsonify({"success": True, "message": "Equipamento removido com sucesso!"})
     except Exception as e:
-        flash(f"Erro ao remover equipamento: {str(e)}", "danger")
+        return jsonify({"success": False, "message": f"Erro ao remover equipamento: {str(e)}"}), 500
     finally:
         if connection:
             connection.close()
-    return redirect(url_for('inventory_nit',category=category))
 
 @app.route('/item_page')
 def item_page():
