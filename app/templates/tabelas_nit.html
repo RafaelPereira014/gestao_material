@@ -128,7 +128,7 @@
             <div class="form-group">
                 <label for="inventoryType">Escolha uma categoria:</label>
                 <select class="form-control" id="inventoryType" onchange="fetchInventory()">
-                    <option value="">Selecione</option>
+                    <option value="">Selecione uma tabela</option>
                     <option value="marcas">Marcas</option>
                     <option value="modelos">Modelos</option>
                     <option value="processadores">Processadores</option>
@@ -251,20 +251,19 @@
                 e.preventDefault();
         
                 const page = e.target.getAttribute("data-page");
-                const inventoryType = document.getElementById("NIT_table").value;
+                const inventoryType = document.getElementById("inventoryType").value; // Dropdown value
                 const searchQuery = document.getElementById("searchInput").value.trim();
         
                 if (page && inventoryType) {
-                    // Include all relevant parameters in the fetch URL
-                    const fetchUrl = `/fetch_tabelas?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}}`;
+                    const fetchUrl = `/fetch_tabelas?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}`;
         
                     fetch(fetchUrl)
                         .then(response => response.text())
                         .then(html => {
-                            document.getElementById("inventoryTable").innerHTML = html;
+                            document.getElementById("NIT_table").innerHTML = html;
                         })
                         .catch(error => {
-                            document.getElementById("inventoryTable").innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
+                            document.getElementById("NIT_table").innerHTML = "<p class='text-danger'>Erro ao carregar os dados.</p>";
                         });
                 }
             }
