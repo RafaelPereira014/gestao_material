@@ -157,15 +157,16 @@ def send_reminders():
                 <div class="content">
                     <p>Caro(a) utilizador(a) {name} ,</p>
                     <p>O material referente à sua requisição <strong>#{ticket_id}</strong> deve ser devolvido até hoje, <strong>{due_date}</strong>. Até ao momento, não foi registada qualquer devolução.</p>
+                    
                     <p>Detalhes do material:</p>
                     <ul>
                         <li>Tipo de equipamento: <strong>{material_type}</strong></li>
                         <li>Equipamento: <strong>{nome_equipamento}</strong></li>
                     </ul>
-                    <p>Por favor, devolva o material o mais breve possível. Para mais informações, consulte a plataforma através do seguinte link: <a href="https://helpdesk.edu.azores.gov.pt/{ticket_id}">Consulta de Requisição</a></p>
+                    <p>Por favor, devolva o material o mais breve possível. Para mais informações(e caso pretenda extender a sua requisição), consulte a plataforma através do seguinte link: <a href="https://helpdesk.edu.azores.gov.pt/{ticket_id}">Consulta de Requisição</a></p>
                 </div>
                 <div class="footer">
-                    <p>Obrigado,<br>A Equipa REDA</p>
+                    <p>Obrigado,<br>NIT</p>
                 </div>
             </div>
         </body>

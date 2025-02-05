@@ -559,7 +559,6 @@ def reopen_requisition(requisicao_id):
         
         update_estado_requisicao(requisicao_id,'Pendente')
         update_equipment_from_requisicao(requisicao_id)
-        send_email_on_material_closure(ticket_id,recipients,material_link)
         
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
