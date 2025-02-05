@@ -222,14 +222,17 @@
                         <td>{{ requisicao.tipo_equipamento }}</td>
                         <td>
                             {% if requisicao.data_fim %}
-                                {% if requisicao.data_fim == today_date %}
-                                    {{ requisicao.data_fim }} - Requisição deve ser devolvida
-                                {% else %}
-                                    {{ requisicao.data_fim }}
-                                {% endif %}
+                                {{ requisicao.data_fim }}
                             {% else %}
                                 Sem data de fim
                             {% endif %}
+                            <button 
+                                class="btn btn-sm btn-info ml-2" 
+                                data-toggle="modal" 
+                                data-target="#updateDataFimModal" 
+                                data-requisicao-id="{{ requisicao.id }}">
+                                Atualizar
+                            </button>
                         </td>
                         <td>
                             
@@ -278,6 +281,31 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-danger" id="confirmCloseRequisition">Encerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateDataFimModal" tabindex="-1" aria-labelledby="updateDataFimModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateDataFimModalLabel">Atualizar Data fim</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateDataFimForm">
+                        <div class="form-group">
+                            <label for="newDataFim">Nova data de fim:</label>
+                            <input type="date" class="form-control" id="newDataFim" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmUpdateDataFim">Atualizar</button>
                 </div>
             </div>
         </div>
@@ -406,6 +434,44 @@
                         console.error("Erro ao reabrir a requisição:", error);
                     });
                 }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("updateDataFimModal");
+            let requisicaoId = null;
+    
+            $(modal).on("show.bs.modal", function (event) {
+                const button = $(event.relatedTarget);
+                requisicaoId = button.data("requisicao-id");
+            });
+    
+            document.getElementById("confirmUpdateDataFim").addEventListener("click", function () {
+                const newDataFim = document.getElementById("newDataFim").value;
+                if (!newDataFim) {
+                    alert("Por favor, insira uma nova data fim.");
+                    return;
+                }
+    
+                fetch(`/update_data_fim/${requisicaoId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ data_fim: newDataFim })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Erro ao atualizar a data fim.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro:", error);
+                    alert("Erro ao atualizar a data fim.");
+                });
             });
         });
     </script>

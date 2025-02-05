@@ -503,6 +503,21 @@ def requisicoes():
                            available_equipments=available_equipments,
                            all_requisicoes_ativas=all_requisicoes_ativas,today_date=today_date)
 
+@app.route('/update_data_fim/<int:requisicao_id>', methods=['POST'])
+def update_data_fim(requisicao_id):
+    data = request.get_json()
+    new_data_fim = data.get('data_fim')
+    if not new_data_fim:
+        return jsonify({"error": "Nova data fim não fornecida"}), 400
+
+    try:
+        # Call a function to update the data_fim in the database
+        update_requisicao_data_fim(requisicao_id, new_data_fim)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print("Erro ao atualizar data_fim:", e)
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/close_requisition/<int:requisicao_id>', methods=['POST'])
 def close_requisition(requisicao_id):
     # Implement the logic to close the requisition using the provided ID

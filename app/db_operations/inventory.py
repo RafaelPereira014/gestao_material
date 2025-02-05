@@ -404,6 +404,20 @@ def update_equipment_from_requisicao(requisicao_id):
     print(f"Requisition {requisicao_id} closed successfully.")
     
 
+def update_requisicao_data_fim(requisicao_id, new_data_fim):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    query = """
+        UPDATE requisicoes 
+        SET data_fim = %s 
+        WHERE id = %s
+    """
+    cursor.execute(query, (new_data_fim, requisicao_id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
 
 def update_estado_requisicao(requisicao_id, estado):
     connection = connect_to_database()
