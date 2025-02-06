@@ -535,6 +535,7 @@ def close_requisition(requisicao_id,equipment_id):
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
         
+       
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
         update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,recipients,material_link)

@@ -332,18 +332,14 @@ def update_equipment_from_requisicao(requisicao_id):
         return
 
     tipo_equip = requisicao[3].lower()  # Assuming tipo_equip is in column 3
+    print(tipo_equip)
 
-    # Debugging
-    #print(f"Requisicao: {requisicao}, Tipo Equip: {tipo_equip}")
-
-    # Conditional update based on the tipo_equip value
     equipamento_id = None
     if tipo_equip == 'camera':
         cursor.execute("SELECT id FROM cameras WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
         
         equipamento_id = equipamento[0] if equipamento else None
-        print(equipamento_id)
         if equipamento_id:
         # Update the equipment table to reset its state
             cursor.execute(
