@@ -503,8 +503,8 @@ def requisicoes():
                            available_equipments=available_equipments,
                            all_requisicoes_ativas=all_requisicoes_ativas,today_date=today_date)
 
-@app.route('/update_data_fim/<int:requisicao_id>', methods=['POST'])
-def update_data_fim(requisicao_id):
+@app.route('/update_data_fim/<int:requisicao_id>/<int:equipment_id>', methods=['POST'])
+def update_data_fim(requisicao_id,equipment_id):
     data = request.get_json()
     new_data_fim = data.get('data_fim')
     if not new_data_fim:
@@ -512,17 +512,18 @@ def update_data_fim(requisicao_id):
 
     try:
         # Call a function to update the data_fim in the database
-        update_requisicao_data_fim(requisicao_id, new_data_fim)
+        update_requisicao_data_fim(requisicao_id, new_data_fim,equipment_id)
         return jsonify({"success": True}), 200
     except Exception as e:
         print("Erro ao atualizar data_fim:", e)
         return jsonify({"error": str(e)}), 500
 
-@app.route('/close_requisition/<int:requisicao_id>', methods=['POST'])
-def close_requisition(requisicao_id):
+@app.route('/close_requisition/<int:requisicao_id>/<int:equipment_id>', methods=['POST'])
+def close_requisition(requisicao_id,equipment_id):
     # Implement the logic to close the requisition using the provided ID
     try:
-            
+        
+
         requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
 
         # Check what requisicao returns
@@ -534,7 +535,7 @@ def close_requisition(requisicao_id):
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
         
-        update_estado_requisicao(requisicao_id,'Resolvido')
+        update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
         update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,recipients,material_link)
         
@@ -542,8 +543,8 @@ def close_requisition(requisicao_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route('/reopen_requisition/<int:requisicao_id>', methods=['POST'])
-def reopen_requisition(requisicao_id):
+@app.route('/reopen_requisition/<int:requisicao_id>/<int:equipment_id>', methods=['POST'])
+def reopen_requisition(requisicao_id,equipment_id):
     # Implement the logic to close the requisition using the provided ID
     try:
         requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
@@ -557,7 +558,7 @@ def reopen_requisition(requisicao_id):
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
         
-        update_estado_requisicao(requisicao_id,'Pendente')
+        update_estado_requisicao(requisicao_id,'Pendente',equipment_id)
         update_equipment_from_requisicao(requisicao_id)
         
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
@@ -592,6 +593,7 @@ def generate_log(category, equipment_id):
         connection = connect_to_database()
         cursor = connection.cursor()
 
+        
         category = category.lower()
         
         if category == 'headsets':
@@ -600,18 +602,9 @@ def generate_log(category, equipment_id):
         if category == 'voips':
             category = 'voip'
             
-        query_category = f"SELECT id_requisicao FROM {category} WHERE id = %s"
-        cursor.execute(query_category, (equipment_id,))
-        id_requisicao_result = cursor.fetchone()
-        if id_requisicao_result:
-            id_requisicao = id_requisicao_result[0]  # Extract the single number
-        else:
-            return jsonify({"success": False, "message": "Nenhum id_requisicao encontrado para este equipamento."}), 404
-
-        if not id_requisicao:
-            return jsonify({"success": False, "message": "Nenhuma requisição associada a este equipamento."}), 404
-
-        print(id_requisicao)
+        print(category)
+        print(equipment_id)
+            
         query_requisicoes = """
             SELECT 
                 r.id , 
@@ -622,13 +615,14 @@ def generate_log(category, equipment_id):
                 r.motivo, 
                 r.data_inicio, 
                 r.data_fim, 
-                r.estado
+                r.estado,
+                r.equipment_id
             FROM requisicoes r
-            WHERE r.id = %s
+            WHERE r.tipo_equipamento = %s AND r.equipment_id=%s
             ORDER BY r.data_inicio DESC
             LIMIT 10
         """
-        cursor.execute(query_requisicoes, (id_requisicao,))  # Pass as a single value
+        cursor.execute(query_requisicoes, (category,equipment_id,))  # Pass as a single value
         logs = cursor.fetchall()
         print(logs)
 
@@ -709,7 +703,7 @@ def assign_equipment():
     
 
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
-    update_estado_requisicao(requisicao_id, 'ativa')
+    update_estado_requisicao(requisicao_id, 'ativa',equipamento_id)
     details = get_equip_details(material_type,equipamento_id,requisicao_id)
     user_name = details[1]
     material_name=details[2]

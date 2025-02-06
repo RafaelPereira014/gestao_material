@@ -230,7 +230,9 @@
                                 class="btn btn-sm btn-info ml-2" 
                                 data-toggle="modal" 
                                 data-target="#updateDataFimModal" 
-                                data-requisicao-id="{{ requisicao.id }}">
+                                data-requisicao-id="{{ requisicao.id }}"
+                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
+                                data-equipamento-id="{{ requisicao.equipment_id }}">
                                 Atualizar
                             </button>
                         </td>
@@ -241,7 +243,8 @@
                                 data-toggle="modal" 
                                 data-target="#closeRequisitionModal" 
                                 data-requisicao-id="{{ requisicao.id }}" 
-                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}">
+                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
+                                data-equipamento-id="{{ requisicao.equipment_id }}">
                                 Encerrar
                             </button>
                             <button 
@@ -249,7 +252,8 @@
                                 data-toggle="modal" 
                                 data-target="#reopenRequisitionModal" 
                                 data-requisicao-id="{{ requisicao.id }}" 
-                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}">
+                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
+                                data-equipamento-id="{{ requisicao.equipment_id }}">
                                 Reabrir
                             </button>
                         </td>
@@ -340,10 +344,6 @@
             // Get the selected equipment ID
             var equipamento_id = document.getElementById('equipamento_' + requisicao_id).value;
     
-            // Debugging: Check if equipment is selected
-            console.log('Selected equipamento ID:', equipamento_id);
-            console.log('Selected requisicao ID:', requisicao_id);
-            
             if (!equipamento_id) {
                 alert('Selecione um equipamento!');
                 return;
@@ -369,21 +369,24 @@
             });
         }
     </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("closeRequisitionModal");
             let requisicaoId = null;
-        
-            // When the modal is shown, set requisicaoId from the button's data attribute
+            let equipamentoId = null;  // Add a variable for equipment ID
+    
+            // When the modal is shown, set requisicaoId and equipamentoId from the button's data attributes
             $(modal).on("show.bs.modal", function (event) {
                 const button = $(event.relatedTarget); // Bootstrap 4 compatible
                 requisicaoId = button.data("requisicao-id");
+                equipamentoId = button.data("equipamento-id");  // Capture the equipment ID
             });
-        
+    
             // Handle the "Encerrar" button click inside the modal
             document.getElementById("confirmCloseRequisition").addEventListener("click", function () {
-                if (requisicaoId) {
-                    fetch(`/close_requisition/${requisicaoId}`, {
+                if (requisicaoId && equipamentoId) {  // Check if both IDs are set
+                    fetch(`/close_requisition/${requisicaoId}/${equipamentoId}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -403,21 +406,24 @@
             });
         });
     </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("reopenRequisitionModal");
             let requisicaoId = null;
-        
-            // When the modal is shown, set requisicaoId from the button's data attribute
+            let equipamentoId = null;  // Add a variable for equipment ID
+    
+            // When the modal is shown, set requisicaoId and equipamentoId from the button's data attributes
             $(modal).on("show.bs.modal", function (event) {
                 const button = $(event.relatedTarget); // Bootstrap 4 compatible
                 requisicaoId = button.data("requisicao-id");
+                equipamentoId = button.data("equipamento-id");  // Capture the equipment ID
             });
-        
-            // Handle the "Encerrar" button click inside the modal
+    
+            // Handle the "Reopen" button click inside the modal
             document.getElementById("confirmReopenRequisition").addEventListener("click", function () {
-                if (requisicaoId) {
-                    fetch(`/reopen_requisition/${requisicaoId}`, {
+                if (requisicaoId && equipamentoId) {  // Check if both IDs are set
+                    fetch(`/reopen_requisition/${requisicaoId}/${equipamentoId}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -427,7 +433,7 @@
                         if (response.ok) {
                             location.reload(); // Reload the page on success
                         } else {
-                            alert("Falha ao reabir a requisição.");
+                            alert("Falha ao reabrir a requisição.");
                         }
                     })
                     .catch(error => {
@@ -437,14 +443,17 @@
             });
         });
     </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("updateDataFimModal");
             let requisicaoId = null;
+            let equipamentoId = null;  // Add a variable for equipment ID
     
             $(modal).on("show.bs.modal", function (event) {
                 const button = $(event.relatedTarget);
                 requisicaoId = button.data("requisicao-id");
+                equipamentoId = button.data("equipamento-id");  // Capture the equipment ID
             });
     
             document.getElementById("confirmUpdateDataFim").addEventListener("click", function () {
@@ -454,24 +463,26 @@
                     return;
                 }
     
-                fetch(`/update_data_fim/${requisicaoId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ data_fim: newDataFim })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
+                if (requisicaoId && equipamentoId) {  // Ensure both IDs are provided
+                    fetch(`/update_data_fim/${requisicaoId}/${equipamentoId}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ data_fim: newDataFim })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert("Erro ao atualizar a data fim.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro:", error);
                         alert("Erro ao atualizar a data fim.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro:", error);
-                    alert("Erro ao atualizar a data fim.");
-                });
+                    });
+                }
             });
         });
     </script>

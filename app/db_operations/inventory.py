@@ -404,29 +404,29 @@ def update_equipment_from_requisicao(requisicao_id):
     print(f"Requisition {requisicao_id} closed successfully.")
     
 
-def update_requisicao_data_fim(requisicao_id, new_data_fim):
+def update_requisicao_data_fim(requisicao_id, new_data_fim,equipment_id):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     query = """
         UPDATE requisicoes 
         SET data_fim = %s 
-        WHERE id = %s
+        WHERE id = %s AND equipment_id=%s
     """
-    cursor.execute(query, (new_data_fim, requisicao_id))
+    cursor.execute(query, (new_data_fim, requisicao_id,equipment_id))
     connection.commit()
     cursor.close()
     connection.close()
 
 
-def update_estado_requisicao(requisicao_id, estado):
+def update_estado_requisicao(requisicao_id, estado,equipment_id):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     # Ensure estado is a valid value
     cursor.execute(
-        "UPDATE requisicoes SET estado = %s WHERE id = %s",
-        (estado, requisicao_id)
+        "UPDATE requisicoes SET estado = %s,equipment_id=%s WHERE id = %s",
+        (estado, equipment_id,requisicao_id)
     )
     
     connection.commit()
