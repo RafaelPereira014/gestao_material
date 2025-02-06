@@ -626,6 +626,7 @@ def generate_log(category, equipment_id):
             FROM requisicoes r
             WHERE r.id = %s
             ORDER BY r.data_inicio DESC
+            LIMIT 10
         """
         cursor.execute(query_requisicoes, (id_requisicao,))  # Pass as a single value
         logs = cursor.fetchall()
@@ -640,6 +641,7 @@ def generate_log(category, equipment_id):
             f"ID do Equipamento: {equipment_id}",
             "-" * 50
         ]
+        print(len(logs))
         for log in logs:
             log_lines.append(
             f"Requisição ID: {log[0]}\n"  # r.id
@@ -651,7 +653,7 @@ def generate_log(category, equipment_id):
             f"Data Início: {log[6]}\n"   # r.data_inicio
             f"Data Fim: {log[7] or 'Ainda não devolvido'}\n"  # r.data_fim
             f"Estado: {log[8]}\n"        # r.estado
-            "-" * 50
+            "-----------------------------------------------------" 
         )
 
         log_content = "\n".join(log_lines)
