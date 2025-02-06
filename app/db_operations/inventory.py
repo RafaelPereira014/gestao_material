@@ -426,7 +426,7 @@ def update_estado_requisicao(requisicao_id, estado,equipment_id):
     # Ensure estado is a valid value
     cursor.execute(
         "UPDATE requisicoes SET estado = %s and equipment_id=%s WHERE id = %s",
-        (estado, requisicao_id)
+        (estado, equipment_id,requisicao_id)
     )
     
     connection.commit()
