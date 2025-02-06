@@ -596,12 +596,22 @@ def generate_log(category, equipment_id):
 
         
         category = category.lower()
+        print(category)
         
         if category == 'headsets':
             category = 'headset'
-            
+    
         if category == 'voips':
             category = 'voip'
+
+        if category == 'computadores':
+            category = 'computador'
+
+        if category == 'cameras':
+            category = 'camera'
+        
+        if category == 'monitores':
+            category = 'monitor'
             
         print(category)
         print(equipment_id)
@@ -636,7 +646,6 @@ def generate_log(category, equipment_id):
             f"ID do Equipamento: {equipment_id}",
             "-" * 50
         ]
-        print(len(logs))
         for log in logs:
             log_lines.append(
             f"Requisição ID: {log[0]}\n"  # r.id

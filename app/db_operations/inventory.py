@@ -382,9 +382,7 @@ def update_equipment_from_requisicao(requisicao_id):
         cursor.execute("SELECT id FROM voip WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
         equipamento_id = equipamento[0] if equipamento else None
-        print("tou ca dentro")
         if equipamento_id:
-            print("tou ca dentro")
             cursor.execute(
                 "UPDATE voip SET atribuido_a = 'NIT voip', requisitado='0', estado='Disponivel', id_requisicao=NULL WHERE id = %s",
                 (equipamento_id,)
