@@ -161,6 +161,12 @@
                                         {% if item['requisitado']==1%}
                                         <small >*Este equipamento está requisitado <strong>[ID:{{item['id_requisicao']}}]</strong> pelo utilizador</small>
                                         {%endif%}
+                                        <a 
+                                            href="/generate_log/{{ category }}/{{ item['id'] }}" 
+                                            class="btn btn-primary btn-sm"
+                                            title="Download Log">
+                                            <i class="fas fa-download"></i> Log
+                                        </a>
                                     </li>
                                 {% endfor %}
                             </ul>

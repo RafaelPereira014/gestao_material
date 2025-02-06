@@ -586,6 +586,94 @@ def user_page(user_name):
 
     return render_template('user_page.html', user_name=user_name, all_items=all_items,is_admin=is_admin(session['user_id']))
 
+@app.route('/generate_log/<string:category>/<int:equipment_id>', methods=['GET'])
+def generate_log(category, equipment_id):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        category = category.lower()
+        
+        if category == 'headsets':
+            category = 'headset'
+            
+        if category == 'voips':
+            category = 'voip'
+            
+        query_category = f"SELECT id_requisicao FROM {category} WHERE id = %s"
+        cursor.execute(query_category, (equipment_id,))
+        id_requisicao_result = cursor.fetchone()
+        if id_requisicao_result:
+            id_requisicao = id_requisicao_result[0]  # Extract the single number
+        else:
+            return jsonify({"success": False, "message": "Nenhum id_requisicao encontrado para este equipamento."}), 404
+
+        if not id_requisicao:
+            return jsonify({"success": False, "message": "Nenhuma requisição associada a este equipamento."}), 404
+
+        print(id_requisicao)
+        query_requisicoes = """
+            SELECT 
+                r.id , 
+                r.nome, 
+                r.email, 
+                r.tipo_equipamento, 
+                r.quantidade, 
+                r.motivo, 
+                r.data_inicio, 
+                r.data_fim, 
+                r.estado
+            FROM requisicoes r
+            WHERE r.id = %s
+            ORDER BY r.data_inicio DESC
+        """
+        cursor.execute(query_requisicoes, (id_requisicao,))  # Pass as a single value
+        logs = cursor.fetchall()
+        print(logs)
+
+        if not logs:
+            return jsonify({"success": False, "message": "Nenhum log encontrado para as requisições associadas."}), 404
+
+        # Generate log content
+        log_lines = [
+            f"Categoria: {category}",
+            f"ID do Equipamento: {equipment_id}",
+            "-" * 50
+        ]
+        for log in logs:
+            log_lines.append(
+            f"Requisição ID: {log[0]}\n"  # r.id
+            f"Nome: {log[1]}\n"          # r.nome
+            f"Email: {log[2]}\n"         # r.email
+            f"Tipo de Equipamento: {log[3]}\n"  # r.tipo_equipamento
+            f"Quantidade: {log[4]}\n"    # r.quantidade
+            f"Motivo: {log[5]}\n"        # r.motivo
+            f"Data Início: {log[6]}\n"   # r.data_inicio
+            f"Data Fim: {log[7] or 'Ainda não devolvido'}\n"  # r.data_fim
+            f"Estado: {log[8]}\n"        # r.estado
+            "-" * 50
+        )
+
+        log_content = "\n".join(log_lines)
+
+        # Create a temporary log file
+        log_file_path = f"/tmp/equipment_log_{category}_{equipment_id}.txt"
+        with open(log_file_path, "w", encoding="utf-8") as log_file:
+            log_file.write(log_content)
+
+        return send_file(
+            log_file_path,
+            as_attachment=True,
+            download_name=f"log_{category}_{equipment_id}.txt",
+            mimetype="text/plain"
+        )
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Erro ao gerar log: {str(e)}"}), 500
+    finally:
+        if connection:
+            connection.close()
+
 @app.route('/assign-equipment', methods=['POST'])
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']
