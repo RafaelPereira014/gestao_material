@@ -599,7 +599,19 @@ def generate_log(category, equipment_id):
             
         if category == 'voips':
             category = 'voip'
-        
+            
+        query_category = f"SELECT id_requisicao FROM {category} WHERE id = %s"
+        cursor.execute(query_category, (equipment_id,))
+        id_requisicao_result = cursor.fetchone()
+        if id_requisicao_result:
+            id_requisicao = id_requisicao_result[0]  # Extract the single number
+        else:
+            return jsonify({"success": False, "message": "Nenhum id_requisicao encontrado para este equipamento."}), 404
+
+        if not id_requisicao:
+            return jsonify({"success": False, "message": "Nenhuma requisição associada a este equipamento."}), 404
+
+        print(id_requisicao)
         query_requisicoes = """
             SELECT 
                 r.id , 
@@ -610,14 +622,13 @@ def generate_log(category, equipment_id):
                 r.motivo, 
                 r.data_inicio, 
                 r.data_fim, 
-                r.estado,
-                r.equipment_id
+                r.estado
             FROM requisicoes r
-            WHERE r.equipment_id = %s AND r.tipo_equipamento=%s
+            WHERE r.id = %s
             ORDER BY r.data_inicio DESC
             LIMIT 10
         """
-        cursor.execute(query_requisicoes, (equipment_id,category,))  # Pass as a single value
+        cursor.execute(query_requisicoes, (id_requisicao,))  # Pass as a single value
         logs = cursor.fetchall()
         print(logs)
 
@@ -691,8 +702,14 @@ def assign_equipment():
     material_type = requisicao[3]
     ticket_id = requisicao[10]
     
+    
+    
+    
+    
+    
+
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
-    update_estado_requisicao(requisicao_id, 'ativa',equipamento_id)
+    update_estado_requisicao(requisicao_id, 'ativa')
     details = get_equip_details(material_type,equipamento_id,requisicao_id)
     user_name = details[1]
     material_name=details[2]

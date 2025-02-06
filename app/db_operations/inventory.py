@@ -419,14 +419,14 @@ def update_requisicao_data_fim(requisicao_id, new_data_fim):
     connection.close()
 
 
-def update_estado_requisicao(requisicao_id, estado,equipment_id):
+def update_estado_requisicao(requisicao_id, estado):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     # Ensure estado is a valid value
     cursor.execute(
-        "UPDATE requisicoes SET estado = %s and equipment_id=%s WHERE id = %s",
-        (estado, equipment_id,requisicao_id)
+        "UPDATE requisicoes SET estado = %s WHERE id = %s",
+        (estado, requisicao_id)
     )
     
     connection.commit()
