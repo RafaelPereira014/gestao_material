@@ -706,12 +706,6 @@ def assign_equipment():
     material_type = requisicao[3]
     ticket_id = requisicao[10]
     
-    
-    
-    
-    
-    
-
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
     update_estado_requisicao(requisicao_id, 'ativa',equipamento_id)
     details = get_equip_details(material_type,equipamento_id,requisicao_id)
@@ -1172,7 +1166,7 @@ def edit_equip():
 
 @app.route('/edit_item/<string:category>/<int:item_id>', methods=['GET', 'POST'])
 def edit_item(category, item_id):
-    # Ensure the category is valid to prevent SQL injection
+
     valid_categories = ['computadores', 'monitores', 
                         'cameras', 'voip', 
                         'headset', 'outros','marcas',
@@ -1208,12 +1202,10 @@ def edit_item(category, item_id):
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             
-            # Prepare the SQL query based on the category
-            # Dynamically generate the SQL UPDATE query based on the form data
+            
             fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
             query = f"UPDATE {category} SET {fields} WHERE id = %s"
             
-            # Execute the query with form values and item_id
             values = list(form_data.values()) + [item_id]
             cursor.execute(query, values)
             connection.commit()
