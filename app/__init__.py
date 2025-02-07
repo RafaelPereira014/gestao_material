@@ -706,6 +706,8 @@ def assign_equipment():
     material_type = requisicao[3]
     ticket_id = requisicao[10]
     
+    
+
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
     update_estado_requisicao(requisicao_id, 'ativa',equipamento_id)
     details = get_equip_details(material_type,equipamento_id,requisicao_id)
