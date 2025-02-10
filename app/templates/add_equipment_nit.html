@@ -209,7 +209,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="text" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
+                        <input type="date" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
                     </div>
                     <div class="form-group">
                         <label for="firma">Firma</label>
@@ -244,7 +244,12 @@
                 <div id="monitoresFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="marca">Marca/Modelo</label>
@@ -274,7 +279,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="text" class="form-control" id="data_aq" name="data_aq"placeholder="Ex: 2015" >
+                        <input type="date" class="form-control" id="data_aq" name="data_aq"placeholder="Ex: 2015" >
                     </div>
                     <div class="form-group">
                         <label for="garantia">Garantia</label>
@@ -292,7 +297,12 @@
                 <div id="camerasFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="marca_modelo">Modelo</label>
@@ -313,7 +323,12 @@
                 <div id="voipFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="marca_modelo">Modelo</label>
@@ -347,7 +362,12 @@
                 <div id="headsetFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="marca_modelo">Modelo</label>
@@ -367,7 +387,12 @@
                 <div id="outrosFields" class="category-fields" style="display: none;">
                     <div class="form-group">
                         <label for="atribuido_a">Atribuido a</label>
-                        <input type="text" class="form-control" id="atribuido_a" name="atribuido_a" placeholder="Ex: Ana Maria Santos">
+                        <select class="form-control" id="atribuido_a" name="atribuido_a" >
+                            <option value="" disabled selected>Selecione um utilizador</option>
+                            {% for atribuido_a in users %}
+                                <option value="{{ atribuido_a }}">{{ atribuido_a }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     
 
@@ -381,7 +406,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
-                        <input type="text" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
+                        <input type="date" class="form-control" id="data_aq" name="data_aq" placeholder="Ex: 2015">
                     </div>
 
 

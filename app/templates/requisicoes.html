@@ -134,6 +134,7 @@
                     <th>Quantidade</th>
                     <th>Atribuir equipamento</th>
                     <th>Confirmar</th> <!-- Add column for Confirmar button -->
+                    <th>Eliminar</th> <!-- Add column for Confirmar button -->
                 </tr>
             </thead>
             <tbody id="inventoryTable">
@@ -177,6 +178,9 @@
                         </td>
                         <td>
                             <button class="btn btn-primary" onclick="assignEquipment({{ requisicao.id }})">Confirmar</button> <!-- Confirm button -->
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="RemoveReq({{ requisicao.id }})">Eliminar</button> <!-- Confirm button -->
                         </td>
                     </tr>
                 {% else %}
@@ -365,6 +369,29 @@
                 error: function(xhr, status, error) {
                     console.log('Error:', xhr, status, error);  // Log the error details
                     alert('Erro ao atribuir equipamento.');
+                }
+            });
+        }
+    </script>
+    <script>
+        // Function to handle equipment assignment
+        function RemoveReq(requisicao_id) {
+            
+            // Send the selected equipment to the server to update the 'atributo_a' field
+            $.ajax({
+                url: '/remove-req',  // Update this with your actual endpoint
+                method: 'POST',
+                data: {
+                    requisicao_id: requisicao_id,
+                },
+                success: function(response) {
+                    console.log('Success:', response);  // Log the response from the server
+                    alert('Requisição removida com sucesso!');
+                    location.reload();  // Reload the page to reflect changes
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', xhr, status, error);  // Log the error details
+                    alert('Erro ao remover a requisição.');
                 }
             });
         }

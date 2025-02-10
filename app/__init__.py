@@ -719,6 +719,20 @@ def assign_equipment():
     
     return jsonify({"status": "success"}), 200
 
+@app.route('/remove-req', methods=['POST'])
+def remove_req():
+    requisicao_id = request.form['requisicao_id']
+    
+    # Ensure that requisicao_id and equipamento_id are integers
+    try:
+        requisicao_id = int(requisicao_id)
+    except ValueError:
+        return jsonify({"status": "error", "message": "Invalid input data."}), 400
+
+    remove_requisition(requisicao_id)
+    
+    
+    return jsonify({"status": "success"}), 200
 
 @app.route('/check_serial_number', methods=['POST'])
 def check_serial_number():

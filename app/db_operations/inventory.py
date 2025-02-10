@@ -518,3 +518,15 @@ def get_equip_details(equipment_type, equipment_id, requisicao_id):
     
     return result
 
+
+def remove_requisition(requisition_id):
+    
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    query = f"DELETE FROM requisicoes WHERE id=%s"
+    cursor.execute(query, (requisition_id,))
+    connection.commit()
+    cursor.close()
+    
+    
