@@ -70,32 +70,31 @@ def total_equip(escola_id=None):
         
 def get_equipment_name(category, equipment_id):
     try:
-        # Connect to the database
         connection = connect_to_database()
         cursor = connection.cursor()
-
         
+        # Check which columns exist in the table
+        cursor.execute(f"SHOW COLUMNS FROM {category}")
+        columns = [row[0] for row in cursor.fetchall()]
+        
+        # Determine the column to use
+        if "marca_modelo" in columns:
+            column_to_select = "marca_modelo"
+        elif "nome_ad" in columns:
+            column_to_select = "nome_ad"
+        else:
+            raise ValueError(f"No relevant columns found in table {category}.")
+        
+        # Build and execute the query
         query = f"""
-        SELECT COALESCE(marca_modelo, nome_ad) AS equipment_name
-        FROM {category}
-        WHERE id = %s
+            SELECT {column_to_select} AS equipment_name
+            FROM {category}
+            WHERE id = %s
         """
-
-        # Execute the query
         cursor.execute(query, (equipment_id,))
-
-        # Fetch the result
         result = cursor.fetchone()
-
-        # Return the equipment name if found, otherwise None
+        
         return result[0] if result else None
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
-
     finally:
-        # Ensure the connection is closed
-        if connection:
-            cursor.close()
-            connection.close()
+        cursor.close()
+        connection.close()
