@@ -67,3 +67,35 @@ def total_equip(escola_id=None):
     finally:
         cursor.close()
         connection.close()
+        
+def get_equipment_name(category, equipment_id):
+    try:
+        # Connect to the database
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Define the query using COALESCE
+        query = f"""
+        SELECT COALESCE(marca_modelo, nome_ad) AS equipment_name
+        FROM {category}
+        WHERE id = %s
+        """
+
+        # Execute the query
+        cursor.execute(query, (equipment_id,))
+
+        # Fetch the result
+        result = cursor.fetchone()
+
+        # Return the equipment name if found, otherwise None
+        return result[0] if result else None
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+    finally:
+        # Ensure the connection is closed
+        if connection:
+            cursor.close()
+            connection.close()

@@ -102,8 +102,8 @@ def send_email_on_material_assign(ticket_id, username,recipient_emails,material_
     """
     send_email(recipient_emails, subject, message)
     
-def send_email_on_material_return_due(ticket_id, username, recipient_emails, material_type, material_name, return_date, material_link):
-    subject = f"Devolução de material: #{ticket_id} - Prazo de entrega atingido"
+def send_email_on_material_assign_admin(ticket_id, username,recipient_emails,material_type,material_name):
+    subject = f"Requisição de material: #{ticket_id}."
     message = f"""
     <html>
     <head>
@@ -117,21 +117,17 @@ def send_email_on_material_return_due(ticket_id, username, recipient_emails, mat
     </head>
     <body>
         <div class="email-container">
-            <div class="header">Lembrete: Devolução de material atribuído</div>
+            <div class="header">Material atribuído ao utilizador <strong>{username}</strong></div>
             <div class="content">
-                <p>Caro(a) {username},</p>
-                <p>Este email serve como lembrete de que o prazo para a devolução do material atribuído está a terminar.</p>
+                <p>Foi atribuído o seguinte material, referente ao pedido de requisicao #{ticket_id}.</p>
                 <p>Detalhes do material:</p>
                 <ul>
-                    <li><strong>Pedido de requisição:</strong> #{ticket_id}</li>
-                    <li><strong>Tipo de equipamento:</strong> {material_type}</li>
-                    <li><strong>Equipamento:</strong> {material_name}</li>
-                    <li><strong>Data limite para devolução:</strong> {return_date}</li>
+                    <li>Tipo de equipamento:<strong></strong> {material_type}</li>
+                    <li>Equipamento:<strong></strong> {material_name}</li>
                 </ul>
-                <p>Por favor, garanta que o material é devolvido até à data indicada. Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
             </div>
             <div class="footer">
-                <p>Obrigado,<br>Equipa NIT</p>
+                <p>Obrigado,<br>NIT</p>
             </div>
         </div>
     </body>
@@ -139,7 +135,43 @@ def send_email_on_material_return_due(ticket_id, username, recipient_emails, mat
     """
     send_email(recipient_emails, subject, message)
     
-def send_email_on_material_closure(ticket_id,recipient_emails,material_link):
+
+    
+def send_email_on_material_closure(ticket_id,recipient_emails,material_link,material_type,material_name):
+    subject = f"Requisição de material: #{ticket_id}."
+    message = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; }}
+            .email-container {{ padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }}
+            .header {{ font-size: 18px; font-weight: bold; color: #333; }}
+            .content {{ margin-top: 10px; }}
+            .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="header">Entrega de material.</strong></div>
+            <div class="content">
+                <p>Este email confirma a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
+                <p>Detalhes do material:</p>
+                <ul>
+                    <li>Tipo de equipamento:<strong></strong> {material_type}</li>
+                    <li>Equipamento:<strong></strong> {material_name}</li>
+                </ul>
+                <p>Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
+            </div>
+            <div class="footer">
+                <p>Obrigado,<br>NIT</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    send_email(recipient_emails, subject, message)
+
+def send_email_on_material_closure_admin(ticket_id,recipient_emails,material_type,material_name):
     subject = f"Requisição de material: #{ticket_id}."
     message = f"""
     <html>
@@ -157,7 +189,11 @@ def send_email_on_material_closure(ticket_id,recipient_emails,material_link):
             <div class="header">Encerramento do pedido de requisição.</strong></div>
             <div class="content">
                 <p>Este email confirma o encerramento da requisição e a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
-                <p>Para mais informações ou esclarecimentos, pode consultar a plataforma através do seguinte link: <a href="{material_link}">{material_link}</a>.</p>
+                <p>Detalhes do material:</p>
+                <ul>
+                    <li>Tipo de equipamento:<strong></strong> {material_type}</li>
+                    <li>Equipamento:<strong></strong> {material_name}</li>
+                </ul>
             </div>
             <div class="footer">
                 <p>Obrigado,<br>NIT</p>
@@ -167,4 +203,3 @@ def send_email_on_material_closure(ticket_id,recipient_emails,material_link):
     </html>
     """
     send_email(recipient_emails, subject, message)
-

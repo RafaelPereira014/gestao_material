@@ -532,13 +532,30 @@ def close_requisition(requisicao_id,equipment_id):
         
         user_email = requisicao[2]
         ticket_id = requisicao[10]
-        material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
-        recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
+        material_type = requisicao[3]
+        material_id = requisicao[11]
+    
+        # Mapping material types to categories
+        material_category_mapping = {
+            "computador": "computadores",
+            "monitor": "monitores",
+            "camera": "cameras",
+            "headset": "headsets",
+            "voip": "voips",
+        }
+
+        # Get the category from the mapping
+        category = material_category_mapping.get(material_type)
+        material_name = get_equipment_name(category,material_id)
         
+        material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
+        recipients=[user_email]
+        recipients_admin = ['srec.nit.edu@azores.gov.pt']
        
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
         update_equipment_from_requisicao(requisicao_id)
-        send_email_on_material_closure(ticket_id,recipients,material_link)
+        send_email_on_material_closure(ticket_id,recipients,material_link,material_type,material_name)
+        send_email_on_material_closure_admin(ticket_id,recipients_admin,material_link,material_type,material_name)
         
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
@@ -714,8 +731,11 @@ def assign_equipment():
     user_name = details[1]
     material_name=details[2]
     material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
-    recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
+    recipients=[user_email]
+    recipients_admin = ['srec.nit.edu@azores.gov.pt']
+
     send_email_on_material_assign(ticket_id,user_name,recipients,material_type,material_name,material_link)
+    send_email_on_material_assign_admin(ticket_id,user_name,recipients_admin,material_type,material_name)
     
     return jsonify({"status": "success"}), 200
 

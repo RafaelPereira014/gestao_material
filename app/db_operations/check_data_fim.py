@@ -131,7 +131,8 @@ def send_reminders():
 
     for requisition in overdue_requisitions:
         requisicao_id = requisition['id']
-        user_email = [requisition['email'], 'srec.nit.edu@azores.gov.pt']
+        user_email = [requisition['email']]
+        admin_mail = 'srec.nit.edu@azores.gov.pt'
         material_type = requisition['tipo_equipamento']
         name = requisition['nome']
         due_date = requisition['data_fim']
