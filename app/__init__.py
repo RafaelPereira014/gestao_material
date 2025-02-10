@@ -559,6 +559,7 @@ def close_requisition(requisicao_id,equipment_id):
         update_equipment_from_requisicao(requisicao_id)
         
         
+        
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
