@@ -180,7 +180,8 @@
                             <button class="btn btn-primary" onclick="assignEquipment({{ requisicao.id }})">Confirmar</button> <!-- Confirm button -->
                         </td>
                         <td>
-                            <button class="btn btn-danger" onclick="RemoveReq({{ requisicao.id }})">Eliminar</button> <!-- Confirm button -->
+                            <button class="btn btn-danger" onclick="RemoveReq({{ requisicao.id }})">Eliminar</button> 
+            
                         </td>
                     </tr>
                 {% else %}
@@ -382,7 +383,7 @@
                 url: '/remove-req',  // Update this with your actual endpoint
                 method: 'POST',
                 data: {
-                    requisicao_id: requisicao_id,
+                    requisicao_id: requisicao_id
                 },
                 success: function(response) {
                     console.log('Success:', response);  // Log the response from the server

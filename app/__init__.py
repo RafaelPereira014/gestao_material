@@ -554,9 +554,9 @@ def close_requisition(requisicao_id,equipment_id):
         recipients_admin = ['srec.nit.edu@azores.gov.pt']
        
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
+        update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,recipients,material_link,material_type,material_name)
         send_email_on_material_closure_admin(ticket_id,recipients_admin,material_link,material_type,material_name)
-        update_equipment_from_requisicao(requisicao_id)
         
         
         
@@ -746,11 +746,7 @@ def assign_equipment():
 def remove_req():
     requisicao_id = request.form['requisicao_id']
     
-    # Ensure that requisicao_id and equipamento_id are integers
-    try:
-        requisicao_id = int(requisicao_id)
-    except ValueError:
-        return jsonify({"status": "error", "message": "Invalid input data."}), 400
+    
 
     remove_requisition(requisicao_id)
     
