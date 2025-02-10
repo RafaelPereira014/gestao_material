@@ -1062,11 +1062,17 @@ def add_equipment(category=None):
             filtered_form_data = {key: value for key, value in form_data.items() if key in table_columns}
 
             if 'atribuido_a' in filtered_form_data:
-                # Set 'estado' based on the value of 'atribuido_a'
-                if not filtered_form_data['atribuido_a'].strip():  # Check if 'atribuido_a' is empty or whitespace
+                atribuido_a_value = filtered_form_data['atribuido_a'].strip()
+                
+                if not atribuido_a_value:  
                     filtered_form_data['estado'] = 'disponivel'
                 else:
-                    filtered_form_data['estado'] = 'em uso'
+                    nit_values = ['nit webcams', 'nit computadores', 'nit portateis', 'nit auriculares', 'nit voips', 'nit monitores']
+                    
+                    if atribuido_a_value.lower() in nit_values:  
+                        filtered_form_data['estado'] = 'disponivel'
+                    else:
+                        filtered_form_data['estado'] = 'em uso'
 
             if not filtered_form_data:
                 return "No valid data to insert.", 400  # Handle the case where no valid data is present
