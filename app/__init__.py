@@ -534,18 +534,19 @@ def close_requisition(requisicao_id,equipment_id):
         ticket_id = requisicao[10]
         material_type = requisicao[3]
         material_id = requisicao[11]
+        
     
         # Mapping material types to categories
         material_category_mapping = {
             "computador": "computadores",
             "monitor": "monitores",
             "camera": "cameras",
-            "headset": "headsets",
-            "voip": "voips",
+            "headset": "headset",
+            "voip": "voip",
         }
 
         # Get the category from the mapping
-        category = material_category_mapping.get(material_type)
+        category = material_category_mapping.get(material_type.lower())
         material_name = get_equipment_name(category,material_id)
         
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
@@ -553,9 +554,10 @@ def close_requisition(requisicao_id,equipment_id):
         recipients_admin = ['srec.nit.edu@azores.gov.pt']
        
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
-        update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,recipients,material_link,material_type,material_name)
         send_email_on_material_closure_admin(ticket_id,recipients_admin,material_link,material_type,material_name)
+        update_equipment_from_requisicao(requisicao_id)
+        
         
         return jsonify({"message": "Requisição encerrada com sucesso."}), 200
     except Exception as e:

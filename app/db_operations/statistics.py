@@ -74,7 +74,7 @@ def get_equipment_name(category, equipment_id):
         connection = connect_to_database()
         cursor = connection.cursor()
 
-        # Define the query using COALESCE
+        
         query = f"""
         SELECT COALESCE(marca_modelo, nome_ad) AS equipment_name
         FROM {category}
