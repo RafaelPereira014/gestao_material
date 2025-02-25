@@ -430,7 +430,7 @@
             }
         });
 
-        // Function to show/hide category-specific fields
+        // Function to show/hide category-specific fields and enforce "Atribuído a" requirement
         function toggleCategoryFields() {
             const selectedCategory = "{{ category }}"; // Use the category passed from the backend
             const allFields = document.querySelectorAll(".category-fields");
@@ -441,7 +441,16 @@
             // Show the selected category's fields
             if (selectedCategory) {
                 const fieldsToShow = document.getElementById(`${selectedCategory}Fields`);
-                if (fieldsToShow) fieldsToShow.style.display = "block";
+                if (fieldsToShow) {
+                    fieldsToShow.style.display = "block";
+
+                    // Make "Atribuído a" required if it's part of the selected category
+                    const atribuicaoField = fieldsToShow.querySelector("#atribuido_a");
+                    if (atribuicaoField) {
+                        atribuicaoField.setAttribute("required", "true");
+                        atribuicaoField.setCustomValidity(""); // Clear any previous error message
+                    }
+                }
             }
         }
 

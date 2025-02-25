@@ -94,40 +94,49 @@
 
     <!-- Pagination Controls -->
     <nav aria-label="Page navigation">
-        <ul class="pagination">
-            {% if current_page > 1 %}
-            <li class="page-item">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Group Button -->
+            <li class="page-item {% if current_page <= 1 %}disabled{% endif %}">
                 <a class="page-link" href="#" 
-                data-page="{{ current_page - 1 }}" 
-                data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
-                    Anterior
+                   data-page="{{ current_page - 5 }}" 
+                   data-search="{{ request.args.get('search', '') }}" 
+                   data-so="{{ request.args.get('so', '') }}" 
+                   data-modelo="{{ request.args.get('modelo', '') }}" 
+                   aria-label="Previous Group" title="Previous Group">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
                 </a>
             </li>
+    
+            <!-- Loop to show pages in groups of 5 -->
+            {% set start_page = (current_page // 5) * 5 + 1 %}
+            {% set end_page = start_page + 4 %}
+            {% if end_page > total_pages %}
+                {% set end_page = total_pages %}
             {% endif %}
-            {% for page in range(1, total_pages + 1) %}
-            <li class="page-item {% if page == current_page %}active{% endif %}">
-                <a class="page-link" href="#" 
-                data-page="{{ page }}" 
-                data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
-                    {{ page }}
-                </a>
-            </li>
+    
+            {% for page in range(start_page, end_page + 1) %}
+                <li class="page-item {% if page == current_page %}active{% endif %}">
+                    <a class="page-link" href="#" 
+                       data-page="{{ page }}" 
+                       data-search="{{ request.args.get('search', '') }}" 
+                       data-so="{{ request.args.get('so', '') }}" 
+                       data-modelo="{{ request.args.get('modelo', '') }}">
+                        {{ page }}
+                    </a>
+                </li>
             {% endfor %}
-            {% if current_page < total_pages %}
-            <li class="page-item">
+    
+            <!-- Next Group Button -->
+            <li class="page-item {% if current_page + 5 > total_pages %}disabled{% endif %}">
                 <a class="page-link" href="#" 
-                data-page="{{ current_page + 1 }}" 
-                data-search="{{ request.args.get('search', '') }}" 
-                data-so="{{ request.args.get('so', '') }}" 
-                data-modelo="{{ request.args.get('modelo', '') }}">
-                    Próximo
+                   data-page="{{ current_page + 5 }}" 
+                   data-search="{{ request.args.get('search', '') }}" 
+                   data-so="{{ request.args.get('so', '') }}" 
+                   data-modelo="{{ request.args.get('modelo', '') }}" 
+                   aria-label="Next Group" title="Next Group">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
                 </a>
             </li>
-            {% endif %}
         </ul>
     </nav>
 </div>
