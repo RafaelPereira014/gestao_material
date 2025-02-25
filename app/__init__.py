@@ -293,6 +293,7 @@ def fetch_tabelas():
             "garantias": "garantia",
             "tipo_camera": "tipo_camera",
             "tipo_headset": "tipo_headset",
+            "diversos": "diversos"
         }.items()
     }
 
@@ -314,6 +315,7 @@ def fetch_tabelas():
             "garantias": "garantia",
             "tipo_camera": "tipo_camera",
             "tipo_headset": "tipo_headset",
+            "diversos": "diversos"
         }.items()
     }
 
@@ -1044,6 +1046,7 @@ def add_equipment(category=None):
     tipos_camera = get_tipos_camera()
     tipos_headset = get_tipos_headset()
     users = get_atribuidos_a()
+    diversos = get_diversos()
     
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
@@ -1112,7 +1115,8 @@ def add_equipment(category=None):
         tipos_camera=tipos_camera,
         tipos_headset=tipos_headset,
         discos = discos,
-        users=users)
+        users=users,
+        diversos=diversos)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():

@@ -394,6 +394,15 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="diversos">Tipo de equipamento</label>
+                        <select class="form-control" id="diversos" name="diversos" >
+                            <option value="" disabled selected>Selecione um tipo de equipamento</option>
+                            {% for diverso in diversos %}
+                                <option value="{{ diverso }}">{{ diverso }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     
 
                     <div class="form-group">
