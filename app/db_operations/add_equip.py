@@ -265,7 +265,7 @@ def get_atribuidos_a():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM users_a_atribuir")
+        cursor.execute("SELECT nome FROM users_a_atribuir ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
