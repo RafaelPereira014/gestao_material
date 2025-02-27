@@ -203,11 +203,11 @@ def get_computadores():
     cursor = connection.cursor()
     
     # Execute SQL query to fetch both modelo and n_serie
-    cursor.execute("SELECT id,nome_ad, n_serie FROM computadores WHERE estado = 'Disponivel'")
+    cursor.execute("SELECT id,nome_ad, n_serie,cod_nit FROM computadores WHERE estado = 'Disponivel'")
     result = cursor.fetchall()  # List of tuples with (modelo, n_serie)
     
     # Convert the result into a list of dictionaries
-    computadores = [{'id': row[0],'nome_ad': row[1], 'n_serie': row[2]} for row in result]
+    computadores = [{'id': row[0],'nome_ad': row[1], 'n_serie': row[2], 'cod_nit': row[3]} for row in result]
     
     cursor.close()
     connection.close()
@@ -413,14 +413,14 @@ def update_requisicao_data_fim(requisicao_id, new_data_fim,equipment_id):
     connection.close()
 
 
-def update_estado_requisicao(requisicao_id, estado,equipment_id):
+def update_estado_requisicao(requisicao_id, estado,equipment_id,cod_nit):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     # Ensure estado is a valid value
     cursor.execute(
-        "UPDATE requisicoes SET estado = %s,equipment_id=%s WHERE id = %s",
-        (estado, equipment_id,requisicao_id)
+        "UPDATE requisicoes SET estado = %s,equipment_id=%s,cod_nit=%s WHERE id = %s",
+        (estado, equipment_id,cod_nit,requisicao_id)
     )
     
     connection.commit()

@@ -522,13 +522,14 @@ def update_data_fim(requisicao_id,equipment_id):
         print("Erro ao atualizar data_fim:", e)
         return jsonify({"error": str(e)}), 500
 
-@app.route('/close_requisition/<int:requisicao_id>/<int:equipment_id>', methods=['POST'])
-def close_requisition(requisicao_id,equipment_id):
+@app.route('/close_requisition/<int:requisicao_id>/<int:equipment_id>/<int:cod_nit>', methods=['POST'])
+def close_requisition(requisicao_id,equipment_id,cod_nit):
     # Implement the logic to close the requisition using the provided ID
     try:
         
 
         requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
+        
 
         # Check what requisicao returns
         if not requisicao:
@@ -552,15 +553,17 @@ def close_requisition(requisicao_id,equipment_id):
         # Get the category from the mapping
         category = material_category_mapping.get(material_type.lower())
         material_name = get_equipment_name(category,material_id)
-        
+        # cod_nit = get_equipment_codnit(category,equipment_id)
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email]
         recipients_admin = ['srec.nit.edu@azores.gov.pt']
-       
-        update_estado_requisicao(requisicao_id,'Resolvido',equipment_id)
+        
+        
+        
+        update_estado_requisicao(requisicao_id,'Resolvido',equipment_id,cod_nit)
         update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,recipients,material_link,material_type,material_name)
-        send_email_on_material_closure_admin(ticket_id,recipients_admin,material_link,material_type,material_name)
+        send_email_on_material_closure_admin(ticket_id,recipients_admin,material_type,material_name)
         
         
         
@@ -568,8 +571,8 @@ def close_requisition(requisicao_id,equipment_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route('/reopen_requisition/<int:requisicao_id>/<int:equipment_id>', methods=['POST'])
-def reopen_requisition(requisicao_id,equipment_id):
+@app.route('/reopen_requisition/<int:requisicao_id>/<int:equipment_id>/<int:cod_nit>', methods=['POST'])
+def reopen_requisition(requisicao_id,equipment_id,cod_nit):
     # Implement the logic to close the requisition using the provided ID
     try:
         requisicao = get_requisicao_by_id(requisicao_id)  # Implement this function
@@ -583,10 +586,10 @@ def reopen_requisition(requisicao_id,equipment_id):
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email,"srec.nit.edu@azores.gov.pt"]
         
-        update_estado_requisicao(requisicao_id,'Pendente',equipment_id)
+        update_estado_requisicao(requisicao_id,'Pendente',equipment_id,cod_nit)
         update_equipment_from_requisicao(requisicao_id)
         
-        return jsonify({"message": "Requisição encerrada com sucesso."}), 200
+        return jsonify({"message": "Requisição reaberta com sucesso."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -708,6 +711,8 @@ def generate_log(category, equipment_id):
 def assign_equipment():
     requisicao_id = request.form['requisicao_id']
     equipamento_id = request.form['equipamento_id']
+    cod_nit = request.form['cod_nit']
+    
     
     # Ensure that requisicao_id and equipamento_id are integers
     try:
@@ -731,9 +736,10 @@ def assign_equipment():
     ticket_id = requisicao[10]
     
     
+    
 
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
-    update_estado_requisicao(requisicao_id, 'ativa',equipamento_id)
+    update_estado_requisicao(requisicao_id, 'ativa',equipamento_id,cod_nit)
     details = get_equip_details(material_type,equipamento_id,requisicao_id)
     user_name = details[1]
     material_name=details[2]

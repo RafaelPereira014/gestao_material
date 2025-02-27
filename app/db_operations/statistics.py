@@ -98,3 +98,32 @@ def get_equipment_name(category, equipment_id):
     finally:
         cursor.close()
         connection.close()
+
+def get_equipment_codnit(category, equipment_id):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+        
+        # Check which columns exist in the table
+        cursor.execute(f"SHOW COLUMNS FROM {category}")
+        columns = [row[0] for row in cursor.fetchall()]
+        
+        # Determine the column to use
+        if "cod_nit" in columns:
+            column_to_select = "cod_nit"
+        else:
+            raise ValueError(f"No relevant columns found in table {category}.")
+        
+        # Build and execute the query
+        query = f"""
+            SELECT {column_to_select} AS cod_nit
+            FROM {category}
+            WHERE id = %s
+        """
+        cursor.execute(query, (equipment_id,))
+        result = cursor.fetchone()
+        
+        return result[0] if result else None
+    finally:
+        cursor.close()
+        connection.close()

@@ -159,7 +159,7 @@
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Computador' %}
                                     {% for equipamento in available_equipments['Computador'] %}
-                                        <option value="{{ equipamento.id }}">{{ equipamento.nome_ad }} - {{ equipamento.n_serie }}</option>
+                                        <option value="{{ equipamento.id }}">{{ equipamento.nome_ad }} - {{ equipamento.cod_nit }}</option>
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Monitor' %}
                                     {% for equipamento in available_equipments['Monitor'] %}
@@ -203,6 +203,7 @@
                     <th>Ticket ID</th>
                     <th>Nome</th>
                     <th>Tipo equipamento</th>
+                    <th>Cód. NIT</th>
                     <th>Data Fim</th>
                     <th>Ações</th>
                     
@@ -225,6 +226,7 @@
                             </a>
                         </td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
+                        <td>{{ requisicao.cod_nit }}</td>
                         <td>
                             {% if requisicao.data_fim %}
                                 {{ requisicao.data_fim }}
@@ -237,7 +239,8 @@
                                 data-target="#updateDataFimModal" 
                                 data-requisicao-id="{{ requisicao.id }}"
                                 data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
-                                data-equipamento-id="{{ requisicao.equipment_id }}">
+                                data-equipamento-id="{{ requisicao.equipment_id }}"
+                                data-cod-nit="{{requisicao.cod_nit}}">
                                 Atualizar
                             </button>
                         </td>
@@ -249,7 +252,8 @@
                                 data-target="#closeRequisitionModal" 
                                 data-requisicao-id="{{ requisicao.id }}" 
                                 data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
-                                data-equipamento-id="{{ requisicao.equipment_id }}">
+                                data-equipamento-id="{{ requisicao.equipment_id }}"
+                                data-cod-nit="{{requisicao.cod_nit}}">
                                 Encerrar
                             </button>
                             <button 
@@ -258,7 +262,8 @@
                                 data-target="#reopenRequisitionModal" 
                                 data-requisicao-id="{{ requisicao.id }}" 
                                 data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
-                                data-equipamento-id="{{ requisicao.equipment_id }}">
+                                data-equipamento-id="{{ requisicao.equipment_id }}"
+                                data-cod-nit="{{requisicao.cod_nit}}">
                                 Reabrir
                             </button>
                         </td>
@@ -346,21 +351,35 @@
     <script>
         // Function to handle equipment assignment
         function assignEquipment(requisicao_id) {
+            // Get the select element
+            var selectElement = document.getElementById('equipamento_' + requisicao_id);
+            
             // Get the selected equipment ID
-            var equipamento_id = document.getElementById('equipamento_' + requisicao_id).value;
+            var equipamento_id = selectElement.value;
+    
+            // Get the selected option's text (to extract cod_nit)
+            var selectedText = selectElement.options[selectElement.selectedIndex].text;
+    
+            // Extract cod_nit from the selected option's text (assuming it's after the last "- ")
+            var cod_nit = selectedText.split(" - ").pop();
     
             if (!equipamento_id) {
                 alert('Selecione um equipamento!');
                 return;
             }
     
-            // Send the selected equipment to the server to update the 'atributo_a' field
+            // Debugging: Check the extracted cod_nit
+            console.log('Equipamento ID:', equipamento_id);
+            console.log('cod_nit:', cod_nit);
+    
+            // Send the selected equipment and cod_nit to the server
             $.ajax({
                 url: '/assign-equipment',  // Update this with your actual endpoint
                 method: 'POST',
                 data: {
                     requisicao_id: requisicao_id,
-                    equipamento_id: equipamento_id
+                    equipamento_id: equipamento_id,
+                    cod_nit: cod_nit // Include cod_nit in the request
                 },
                 success: function(response) {
                     console.log('Success:', response);  // Log the response from the server
@@ -402,27 +421,33 @@
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("closeRequisitionModal");
             let requisicaoId = null;
-            let equipamentoId = null;  // Add a variable for equipment ID
+            let equipamentoId = null;
+            let codNit = null; // Add a variable for cod_nit
     
-            // When the modal is shown, set requisicaoId and equipamentoId from the button's data attributes
+            // When the modal is shown, set requisicaoId, equipamentoId, and codNit from the button's data attributes
             $(modal).on("show.bs.modal", function (event) {
                 const button = $(event.relatedTarget); // Bootstrap 4 compatible
                 requisicaoId = button.data("requisicao-id");
-                equipamentoId = button.data("equipamento-id");  // Capture the equipment ID
+                equipamentoId = button.data("equipamento-id");
+                codNit = button.data("cod-nit"); // Capture the cod_nit
             });
     
-            // Handle the "Encerrar" button click inside the modal
             document.getElementById("confirmCloseRequisition").addEventListener("click", function () {
-                if (requisicaoId && equipamentoId) {  // Check if both IDs are set
-                    fetch(`/close_requisition/${requisicaoId}/${equipamentoId}`, {
+                if (requisicaoId && equipamentoId && codNit) { // Ensure all values are set
+                    fetch(`/close_requisition/${requisicaoId}/${equipamentoId}/${codNit}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
-                        }
+                        },
+                        body: JSON.stringify({ cod_nit: codNit }) // Pass cod_nit in the request body
                     })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json()) // Parse response JSON
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message); // Show the server message
                             location.reload(); // Reload the page on success
+                        } else if (data.error) {
+                            alert("Erro: " + data.error); // Handle server error messages
                         } else {
                             alert("Falha ao encerrar a requisição.");
                         }
@@ -430,6 +455,8 @@
                     .catch(error => {
                         console.error("Erro ao encerrar a requisição:", error);
                     });
+                } else {
+                    alert("Informações incompletas para encerrar a requisição.");
                 }
             });
         });
@@ -439,34 +466,44 @@
         document.addEventListener("DOMContentLoaded", function () {
             const modal = document.getElementById("reopenRequisitionModal");
             let requisicaoId = null;
-            let equipamentoId = null;  // Add a variable for equipment ID
+            let equipamentoId = null;
+            let codNit = null; // Add a variable for cod_nit
     
-            // When the modal is shown, set requisicaoId and equipamentoId from the button's data attributes
+            // When the modal is shown, set requisicaoId, equipamentoId, and codNit from the button's data attributes
             $(modal).on("show.bs.modal", function (event) {
                 const button = $(event.relatedTarget); // Bootstrap 4 compatible
                 requisicaoId = button.data("requisicao-id");
-                equipamentoId = button.data("equipamento-id");  // Capture the equipment ID
+                equipamentoId = button.data("equipamento-id");
+                codNit = button.data("cod-nit"); // Capture the cod_nit
             });
     
             // Handle the "Reopen" button click inside the modal
             document.getElementById("confirmReopenRequisition").addEventListener("click", function () {
-                if (requisicaoId && equipamentoId) {  // Check if both IDs are set
-                    fetch(`/reopen_requisition/${requisicaoId}/${equipamentoId}`, {
+                if (requisicaoId && equipamentoId && codNit) { // Ensure all values are set
+                    fetch(`/reopen_requisition/${requisicaoId}/${equipamentoId}/${codNit}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
-                        }
+                        },
+                        body: JSON.stringify({ cod_nit: codNit }) // Pass cod_nit in the request body
                     })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json()) // Parse response JSON
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message); // Show the server success message
                             location.reload(); // Reload the page on success
+                        } else if (data.error) {
+                            alert("Erro: " + data.error); // Show the server error message
                         } else {
                             alert("Falha ao reabrir a requisição.");
                         }
                     })
                     .catch(error => {
                         console.error("Erro ao reabrir a requisição:", error);
+                        alert("Erro inesperado ao reabrir a requisição.");
                     });
+                } else {
+                    alert("Informações incompletas para reabrir a requisição.");
                 }
             });
         });
