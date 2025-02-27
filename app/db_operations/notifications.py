@@ -203,3 +203,34 @@ def send_email_on_material_closure_admin(ticket_id,recipient_emails,material_typ
     </html>
     """
     send_email(recipient_emails, subject, message)
+    
+    
+def send_email_on_password_recover(recipient_emails,new_password,link):
+    subject = f"Reposição de password."
+    message = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; }}
+            .email-container {{ padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }}
+            .header {{ font-size: 18px; font-weight: bold; color: #333; }}
+            .content {{ margin-top: 10px; }}
+            .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="header">Pedido de reposição de password.</strong></div>
+            <div class="content">
+                <p>Este email confirma o seu pedido de reposição de password</strong>.</p>
+                <p>Foi gerada a seguinte password: {new_password}.</p>
+                <p>Aceda à plataforma atraves do link {link} e altere a sua password.</p>
+            </div>
+            <div class="footer">
+                <p>Obrigado,<br>NIT</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    send_email(recipient_emails, subject, message)

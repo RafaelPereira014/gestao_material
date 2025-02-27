@@ -64,3 +64,20 @@ def update_password(user_id, new_password_hash):
     finally:
         cursor.close()
         connection.close()
+
+def update_password_with_email(email, new_password_hash):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            "UPDATE users SET password = %s WHERE email = %s",
+            (new_password_hash, email)
+        )
+        connection.commit()
+    except Exception as e:
+        connection.rollback()
+        print(f"Error updating password: {e}")
+        raise
+    finally:
+        cursor.close()
+        connection.close()

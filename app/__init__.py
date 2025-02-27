@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
 from io import BytesIO, StringIO, TextIOWrapper
+import random
+import string
 from fpdf import FPDF
 import os
 from urllib.parse import unquote
@@ -29,6 +31,11 @@ limiter = Limiter(
     #storage_uri="redis://localhost:6379/0",  # Redis connection URI
     default_limits=["100 per minute"]  # Default rate limit for the entire app
 )
+def generate_random_password(length=12):
+    # Define character pools for password generation
+    characters = string.ascii_letters + string.digits + string.punctuation
+    # Generate a random password
+    return ''.join(random.choices(characters, k=length))
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
@@ -81,13 +88,40 @@ def logout():
     return redirect(url_for('login'))  # Redirect to homepage after logout
 
 
+import logging
+
 @app.route('/forgot_password', methods=['POST'])
 def forgot_password():
-    email = request.form.get('email')
-    token = request.form.get('token')
-    # Add logic to verify the token and reset the password
-    flash('Intruções para recuperar a password foram enviadas para o respetivo email.', 'success')
-    return redirect(url_for('login'))
+    try:
+        email = request.form.get('email')
+        logging.info(f"Received email: {email}")
+
+        if not email:
+            flash('O email é obrigatório.', 'danger')
+            return redirect(url_for('forgot_password'))
+
+        random_pass = generate_random_password(12)
+        logging.info(f"Generated password: {random_pass}")
+
+        link = 'https://itcontrol.edu.azores.gov.pt'
+        new_password_hash = bcrypt.hashpw(random_pass.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        logging.info(f"Hashed password: {new_password_hash}")
+
+        # Update password in the database
+        update_password_with_email(email, new_password_hash)
+        logging.info(f"Password updated in the database for email: {email}")
+
+        # Send email
+        send_email_on_password_recover([email], random_pass, link)
+        logging.info(f"Recovery email sent to: {email}")
+
+        flash('As instruções para recuperar a password foram enviadas para o respetivo email.', 'success')
+        return redirect(url_for('login'))
+
+    except Exception as e:
+        logging.error(f"Error in forgot_password: {str(e)}")
+        flash('Ocorreu um erro ao tentar recuperar a password.', 'danger')
+        return redirect(url_for('forgot_password'))
 
 
 @app.route('/index')
