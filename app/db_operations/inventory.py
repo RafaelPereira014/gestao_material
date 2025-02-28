@@ -250,9 +250,9 @@ def get_monitores():
 def get_outros():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,n_serie FROM monitores WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,diversos,cod_nit,n_serie FROM outros WHERE estado = 'Disponivel' ")
     result = cursor.fetchall()
-    monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2]} for row in result]
+    monitores = [{'id': row[0],'diversos': row[1], 'cod_nit': row[2], 'n_serie': row[3]} for row in result]
     cursor.close()
     connection.close()
     
@@ -314,6 +314,11 @@ def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
             "UPDATE voip SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
             (nome_requisicao, requisicao_id,equipamento_id)
         )
+    elif tipo_equip == 'leitor de cartões':
+        cursor.execute(
+            "UPDATE outros SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
+            (nome_requisicao, requisicao_id,equipamento_id)
+        )
     else:
         print("Tipo de equipamento não encontrado ou inválido")
     
@@ -332,7 +337,7 @@ def update_equipment_from_requisicao(requisicao_id):
         return
 
     tipo_equip = requisicao[3].lower()  # Assuming tipo_equip is in column 3
-    print(tipo_equip)
+    
 
     equipamento_id = None
     if tipo_equip == 'camera':
@@ -387,7 +392,15 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE voip SET atribuido_a = 'NIT voip', requisitado='0', estado='Disponivel', id_requisicao=NULL WHERE id = %s",
                 (equipamento_id,)
             )
-           
+    elif tipo_equip == 'leitor de cartões':
+        cursor.execute("SELECT id FROM outros WHERE id_requisicao=%s", (requisicao_id,))
+        equipamento = cursor.fetchone()
+        equipamento_id = equipamento[0] if equipamento else None
+        if equipamento_id:
+            cursor.execute(
+                "UPDATE outros SET atribuido_a = 'NIT Diversos', requisitado='0', estado='Disponivel', id_requisicao=NULL WHERE id = %s",
+                (equipamento_id,)
+            )
     else:
         print("Tipo de equipamento não encontrado ou inválido")
 
@@ -499,7 +512,8 @@ def get_equip_details(equipment_type, equipment_id, requisicao_id):
     "monitor": "monitores",
     "camera": "cameras",
     "voip": "voip",
-    "headset": "headset"
+    "headset": "headset",
+    "leitor de cartões": "outros"
     }
 
     table_name = table_mapping.get(equipment_type.lower())

@@ -82,6 +82,8 @@ def get_equipment_name(category, equipment_id):
             column_to_select = "marca_modelo"
         elif "nome_ad" in columns:
             column_to_select = "nome_ad"
+        elif "diversos" in columns:
+            column_to_select = "diversos"
         else:
             raise ValueError(f"No relevant columns found in table {category}.")
         

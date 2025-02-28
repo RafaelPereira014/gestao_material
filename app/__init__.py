@@ -535,6 +535,7 @@ def requisicoes():
     available_equipments['Computador'] = get_computadores()
     available_equipments['Headset'] = get_headset()
     available_equipments['Voip'] = get_voip()
+    available_equipments['Leitor de cartões'] = get_outros()
     
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
@@ -582,6 +583,7 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
             "camera": "cameras",
             "headset": "headset",
             "voip": "voip",
+            "leitor de cartões": "outros"
         }
 
         # Get the category from the mapping
@@ -746,7 +748,6 @@ def assign_equipment():
     requisicao_id = request.form['requisicao_id']
     equipamento_id = request.form['equipamento_id']
     cod_nit = request.form['cod_nit']
-    
     
     # Ensure that requisicao_id and equipamento_id are integers
     try:
