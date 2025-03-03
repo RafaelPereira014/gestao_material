@@ -356,6 +356,30 @@
                     <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
                 </div>
                 {% elif category == 'outros' %}
+                <div class="form-group">
+                    <label for="diversos">Tipo equipamento:</label>
+                    <select class="form-control" id="diversos" name="diversos">
+                        <option value="" disabled selected>Selecione uma tipo de equipamento</option>
+                        {% for diverso in diversos %}
+                            <option value="{{ diverso }}" {% if item.diverso == diverso %}selected{% endif %}>
+                                {{ diverso }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="data_aq">Data aquisição</label>
+                    <input type="text" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
+                </div>
+                <div class="form-group">
+                    <label for="cod_nit">Codigo NIT</label>
+                    <input type="text" class="form-control" id="cod_nit" name="cod_nit" value="{{ item.cod_nit }}">
+                </div>
+                <div class="form-group">
+                    <label for="n_serie">Nº Série</label>
+                    <input type="text" class="form-control" id="n_serie" name="n_serie" value="{{ item.n_serie }}">
+                </div>
                 
                 {% endif %}
         

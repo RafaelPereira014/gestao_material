@@ -589,6 +589,7 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
         # Get the category from the mapping
         category = material_category_mapping.get(material_type.lower())
         material_name = get_equipment_name(category,material_id)
+        
         # cod_nit = get_equipment_codnit(category,equipment_id)
         material_link = f'https://helpdesk.edu.azores.gov.pt/ticket_details/{ticket_id}'    
         recipients=[user_email]
@@ -1259,7 +1260,7 @@ def edit_item(category, item_id):
                         'cameras', 'voip', 
                         'headset', 'outros','marcas',
                         'modelos','processadores','rams','discos','tipo_monitor','tipo_camera','tipo_headset',
-                        'tipo_voip','polegadas','garantia','office','firma','users_a_atribuir']
+                        'tipo_voip','polegadas','garantia','office','firma','users_a_atribuir','diversos']
     
     if category not in valid_categories:
         return "Categoria inválida", 400
@@ -1280,6 +1281,8 @@ def edit_item(category, item_id):
     tipos_camera = get_tipos_camera()
     tipos_headset = get_tipos_headset()
     users = get_atribuidos_a()
+    diversos = get_diversos()
+    
     
     if request.method == 'POST':
         # Get form data
@@ -1346,7 +1349,8 @@ def edit_item(category, item_id):
         tipos_camera=tipos_camera,
         tipos_headset=tipos_headset,
         discos = discos,
-        users=users)
+        users=users,
+        diversos=diversos)
 
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):

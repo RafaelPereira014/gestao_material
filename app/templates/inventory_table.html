@@ -13,11 +13,14 @@
                 {% if items[0].so %}
                 <th>SO</th>
                 {% endif %}
+                {% if items[0].diversos %}
+                <th>Nome</th>
+                {% endif %}
                 {% if items[0].cod_nit %}
                 <th>COD Nit</th>
                 {% endif %}
                 {% if items[0].data_aq %}
-                <th>Data aq.</th>
+                <th>Data aq</th>
                 {% endif %}
                 {% if items[0].ext %}
                 <th>Ext</th>
@@ -37,10 +40,11 @@
                 {% if item.nome_ad %}
                 <td>{{ item.nome_ad }}</td>
                 {% endif %}
+                {% if item.diversos  %}
+                    <td>{{ item.diversos }}</td>
+                {% endif %}
                 {% if item.modelo or item.marca_modelo %}
                     <td>{{ item.modelo if item.modelo else item.marca_modelo }}</td>
-                {% else %}
-                    <td>-</td>
                 {% endif %}
                 {% if item.so  %}
                     <td>{{ item.so }}</td>
@@ -54,7 +58,7 @@
                 {%endif%}
                 {% if item.data_aq %}
                     <td>{{ item.data_aq }}</td>
-                {% elif item.data_aq == '' %}
+                {% elif item.data_aq == '' or item.data_aq is none %}
                     <td>{{ '-' }}</td>
                 {%endif%}
                 {% if item.ext %}

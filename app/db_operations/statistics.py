@@ -78,12 +78,13 @@ def get_equipment_name(category, equipment_id):
         columns = [row[0] for row in cursor.fetchall()]
         
         # Determine the column to use
-        if "marca_modelo" in columns:
+        if "diversos" in columns:
+            column_to_select = "diversos"
+        elif "marca_modelo" in columns:
             column_to_select = "marca_modelo"
         elif "nome_ad" in columns:
             column_to_select = "nome_ad"
-        elif "diversos" in columns:
-            column_to_select = "diversos"
+        
         else:
             raise ValueError(f"No relevant columns found in table {category}.")
         
