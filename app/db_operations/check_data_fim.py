@@ -133,6 +133,7 @@ def send_reminders():
         requisicao_id = requisition['id']
         user_email = [requisition['email']]
         admin_mail = 'srec.nit.edu@azores.gov.pt'
+        emails=[user_email,admin_mail]
         material_type = requisition['tipo_equipamento']
         name = requisition['nome']
         due_date = requisition['data_fim']
@@ -174,7 +175,7 @@ def send_reminders():
         </html>
         """
         
-        send_email(user_email+admin_mail, subject, message)
+        send_email([emails], subject, message)
         
 
 send_reminders()
