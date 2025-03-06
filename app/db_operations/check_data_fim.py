@@ -174,7 +174,7 @@ def send_reminders():
         </html>
         """
         
-        send_email(user_email, subject, message)
+        send_email(user_email+admin_mail, subject, message)
         
 
 send_reminders()
