@@ -1303,15 +1303,19 @@ def edit_item(category, item_id):
         form_data = request.form.to_dict()
 
         try:
-            # Connect to the database
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             
-            
+            if 'NIT' in form_data.get('atribuido_a', '') and 'abatido' in form_data.get('atribuido_a', '').lower():
+                form_data['estado'] = 'Abatido'
+            elif form_data.get('atribuido_a', '').startswith('NIT'):
+                form_data['estado'] = 'disponivel'
+
             fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
             query = f"UPDATE {category} SET {fields} WHERE id = %s"
             
             values = list(form_data.values()) + [item_id]
+            
             cursor.execute(query, values)
             connection.commit()
 
@@ -1320,7 +1324,6 @@ def edit_item(category, item_id):
         finally:
             if connection:
                 connection.close()
-
         # Redirect to another page or render success message
         return redirect(url_for('inventory_nit'))  # Replace with your desired route
 
