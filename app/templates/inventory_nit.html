@@ -160,6 +160,11 @@
                             <option value="Manutencao">Manutenção</option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="codNit">Pesquisar "CodNIT":</label>
+                        <input type="text" class="form-control custom-input" id="codNitInput" placeholder="Digite o CodNIT">
+                    </div>
             
                     <!-- Additional Filters for Computadores -->
                     <div id="computadoresFields" style="display: none;">
@@ -169,12 +174,6 @@
                                 <div class="form-group">
                                     <label for="marca_modelo">Marca/Modelo:</label>
                                     <input type="text" class="form-control custom-input" id="marca_modelo" placeholder="Digite a marca/modelo">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="codNit">Pesquisar "CodNIT":</label>
-                                    <input type="text" class="form-control custom-input" id="codNit" placeholder="Digite o CodNIT">
                                 </div>
                             </div>
                         </div>
@@ -358,10 +357,12 @@
                     });
             });
         });
+        
         function fetchInventory() {
             const inventoryType = document.getElementById("inventoryType").value;
             const searchQuery = document.getElementById("searchInput").value.trim();
             const estado = document.getElementById("estado").value; // Get the 'estado' value
+            const codNit = document.getElementById("codNitInput").value.trim(); // Get the 'cod_nit' value
             const inventoryTable = document.getElementById("inventoryTable");
             
             const computadoresFields = document.getElementById("computadoresFields");
@@ -370,10 +371,10 @@
             } else {
                 computadoresFields.style.display = "none";
             }
-        
-            // Build the fetch URL with 'estado' as an additional parameter
-            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estado)}`;
-        
+            
+            // Build the fetch URL with 'estado' and 'cod_nit' as additional parameters
+            let fetchUrl = `/fetch_inventory?type=${inventoryType}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estado)}&cod_nit=${encodeURIComponent(codNit)}`;
+            
             if (inventoryType) {
                 fetch(fetchUrl)
                     .then(response => response.text())
@@ -406,20 +407,22 @@
         document.getElementById("searchInput").addEventListener("input", fetchInventory);
         document.getElementById("searchSO")?.addEventListener("input", fetchInventory);
         document.getElementById("searchModelo")?.addEventListener("input", fetchInventory);
-
+        document.getElementById("codNitInput")?.addEventListener("input", fetchInventory);
+        
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("page-link")) {
                 e.preventDefault();
-        
+            
                 const page = e.target.getAttribute("data-page");
                 const inventoryType = document.getElementById("inventoryType").value;
                 const searchQuery = document.getElementById("searchInput").value.trim();
                 const estadoQuery = document.getElementById("estado").value.trim();
-        
+                const codNitQuery = document.getElementById("codNitInput").value.trim();
+            
                 if (page && inventoryType) {
                     // Include all relevant parameters in the fetch URL
-                    const fetchUrl = `/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estadoQuery)}`;
-        
+                    const fetchUrl = `/fetch_inventory?type=${inventoryType}&page=${page}&search=${encodeURIComponent(searchQuery)}&estado=${encodeURIComponent(estadoQuery)}&cod_nit=${encodeURIComponent(codNitQuery)}`;
+            
                     fetch(fetchUrl)
                         .then(response => response.text())
                         .then(html => {
