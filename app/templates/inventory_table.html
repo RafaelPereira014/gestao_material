@@ -4,6 +4,9 @@
         <thead>
             <tr>
                 <th>Atribuido a</th>
+                {% if items[0].dominio %}
+                <th>Dominio</th>
+                {% endif %}
                 {% if items[0].nome_ad %}
                 <th>Nome</th>
                 {% endif %}
@@ -37,9 +40,13 @@
                         {{ item.atribuido_a }}
                     </a>
                 </td>
+                {% if item.dominio %}
+                <td>{{ item.dominio }}</td>
+                {% endif %}
                 {% if item.nome_ad %}
                 <td>{{ item.nome_ad }}</td>
                 {% endif %}
+                
                 {% if item.diversos  %}
                     <td>{{ item.diversos }}</td>
                 {% endif %}

@@ -140,7 +140,11 @@
                 </div>
                 
                 {% if category == 'computadores' %}
-                        
+                    
+                    <div class="form-group">
+                        <label for="dominio">Nome AD</label>
+                        <input type="text" class="form-control" id="dominio" name="dominio" value="{{ item.dominio }}">
+                    </div>
                     <div class="form-group">
                         <label for="nome_ad">Nome AD</label>
                         <input type="text" class="form-control" id="nome_ad" name="nome_ad" value="{{ item.nome_ad }}">
