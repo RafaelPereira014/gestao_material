@@ -81,7 +81,7 @@ def check_due_requisitions():
     query = """
         SELECT id, email, data_fim, tipo_equipamento, nome,ticket_id
         FROM requisicoes
-        WHERE DATE(data_fim) = %s AND estado = 'ativa'
+        WHERE DATE(data_fim) < %s AND estado = 'ativa'
     """
     
     cursor.execute(query, (today_date,))
@@ -158,7 +158,7 @@ def send_reminders():
                 <div class="header">Atenção: Devolução de material pendente</div>
                 <div class="content">
                     <p>Caro(a) utilizador(a) {name} ,</p>
-                    <p>O material referente à sua requisição <strong>#{ticket_id}</strong> deve ser devolvido até à data <strong>{due_date}</strong>. Até ao momento, não foi registada qualquer devolução.</p>
+                    <p>O material referente à sua requisição <strong>#{ticket_id}</strong> devia ter sido devolvido a <strong>{due_date}</strong>. Até ao momento, não foi registada qualquer devolução.</p>
                     
                     <p>Detalhes do material:</p>
                     <ul>
