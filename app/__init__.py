@@ -310,7 +310,7 @@ def fetch_tabelas():
     per_page = 10  # Items per page
 
     query_templates = {
-        key: f"SELECT * FROM {table} WHERE nome LIKE %s LIMIT %s OFFSET %s"
+        key: f"SELECT * FROM {table} WHERE nome LIKE %s ORDER BY nome ASC LIMIT %s OFFSET %s"
         for key, table in {
             "marcas": "marcas",
             "modelos": "modelos",
