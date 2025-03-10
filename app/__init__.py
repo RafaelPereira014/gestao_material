@@ -7,7 +7,7 @@ from fpdf import FPDF
 import os
 from urllib.parse import unquote
 import bcrypt
-from flask import Flask, flash, jsonify, make_response, render_template, redirect, send_file, send_from_directory, session, url_for, request
+from flask import Flask, Response, flash, jsonify, make_response, render_template, redirect, send_file, send_from_directory, session, url_for, request
 from flask_limiter import Limiter
 import pymysql
 from app.db_operations.edit_equip import *
@@ -1451,6 +1451,43 @@ def download_document(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
     except FileNotFoundError:
         return "File not found", 404
+    
+
+@app.route('/download_document/<category>', methods=['GET'])
+def download_document_category(category):
+    try:
+        # Establish database connection
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Fetch all rows from the table matching the category
+        query = f"SELECT * FROM {category}"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        # Fetch column names
+        column_names = [desc[0] for desc in cursor.description]
+
+        # Close cursor and connection
+        cursor.close()
+        connection.close()
+
+        # Generate CSV content using StringIO
+        output = StringIO()
+        csv_writer = csv.writer(output)
+        csv_writer.writerow(column_names)  # Write header row
+        csv_writer.writerows(rows)         # Write data rows
+        csv_data = output.getvalue()       # Get CSV data as string
+        output.close()
+
+        # Create the CSV response
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers["Content-Disposition"] = f"attachment; filename={category}.csv"
+        return response
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return "An error occurred while processing the request", 500
 
 
 @app.route('/receive-data', methods=['POST'])

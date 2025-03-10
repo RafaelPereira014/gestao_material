@@ -127,7 +127,7 @@
             <!-- Dropdown for selecting inventory type -->
             <div class="form-group">
                 <label for="inventoryType">Escolha uma categoria:</label>
-                <select class="form-control" id="inventoryType" onchange="fetchInventory()">
+                <select class="form-control" id="inventoryType" onchange="updateDownloadLink(); fetchInventory();">
                     <option value="">Selecione</option>
                     <option value="computadores">Computadores</option>
                     <option value="monitores">Monitores</option>
@@ -269,6 +269,10 @@
                 </div>
                 </div>
             </div>
+            <div>
+                <a href="#" id="downloadLink" class="btn btn-primary" style="display: none;">Download Excel</a>
+            </div>
+
     
             <!-- Placeholder for the inventory table -->
             <div id="inventoryTable" class="mt-4">
@@ -385,6 +389,19 @@
                 additionalSearchFields.style.display = "none";
             }
         });
+
+        function updateDownloadLink() {
+            const selectedCategory = document.getElementById("inventoryType").value;
+            const downloadLink = document.getElementById("downloadLink");
+        
+            if (selectedCategory) {
+                downloadLink.href = `/download_document/${selectedCategory}`;
+                downloadLink.style.display = "inline-block"; // Show the link when a category is selected
+            } else {
+                downloadLink.href = "#";
+                downloadLink.style.display = "none"; // Hide the link if no category is selected
+            }
+        }
         
         // Trigger fetchInventory when input changes
         document.getElementById("searchInput").addEventListener("input", fetchInventory);
