@@ -128,6 +128,7 @@
                 <tr>
                     <th>Pedido#</th>
                     <th>Data pedido</th>
+                    <th>Data Inicio</th>
                     <th>Ticket ID</th>
                     <th>Nome</th>
                     <th>Equipamento</th>
@@ -142,6 +143,7 @@
                     <tr>
                         <td>{{requisicao.id}}</td>
                         <td>{{ requisicao.data_criacao }}</td>
+                        <td>{{ requisicao.data_inicio }}</td>
                         <td>
                             <a href="https://helpdesk.edu.azores.gov.pt/ticket_details/{{ requisicao.ticket_id }}" target="_blank">
                                 {{ requisicao.ticket_id }}
