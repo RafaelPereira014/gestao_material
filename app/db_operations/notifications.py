@@ -137,7 +137,7 @@ def send_email_on_material_assign_admin(ticket_id, username,recipient_emails,mat
     
 
     
-def send_email_on_material_closure(ticket_id,recipient_emails,material_link,material_type,material_name):
+def send_email_on_material_closure(ticket_id,user_name,recipient_emails,material_link,material_type,material_name):
     subject = f"Requisição de material: #{ticket_id}."
     message = f"""
     <html>
@@ -154,6 +154,7 @@ def send_email_on_material_closure(ticket_id,recipient_emails,material_link,mate
         <div class="email-container">
             <div class="header">Entrega de material.</strong></div>
             <div class="content">
+                <p>Caro(a) utilizador(a) {user_name} ,</p>
                 <p>Este email confirma a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
                 <p>Detalhes do material:</p>
                 <ul>

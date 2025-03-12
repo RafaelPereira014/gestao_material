@@ -589,6 +589,9 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
         material_type = requisicao[3]
         material_id = requisicao[11]
         
+        details = get_equip_details(material_type,equipment_id,requisicao_id)
+        user_name = details[1]
+        
     
         # Mapping material types to categories
         material_category_mapping = {
@@ -613,7 +616,7 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
         
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id,cod_nit)
         update_equipment_from_requisicao(requisicao_id)
-        send_email_on_material_closure(ticket_id,recipients,material_link,material_type,material_name)
+        send_email_on_material_closure(ticket_id,user_name,recipients,material_link,material_type,material_name)
         send_email_on_material_closure_admin(ticket_id,recipients_admin,material_type,material_name)
         
         
