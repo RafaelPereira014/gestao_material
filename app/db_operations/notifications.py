@@ -172,7 +172,7 @@ def send_email_on_material_closure(ticket_id,user_name,recipient_emails,material
     """
     send_email(recipient_emails, subject, message)
 
-def send_email_on_material_closure_admin(ticket_id,recipient_emails,material_type,material_name):
+def send_email_on_material_closure_admin(ticket_id,user_name,recipient_emails,material_type,material_name):
     subject = f"Requisição de material: #{ticket_id}."
     message = f"""
     <html>
@@ -189,7 +189,7 @@ def send_email_on_material_closure_admin(ticket_id,recipient_emails,material_typ
         <div class="email-container">
             <div class="header">Encerramento do pedido de requisição.</strong></div>
             <div class="content">
-                <p>Este email confirma o encerramento da requisição e a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
+                <p>Este email confirma o encerramento da requisição do utilizador <strong>{user_name}</strong> e a entrega do material associado ao pedido <strong>#{ticket_id}</strong>.</p>
                 <p>Detalhes do material:</p>
                 <ul>
                     <li>Tipo de equipamento:<strong></strong> {material_type}</li>

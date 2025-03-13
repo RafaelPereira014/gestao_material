@@ -617,7 +617,7 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
         update_estado_requisicao(requisicao_id,'Resolvido',equipment_id,cod_nit)
         update_equipment_from_requisicao(requisicao_id)
         send_email_on_material_closure(ticket_id,user_name,recipients,material_link,material_type,material_name)
-        send_email_on_material_closure_admin(ticket_id,recipients_admin,material_type,material_name)
+        send_email_on_material_closure_admin(ticket_id,user_name,recipients_admin,material_type,material_name)
         
         
         
@@ -1496,13 +1496,18 @@ def download_document_category(category):
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
     data = request.get_json()
-    print("Received data:", data)
 
-    material_types = data.get('material_type', [])  # Safely get material_type, default to an empty list if not found
+    material_types = data.get('material_type', [])
+    quantity_types = data.get('quantity', [])
 
-    if not material_types:
-        return "Material types are required.", 400  # Return an error if material_types is empty
+    # Validate that both lists have the same length
+    if len(material_types) != len(quantity_types):
+        return "Material types and quantities must have the same length.", 400
 
+    material = [{'material': material, 'quantity': quantity} for material, quantity in zip(material_types, quantity_types)]
+
+
+    
     # Extract other fields from the data
     ticket_id = data['ID']
     username = data['User']
@@ -1522,14 +1527,18 @@ def receive_data():
         cursor = connection.cursor()
 
         
-        for material_type in material_types:
-            cursor.execute(
-                """
-                INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim,ticket_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s,%s)
-                """,
-                (username, email, material_type, quantity, reason, start_date, end_date,ticket_id)
-            )
+        for item in material:
+            material_type = item['material']
+            quantity = int(item['quantity'])  # Convert quantity to an integer
+            
+            for _ in range(quantity):
+                cursor.execute(
+                    """
+                    INSERT INTO requisicoes (nome, email, tipo_equipamento, quantidade, motivo, data_inicio, data_fim, ticket_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (username, email, material_type, 1, reason, start_date, end_date, ticket_id)
+                )
 
         connection.commit()
 
