@@ -180,6 +180,10 @@
                                     {% for equipamento in available_equipments['Leitor de cartões'] %}
                                         <option value="{{ equipamento.id }}">{{ equipamento.diversos }} - {{ equipamento.cod_nit }}</option>
                                     {% endfor %}
+                                {% elif requisicao.tipo_equipamento == 'Pen' %}
+                                    {% for equipamento in available_equipments['Pen'] %}
+                                        <option value="{{ equipamento.id }}">{{ equipamento.diversos }} - {{ equipamento.cod_nit }}</option>
+                                    {% endfor %}
                                 {% endif %}
 
                             </select>

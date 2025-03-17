@@ -247,16 +247,22 @@ def get_monitores():
     
     return monitores
 
-def get_outros():
+def get_outros(equipment_name):
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,diversos,cod_nit,n_serie FROM outros WHERE estado = 'Disponivel' ")
+
+    # Use LIKE to match the equipment name in the 'diversos' column
+    query = "SELECT id, diversos, cod_nit, n_serie FROM outros WHERE estado = 'Disponivel' AND diversos LIKE %s"
+    cursor.execute(query, ('%' + equipment_name + '%',))  # % is used for partial matching
     result = cursor.fetchall()
-    monitores = [{'id': row[0],'diversos': row[1], 'cod_nit': row[2], 'n_serie': row[3]} for row in result]
+
+    # Build the list of dictionaries with relevant equipment details
+    equipamentos = [{'id': row[0], 'diversos': row[1], 'cod_nit': row[2], 'n_serie': row[3]} for row in result]
+    
     cursor.close()
     connection.close()
-    
-    return monitores
+
+    return equipamentos
 
 def get_requisicao_by_id(requisicao_id):
     connection = connect_to_database()
@@ -314,7 +320,7 @@ def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
             "UPDATE voip SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
             (nome_requisicao, requisicao_id,equipamento_id)
         )
-    elif tipo_equip == 'leitor de cartões':
+    elif tipo_equip == 'leitor de cartões' or tipo_equip =='pen':
         cursor.execute(
             "UPDATE outros SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
             (nome_requisicao, requisicao_id,equipamento_id)
@@ -513,7 +519,8 @@ def get_equip_details(equipment_type, equipment_id, requisicao_id):
     "camera": "cameras",
     "voip": "voip",
     "headset": "headset",
-    "leitor de cartões": "outros"
+    "leitor de cartões": "outros",
+    "pen": "outros"
     }
 
     table_name = table_mapping.get(equipment_type.lower())

@@ -549,7 +549,8 @@ def requisicoes():
     available_equipments['Computador'] = get_computadores()
     available_equipments['Headset'] = get_headset()
     available_equipments['Voip'] = get_voip()
-    available_equipments['Leitor de cartões'] = get_outros()
+    available_equipments['Leitor de cartões'] = get_outros('Leitor de cartões')
+    available_equipments['Pen'] = get_outros('Pen')
     
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
                            all_requisicoes=all_requisicoes, 
@@ -600,7 +601,8 @@ def close_requisition(requisicao_id,equipment_id,cod_nit):
             "camera": "cameras",
             "headset": "headset",
             "voip": "voip",
-            "leitor de cartões": "outros"
+            "leitor de cartões": "outros",
+            "pen": "outros"
         }
 
         # Get the category from the mapping
