@@ -1525,6 +1525,18 @@ def receive_data():
     try:
         connection = connect_to_database()
         cursor = connection.cursor()
+        
+        cursor.execute(
+            "SELECT COUNT(*) FROM users_a_atribuir WHERE nome = %s",
+            (username,)
+        )
+        user_exists = cursor.fetchone()[0]
+
+        if not user_exists:
+            cursor.execute(
+                "INSERT INTO users_a_atribuir (nome) VALUES (%s)",
+                (username)
+            )
 
         
         for item in material:
