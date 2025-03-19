@@ -1313,7 +1313,7 @@ def edit_item(category, item_id):
             
             if 'NIT' in form_data.get('atribuido_a', '') and 'abatido' in form_data.get('atribuido_a', '').lower():
                 form_data['estado'] = 'Abatido'
-            elif 'NIT' in form_data.get('atribuido_a', '') and 'Manutenção' in form_data.get('atribuido_a', '').lower():
+            elif 'NIT' in form_data.get('atribuido_a', '') and 'manutenção' in form_data.get('atribuido_a', '').lower():
                 form_data['estado'] = 'Manutenção'
             elif form_data.get('atribuido_a', '').startswith('NIT'):
                 form_data['estado'] = 'disponivel'
