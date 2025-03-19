@@ -387,18 +387,7 @@
                 
                 {% endif %}
         
-                <div class="form-group">
-                    {%if item.estado %}
-                        <label for="estado">Estado:</label>
-                        <select class="form-control" id="estado" name="estado">
-                            <option value="Em uso" {% if item.estado == 'Em uso' %}selected{% endif %}>Em uso</option>
-                            <option value="Extraviado" {% if item.estado == 'Extraviado' %}selected{% endif %}>Extraviado</option>
-                            <option value="Manutenção" {% if item.estado == 'Manutenção' %}selected{% endif %}>Em manutenção</option>
-                            <option value="Disponivel" {% if item.estado == 'Disponivel' %}selected{% endif %}>Disponível</option>
-                            <option value="Abatido" {% if item.estado == 'Abatido' %}selected{% endif %}>Abatido</option>
-                        </select>
-                    {%endif%}
-                </div>
+                
                 
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 <a href="/inventory_nit" class="btn btn-secondary">Cancelar</a>
