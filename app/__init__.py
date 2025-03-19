@@ -1133,7 +1133,7 @@ def add_equipment(category=None):
                 if not atribuido_a_value:  
                     filtered_form_data['estado'] = 'disponivel'
                 else:
-                    nit_values = ['nit webcams', 'nit computadores', 'nit portateis', 'nit auriculares', 'nit voips', 'nit monitores']
+                    nit_values = ['nit cameras', 'nit computadores', 'nit portateis', 'nit auriculares', 'nit voips', 'nit monitores']
                     
                     if atribuido_a_value.lower() in nit_values:  
                         filtered_form_data['estado'] = 'disponivel'
@@ -1311,14 +1311,15 @@ def edit_item(category, item_id):
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             
-            if 'NIT' in form_data.get('atribuido_a', '') and 'abatido' in form_data.get('atribuido_a', '').lower():
-                form_data['estado'] = 'Abatido'
-            elif 'NIT' in form_data.get('atribuido_a', '') and 'manutenção' in form_data.get('atribuido_a', '').lower():
-                form_data['estado'] = 'Manutenção'
-            elif form_data.get('atribuido_a', '').startswith('NIT'):
-                form_data['estado'] = 'disponivel'
-            else:
-                form_data['estado'] = 'em uso'
+            if category != "users_a_atribuir":
+                if 'NIT' in form_data.get('atribuido_a', '') and 'abatido' in form_data.get('atribuido_a', '').lower():
+                    form_data['estado'] = 'Abatido'
+                elif 'NIT' in form_data.get('atribuido_a', '') and 'manutenção' in form_data.get('atribuido_a', '').lower():
+                    form_data['estado'] = 'Manutenção'
+                elif 'NIT' not in form_data.get('atribuido_a', ''):
+                    form_data['estado'] = 'em uso'
+                elif form_data.get('atribuido_a', '').startswith('NIT'):
+                    form_data['estado'] = 'disponivel'
 
             fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
             query = f"UPDATE {category} SET {fields} WHERE id = %s"
