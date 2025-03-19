@@ -127,11 +127,12 @@
                     <select class="form-control" id="category" name="category" required>
                         <option value="" disabled selected>Selecione a categoria</option>
                         <option value="computadores" {% if category == 'computadores' %}selected{% endif %}>Computadores</option>
-                        <option value="monitores" {% if category == 'monitores' %}selected{% endif %}>Monitores</option>
                         <option value="cameras" {% if category == 'cameras' %}selected{% endif %}>Câmeras</option>
-                        <option value="voip" {% if category == 'voip' %}selected{% endif %}>VoIPs</option>
+                        <option value="outros" {% if category == 'outros' %}selected{% endif %}>Diversos</option>
                         <option value="headset" {% if category == 'headset' %}selected{% endif %}>Headsets</option>
-                        <option value="outros" {% if category == 'outros' %}selected{% endif %}>Outros</option>
+                        <option value="monitores" {% if category == 'monitores' %}selected{% endif %}>Monitores</option>
+                        <option value="voip" {% if category == 'voip' %}selected{% endif %}>VoIPs</option>
+                        
                     </select>
                 </div>
             </form>
