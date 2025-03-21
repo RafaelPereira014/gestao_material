@@ -419,32 +419,32 @@ def fetch_inventory():
                            AND (%s = '' OR so LIKE %s)
                            AND (%s = '' OR modelo LIKE %s)
                            AND (%s = '' OR cod_nit LIKE %s)
-                           LIMIT %s OFFSET %s""",
+                           ORDER BY atribuido_a LIMIT %s OFFSET %s """,
         "monitores": """SELECT * FROM monitores 
                         WHERE atribuido_a LIKE %s 
                         AND (%s = '' OR estado = %s)
                         AND (%s = '' OR cod_nit LIKE %s)
-                        LIMIT %s OFFSET %s""",
+                        ORDER BY atribuido_a LIMIT %s OFFSET %s""",
         "cameras": """SELECT * FROM cameras 
                       WHERE atribuido_a LIKE %s 
                       AND (%s = '' OR estado = %s)
                       AND (%s = '' OR cod_nit LIKE %s)
-                      LIMIT %s OFFSET %s""",
+                      ORDER BY atribuido_a LIMIT %s OFFSET %s""",
         "voip": """SELECT * FROM voip 
                    WHERE atribuido_a LIKE %s 
                    AND (%s = '' OR estado = %s)
                    AND (%s = '' OR cod_nit LIKE %s)
-                   LIMIT %s OFFSET %s""",
+                   ORDER BY atribuido_a LIMIT %s OFFSET %s""",
         "headset": """SELECT * FROM headset 
                       WHERE atribuido_a LIKE %s 
                       AND (%s = '' OR estado = %s)
                       AND (%s = '' OR cod_nit LIKE %s)
-                      LIMIT %s OFFSET %s""",
+                      ORDER BY atribuido_a LIMIT %s OFFSET %s""",
         "outros": """SELECT * FROM outros 
                      WHERE atribuido_a LIKE %s 
                      AND (%s = '' OR estado = %s)
                      AND (%s = '' OR cod_nit LIKE %s)
-                     LIMIT %s OFFSET %s""",
+                     ORDER BY atribuido_a LIMIT %s OFFSET %s""",
     }
 
     count_templates = {
