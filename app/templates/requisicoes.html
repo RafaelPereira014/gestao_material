@@ -120,7 +120,7 @@
     </div>
 
     <div id="main-content">
-        <h1>Requisições</h1>
+        <h1>Requisições pendentes</h1>
 
         <!-- Equipment Table -->
         <table class="table table-striped">
@@ -131,8 +131,7 @@
                     <th>Data Inicio</th>
                     <th>Ticket ID</th>
                     <th>Nome</th>
-                    <th>Equipamento</th>
-                    <th>Quantidade</th>
+                    <th>Tipo equipamento</th>
                     <th>Atribuir equipamento</th>
                     <th>Confirmar</th> <!-- Add column for Confirmar button -->
                     <th>Eliminar</th> <!-- Add column for Confirmar button -->
@@ -151,7 +150,6 @@
                         </td>
                         <td>{{ requisicao.nome }}</td>
                         <td>{{ requisicao.tipo_equipamento }}</td>
-                        <td>{{ requisicao.quantidade }}</td>
                         <td>
                             <select class="form-control" id="equipamento_{{ requisicao.id }}">
                                 <option value="" disabled selected>Selecionar equipamento</option>
