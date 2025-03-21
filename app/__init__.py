@@ -1283,6 +1283,9 @@ def edit_item(category, item_id):
     
     if category not in valid_categories:
         return "Categoria inválida", 400
+    
+    referrer_paths = ['/computadores', '/monitores', '/cameras', '/headset', '/outros', '/voip']
+
 
 
     marcas = get_marcas()
@@ -1320,6 +1323,8 @@ def edit_item(category, item_id):
                     form_data['estado'] = 'em uso'
                 elif form_data.get('atribuido_a', '').startswith('NIT'):
                     form_data['estado'] = 'disponivel'
+            else:
+                form_data.pop('estado', None)
 
             fields = ', '.join([f"{key} = %s" for key in form_data.keys()])
             query = f"UPDATE {category} SET {fields} WHERE id = %s"
@@ -1334,8 +1339,14 @@ def edit_item(category, item_id):
         finally:
             if connection:
                 connection.close()
-        # Redirect to another page or render success message
-        return redirect(url_for('inventory_nit'))  # Replace with your desired route
+        
+        
+        if any(path in request.referrer for path in referrer_paths):
+            # Redirect to 'tabelas_nit' if the previous URL contained '/tabelas'
+            return redirect(url_for('inventory_nit'))
+        else:
+            # Otherwise, redirect to 'inventory_nit'
+            return redirect(url_for('tabelas_nit'))
 
     # For GET request, fetch the item data to display in the form
     try:
