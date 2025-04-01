@@ -133,14 +133,26 @@
 
         <!-- Panels -->
         <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-primary text-white mb-3">
-                    <div class="card-header">Equipamentos registados</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{totalequipm}}</h5>
+            {% if is_admin %}
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white mb-3">
+                        <div class="card-header">Equipamentos registados</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{total_equipm_admin}}</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white mb-3">
+                        <div class="card-header">Equipamentos registados</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{total_equipm_user}}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="col-md-4">
                 <a href="{{ request.host_url }}inventory?search=Disponivel&search_type=status" class="text-decoration-none">
                     <div class="card bg-info text-white mb-3">

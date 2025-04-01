@@ -132,10 +132,18 @@ def index():
     user_data = get_user_fields(session['user_id'])
     escola_nome = get_school_name_by_id(user_data.get('escola_id'))
     equipment_counts = get_equipment_counts(user_data.get('escola_id'))
-    total_equipm = total_equip(user_data.get('escola_id'))
+    total_equipm_user = total_equip(user_data.get('escola_id'))
+    total_equipm_admin = total_equip(user_data.get('escola_id'))
     
     
-    return render_template('index.html',year=year,is_admin=is_admin(session['user_id']),equipment_counts=equipment_counts,total_equipm=total_equipm,escola_nome=escola_nome)
+    
+    return render_template('index.html',
+                           year=year,
+                           is_admin=is_admin(session['user_id']),
+                           equipment_counts=equipment_counts,
+                           escola_nome=escola_nome,
+                           total_equipm_user=total_equipm_user,
+                           total_equipm_admin=total_equipm_admin)
 
 
 @app.route('/adicionar_utilizador', methods=['GET', 'POST'])
