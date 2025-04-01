@@ -157,7 +157,6 @@ def add_user():
         escola_id = get_school_id_by_name(escola)
         role = request.form.get('role')
         password = request.form.get('password')
-        #print(username)
 
         if not username or not email or not role or not password:
             flash('Todos os campos são obrigatórios.', 'danger')
