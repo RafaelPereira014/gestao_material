@@ -174,8 +174,8 @@
                                         <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.cod_nit }}</option>
                                     {% endfor %}
                                 
-                                {% elif requisicao.tipo_equipamento == 'Leitor de cartões' %}
-                                    {% for equipamento in available_equipments['Leitor de cartões'] %}
+                                {% elif requisicao.tipo_equipamento == 'Leitor de cartoes' %}
+                                    {% for equipamento in available_equipments['Leitor de cartoes'] %}
                                         <option value="{{ equipamento.id }}">{{ equipamento.diversos }} - {{ equipamento.cod_nit }}</option>
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Pen' %}

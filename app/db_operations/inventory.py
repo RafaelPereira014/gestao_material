@@ -252,7 +252,12 @@ def get_outros(equipment_name):
     cursor = connection.cursor()
 
     # Use LIKE to match the equipment name in the 'diversos' column
-    query = "SELECT id, diversos, cod_nit, n_serie FROM outros WHERE estado = 'Disponivel' AND diversos LIKE %s"
+    query = """
+        SELECT id, diversos, cod_nit, n_serie 
+        FROM outros 
+        WHERE estado = 'Disponivel' 
+        AND diversos LIKE %s COLLATE utf8mb4_general_ci
+    """
     cursor.execute(query, ('%' + equipment_name + '%',))  # % is used for partial matching
     result = cursor.fetchall()
 
@@ -320,7 +325,7 @@ def update_equipment_atributo_a(requisicao_id, nome_requisicao, equipamento_id):
             "UPDATE voip SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
             (nome_requisicao, requisicao_id,equipamento_id)
         )
-    elif tipo_equip == 'leitor de cartões' or tipo_equip =='pen':
+    elif tipo_equip == 'leitor de cartoes' or tipo_equip =='pen':
         cursor.execute(
             "UPDATE outros SET atribuido_a = %s,requisitado='1', estado='Em uso',id_requisicao=%s WHERE id = %s ",
             (nome_requisicao, requisicao_id,equipamento_id)
@@ -398,7 +403,7 @@ def update_equipment_from_requisicao(requisicao_id):
                 "UPDATE voip SET atribuido_a = 'NIT voip', requisitado='0', estado='Disponivel', id_requisicao=NULL WHERE id = %s",
                 (equipamento_id,)
             )
-    elif tipo_equip == 'leitor de cartões':
+    elif tipo_equip == 'leitor de cartoes':
         cursor.execute("SELECT id FROM outros WHERE id_requisicao=%s", (requisicao_id,))
         equipamento = cursor.fetchone()
         equipamento_id = equipamento[0] if equipamento else None
@@ -519,7 +524,7 @@ def get_equip_details(equipment_type, equipment_id, requisicao_id):
     "camera": "cameras",
     "voip": "voip",
     "headset": "headset",
-    "leitor de cartões": "outros",
+    "leitor de cartoes": "outros",
     "pen": "outros"
     }
 
