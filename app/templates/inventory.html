@@ -182,8 +182,26 @@
                         </td>
                         <td>{{ equipamento.escola_name_to if equipamento.escola_name_to else '-' }}</td>  
                         <td>
-                            <a href="{{ url_for('edit_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" onclick="confirmRemoval('{{ url_for('remove_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}')">Remover</button>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" 
+                                        type="button" 
+                                        id="dropdownMenuButton" 
+                                        data-toggle="dropdown" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" 
+                                       href="{{ url_for('edit_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <button class="dropdown-item text-danger" 
+                                            onclick="confirmRemoval('{{ url_for('remove_equip', serial_number=equipamento.serial_number, escola_id=equipamento.escola_id) }}')">
+                                        <i class="fas fa-trash"></i> Remover
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 {% else %}

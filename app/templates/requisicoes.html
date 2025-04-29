@@ -255,27 +255,36 @@
                             </button>
                         </td>
                         <td>
-                            
-                            <button 
-                                class="btn btn-danger btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#closeRequisitionModal" 
-                                data-requisicao-id="{{ requisicao.id }}" 
-                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
-                                data-equipamento-id="{{ requisicao.equipment_id }}"
-                                data-cod-nit="{{requisicao.cod_nit}}">
-                                Encerrar
-                            </button>
-                            <button 
-                                class="btn btn-warning btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#reopenRequisitionModal" 
-                                data-requisicao-id="{{ requisicao.id }}" 
-                                data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
-                                data-equipamento-id="{{ requisicao.equipment_id }}"
-                                data-cod-nit="{{requisicao.cod_nit}}">
-                                Reabrir
-                            </button>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" 
+                                        type="button" 
+                                        id="dropdownMenuButton" 
+                                        data-toggle="dropdown" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <button class="dropdown-item text-danger" 
+                                            data-toggle="modal" 
+                                            data-target="#closeRequisitionModal" 
+                                            data-requisicao-id="{{ requisicao.id }}" 
+                                            data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
+                                            data-equipamento-id="{{ requisicao.equipment_id }}"
+                                            data-cod-nit="{{ requisicao.cod_nit }}">
+                                        <i class="fas fa-times-circle"></i> Encerrar
+                                    </button>
+                                    <button class="dropdown-item text-warning" 
+                                            data-toggle="modal" 
+                                            data-target="#reopenRequisitionModal" 
+                                            data-requisicao-id="{{ requisicao.id }}" 
+                                            data-requisicao-tipo="{{ requisicao.tipo_equipamento }}"
+                                            data-equipamento-id="{{ requisicao.equipment_id }}"
+                                            data-cod-nit="{{ requisicao.cod_nit }}">
+                                        <i class="fas fa-undo"></i> Reabrir
+                                    </button>
+                                </div>
+                            </div>
                         </td>
 
 

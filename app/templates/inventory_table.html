@@ -87,17 +87,28 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a class="btn btn-sm btn-warning" href="{{ url_for('edit_item', category=inventory_type, item_id=item['id']) }}">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a class="btn btn-sm btn-danger" 
-                        data-toggle="modal" 
-                        data-target="#removeModal" 
-                        data-id="{{ item['id'] }}" 
-                        data-category="{{ inventory_type }}">
-                        <i class="fas fa-trash"></i> Remover
-                    </a>
-
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-secondary dropdown-toggle" 
+                                type="button" 
+                                id="dropdownMenuButton" 
+                                data-toggle="dropdown" 
+                                aria-haspopup="true" 
+                                aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="{{ url_for('edit_item', category=inventory_type, item_id=item['id']) }}">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a class="dropdown-item text-danger" 
+                               data-toggle="modal" 
+                               data-target="#removeModal" 
+                               data-id="{{ item['id'] }}" 
+                               data-category="{{ inventory_type }}">
+                                <i class="fas fa-trash"></i> Remover
+                            </a>
+                        </div>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
