@@ -294,3 +294,21 @@ def get_diversos():
     finally:
         cursor.close()
         connection.close()
+
+def get_dominios():
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    try:
+        # Execute the query to fetch school names
+        cursor.execute("SELECT nome FROM dominios ORDER BY nome ASC")
+        # Fetch all results
+        escolas = cursor.fetchall()
+        # Return list of school names
+        return [escola[0] for escola in escolas]
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()

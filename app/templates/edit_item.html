@@ -143,7 +143,14 @@
                     
                     <div class="form-group">
                         <label for="dominio">Dominio</label>
-                        <input type="text" class="form-control" id="dominio" name="dominio" value="{{ item.dominio }}">
+                        <select class="form-control" id="dominio" name="dominio">
+                            <option value="" disabled selected>Selecione um/o dominio</option>
+                            {% for dominio in dominios %}
+                                <option value="{{ dominio }}" {% if item.dominio == dominio %}selected{% endif %}>
+                                    {{ dominio }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="nome_ad">Nome AD</label>

@@ -335,7 +335,8 @@ def fetch_tabelas():
             "garantias": "garantia",
             "tipo_camera": "tipo_camera",
             "tipo_headset": "tipo_headset",
-            "diversos": "diversos"
+            "diversos": "diversos",
+            "dominios": "dominios"
         }.items()
     }
 
@@ -358,7 +359,8 @@ def fetch_tabelas():
             "garantias": "garantia",
             "tipo_camera": "tipo_camera",
             "tipo_headset": "tipo_headset",
-            "diversos": "diversos"
+            "diversos": "diversos",
+            "dominios" : "dominios"
         }.items()
     }
 
@@ -1287,12 +1289,12 @@ def edit_item(category, item_id):
                         'cameras', 'voip', 
                         'headset', 'outros','marcas',
                         'modelos','processadores','rams','discos','tipo_monitor','tipo_camera','tipo_headset',
-                        'tipo_voip','polegadas','garantia','office','firma','users_a_atribuir','diversos']
+                        'tipo_voip','polegadas','garantia','office','firma','users_a_atribuir','diversos','dominios']
     
     if category not in valid_categories:
         return "Categoria inválida", 400
     
-    referrer_paths = ['/computadores', '/monitores', '/cameras', '/headset', '/outros', '/voip']
+    referrer_paths = ['/computadores', '/monitores', '/cameras', '/headset', '/outros', '/voip','/dominios']
 
 
 
@@ -1312,6 +1314,8 @@ def edit_item(category, item_id):
     tipos_headset = get_tipos_headset()
     users = get_atribuidos_a()
     diversos = get_diversos()
+    dominios = get_dominios()
+    print(dominios)
     
     
     if request.method == 'POST':
@@ -1396,7 +1400,8 @@ def edit_item(category, item_id):
         tipos_headset=tipos_headset,
         discos = discos,
         users=users,
-        diversos=diversos)
+        diversos=diversos,
+        dominios = dominios)
 
 @app.route('/remove_equip/<serial_number>/<escola_id>', methods=['GET', 'POST'])
 def remove_equip(serial_number, escola_id):
