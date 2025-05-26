@@ -493,28 +493,16 @@ def fetch_inventory():
         estado_term = estado_query if estado_query else ""
         cod_nit_term = f"%{cod_nit_query}%" if cod_nit_query else ""
 
-        # Fetch the total count of items for pagination
-        if inventory_type == "computadores":
-            cursor.execute(
-                count_templates[inventory_type],
-                (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term),
-            )
-        else:
-            cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
+        
+        cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
         total_items = cursor.fetchone().get('count', 0)
 
         # Calculate pagination details
         total_pages = (total_items + per_page - 1) // per_page
         offset = (current_page - 1) * per_page
 
-        # Fetch the inventory data with pagination
-        if inventory_type == "computadores":
-            cursor.execute(
-                query_templates[inventory_type],
-                (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset),
-            )
-        else:
-            cursor.execute(query_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
+       
+        cursor.execute(query_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
