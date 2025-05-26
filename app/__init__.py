@@ -421,17 +421,11 @@ def fetch_inventory():
 
     # Query templates for counting and fetching data
     query_templates = {
-        "computadores": """SELECT c.* 
-                        FROM computadores c
-                        INNER JOIN (
-                            SELECT DISTINCT nome_ad 
-                            FROM computadores
-                        ) sub ON c.nome_ad = sub.nome_ad
-                        WHERE c.atribuido_a LIKE %s
-                        AND (%s = '' OR c.estado = %s)
-                        AND (%s = '' OR c.cod_nit LIKE %s)
-                        ORDER BY c.atribuido_a 
-                        LIMIT %s OFFSET %s;""",
+        "computadores": """SELECT * FROM computadores 
+                           WHERE atribuido_a LIKE %s 
+                           AND (%s = '' OR estado = %s)
+                           AND (%s = '' OR cod_nit LIKE %s)
+                           ORDER BY atribuido_a LIMIT %s OFFSET %s """,
         "monitores": """SELECT * FROM monitores 
                         WHERE atribuido_a LIKE %s 
                         AND (%s = '' OR estado = %s)
