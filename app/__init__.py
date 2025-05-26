@@ -1108,7 +1108,7 @@ def add_equipment(category=None):
     modelos = get_modelos()
     processadores = get_processadores()
     rams = get_rams()
-    monitores = get_tipo_monitores()
+    tipos_monitor = get_tipo_monitores()
     polegadas = get_polegadas()
     voips = get_tipo_voips()
     discos = get_discos()
@@ -1124,17 +1124,48 @@ def add_equipment(category=None):
     
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
-        
-        
+    
         try:
             # Connect to the database
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
-
+            
+            # Check for existing n_serie or cod_nit
+            n_serie = form_data.get('n_serie')
+            cod_nit = form_data.get('cod_nit')
+            if n_serie or cod_nit:
+                check_query = f"SELECT 1 FROM {category} WHERE n_serie = %s OR cod_nit = %s LIMIT 1"
+                cursor.execute(check_query, (n_serie, cod_nit))
+                existing = cursor.fetchone()
+                if existing:
+                    flash("Nº Série ou Código NIT já existem na base de dados", "error")
+                    return render_template(
+                        'add_equipment_nit.html', 
+                        category=category,
+                        is_admin=is_admin(session['user_id']),
+                        marcas=marcas,
+                        modelos=modelos,
+                        processadores=processadores,
+                        rams=rams,
+                        tipos_monitor=tipos_monitor,
+                        polegadas=polegadas,
+                        voips=voips,
+                        sistemas_operativos=sistemas_operativos,
+                        offices=offices,
+                        firmas=firmas,
+                        garantias=garantias,
+                        tipos_camera=tipos_camera,
+                        tipos_headset=tipos_headset,
+                        discos=discos,
+                        users=users,
+                        diversos=diversos,
+                        dominios=dominios) # Pass the error message to the template
+            
             # Step 1: Get the list of columns for the selected category table
             cursor.execute(f"DESCRIBE {category}")
+            
             table_columns = [column['Field'] for column in cursor.fetchall()]
-
+            print(table_columns)
             # Step 2: Filter the form data to include only the fields that exist in the table
             filtered_form_data = {key: value for key, value in form_data.items() if key in table_columns}
 
@@ -1156,7 +1187,9 @@ def add_equipment(category=None):
 
             # Step 3: Prepare the SQL query dynamically based on filtered form data
             fields = ', '.join([f"{key} = %s" for key in filtered_form_data.keys()])
+            print(fields)
             query = f"INSERT INTO {category} SET {fields}"
+            print(query)
 
             # Step 4: Execute the query with the filtered form values
             cursor.execute(query, list(filtered_form_data.values()))
@@ -1179,7 +1212,7 @@ def add_equipment(category=None):
         modelos=modelos,
         processadores=processadores,
         rams=rams,
-        monitores=monitores,
+        tipos_monitor=tipos_monitor,
         polegadas=polegadas,
         voips=voips,
         sistemas_operativos=sistemas_operativos,

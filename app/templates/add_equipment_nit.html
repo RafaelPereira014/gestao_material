@@ -264,11 +264,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="marca">Marca/Modelo</label>
-                        <select class="form-control" id="marca" name="marca" >
+                        <label for="marca_modelo">Marca/Modelo</label>
+                        <select class="form-control" id="marca_modelo" name="marca_modelo" >
                             <option value="" disabled selected>Selecione uma marca/modelo</option>
-                            {% for marca in monitores %}
-                                <option value="{{ marca }}">{{ marca }}</option>
+                            {% for marca_modelo in tipos_monitor %}
+                                <option value="{{ marca_modelo }}">{{ marca_modelo }}</option>
                             {% endfor %}
                         </select>
                     </div>
