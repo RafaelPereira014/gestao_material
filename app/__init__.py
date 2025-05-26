@@ -432,7 +432,7 @@ def fetch_inventory():
             return "<p class='text-danger'>Parâmetro de ordenação inválido.</p>", 400
     else:
         # Default order clause if no ordenacao provided
-        order_clause = "nome_ad"
+        order_clause = "atribuido_a"
 
     # Query templates for counting and fetching data
     base_query_template = """SELECT * FROM {table}

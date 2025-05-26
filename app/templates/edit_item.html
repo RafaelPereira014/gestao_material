@@ -294,6 +294,17 @@
                     <input type="text" class="form-control" id="data_aq" name="data_aq" value="{{ item.data_aq }}">
                 </div>
                 <div class="form-group">
+                        <label for="firma">Firma</label>
+                        <select class="form-control" id="firma" name="firma">
+                            <option value="" disabled selected>Selecione uma firma</option>
+                            {% for firma in firmas %}
+                                <option value="{{ firma }}" {% if item.firma == firma %}selected{% endif %}>
+                                    {{ firma }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                <div class="form-group">
                     <label for="garantia">Garantia</label>
                     <select class="form-control" id="garantia" name="garantia">
                         <option value="" disabled selected>Selecione uma garantia</option>
