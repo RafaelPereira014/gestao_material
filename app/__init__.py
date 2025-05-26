@@ -413,75 +413,51 @@ def fetch_tabelas():
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
     search_query = request.args.get('search', '').strip()  # Search term
-    estado_query = request.args.get('estado', '').strip()  # Estado filter
-    
+    estado_query = request.args.get('estado', '').strip()  # Estado filter    
     cod_nit_query = request.args.get('cod_nit', '').strip()  # cod_nit filter
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
+    ordenacao = request.args.get('ordenacao', '')  # Sorting column
+    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq']  # Define allowed columns
+    valid_directions = ['ASC', 'DESC']  # Allowed directions
+
+    # Split and validate the sorting parameter
+    if ordenacao:
+        parts = ordenacao.split()
+        print(parts)
+        if len(parts) == 1 and parts[0] in valid_sort_columns:
+            # Always use ASC, no need to check for direction
+            order_clause = f"{parts[0]}"
+        else:
+            return "<p class='text-danger'>Parâmetro de ordenação inválido.</p>", 400
+    else:
+        # Default order clause if no ordenacao provided
+        order_clause = "nome_ad"
 
     # Query templates for counting and fetching data
-    query_templates = {
-        "computadores": """SELECT * FROM computadores 
-                           WHERE atribuido_a LIKE %s 
-                           AND (%s = '' OR estado = %s)
-                           AND (%s = '' OR cod_nit LIKE %s)
-                           ORDER BY nome_ad LIMIT %s OFFSET %s """,
-        "monitores": """SELECT * FROM monitores 
-                        WHERE atribuido_a LIKE %s 
-                        AND (%s = '' OR estado = %s)
-                        AND (%s = '' OR cod_nit LIKE %s)
-                        ORDER BY atribuido_a LIMIT %s OFFSET %s""",
-        "cameras": """SELECT * FROM cameras 
-                      WHERE atribuido_a LIKE %s 
-                      AND (%s = '' OR estado = %s)
-                      AND (%s = '' OR cod_nit LIKE %s)
-                      ORDER BY atribuido_a LIMIT %s OFFSET %s""",
-        "voip": """SELECT * FROM voip 
-                   WHERE atribuido_a LIKE %s 
-                   AND (%s = '' OR estado = %s)
-                   AND (%s = '' OR cod_nit LIKE %s)
-                   ORDER BY atribuido_a LIMIT %s OFFSET %s""",
-        "headset": """SELECT * FROM headset 
-                      WHERE atribuido_a LIKE %s 
-                      AND (%s = '' OR estado = %s)
-                      AND (%s = '' OR cod_nit LIKE %s)
-                      ORDER BY atribuido_a LIMIT %s OFFSET %s""",
-        "outros": """SELECT * FROM outros 
-                     WHERE atribuido_a LIKE %s 
-                     AND (%s = '' OR estado = %s)
-                     AND (%s = '' OR cod_nit LIKE %s)
-                     ORDER BY atribuido_a LIMIT %s OFFSET %s""",
-    }
+    base_query_template = """SELECT * FROM {table}
+                             WHERE atribuido_a LIKE %s
+                             AND (%s = '' OR estado = %s)
+                             AND (%s = '' OR cod_nit LIKE %s)
+                             ORDER BY {order_clause} LIMIT %s OFFSET %s"""
 
-    count_templates = {
-        "computadores": """SELECT COUNT(*) AS count FROM computadores 
-                           WHERE atribuido_a LIKE %s 
-                           AND (%s = '' OR estado = %s)
-                           AND (%s = '' OR cod_nit LIKE %s)""",
-        "monitores": """SELECT COUNT(*) AS count FROM monitores 
-                        WHERE atribuido_a LIKE %s 
-                        AND (%s = '' OR estado = %s)
-                        AND (%s = '' OR cod_nit LIKE %s)""",
-        "cameras": """SELECT COUNT(*) AS count FROM cameras 
-                      WHERE atribuido_a LIKE %s 
-                      AND (%s = '' OR estado = %s)
-                      AND (%s = '' OR cod_nit LIKE %s)""",
-        "voip": """SELECT COUNT(*) AS count FROM voip 
-                   WHERE atribuido_a LIKE %s 
-                   AND (%s = '' OR estado = %s)
-                   AND (%s = '' OR cod_nit LIKE %s)""",
-        "headset": """SELECT COUNT(*) AS count FROM headset 
-                      WHERE atribuido_a LIKE %s 
-                      AND (%s = '' OR estado = %s)
-                      AND (%s = '' OR cod_nit LIKE %s)""",
-        "outros": """SELECT COUNT(*) AS count FROM outros 
-                     WHERE atribuido_a LIKE %s 
-                     AND (%s = '' OR estado = %s)
-                     AND (%s = '' OR cod_nit LIKE %s)""",
+    base_count_template = """SELECT COUNT(*) AS count FROM {table}
+                             WHERE atribuido_a LIKE %s
+                             AND (%s = '' OR estado = %s)
+                             AND (%s = '' OR cod_nit LIKE %s)"""
+
+    # Map inventory types to their table names
+    table_mapping = {
+        "computadores": "computadores",
+        "monitores": "monitores",
+        "cameras": "cameras",
+        "voip": "voip",
+        "headset": "headset",
+        "outros": "outros",
     }
 
     # Validate the inventory type
-    if inventory_type not in query_templates:
+    if inventory_type not in table_mapping:
         return "<p class='text-danger'>Categoria inválida.</p>", 400
 
     try:
@@ -490,25 +466,27 @@ def fetch_inventory():
 
         # Prepare search terms with wildcards
         search_term = f"{search_query.strip()}%"  # Remove unnecessary spaces
-        print(search_term)
         estado_term = estado_query.strip()
         cod_nit_term = f"{cod_nit_query.strip()}%"
 
-        
-        cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
+        # Fetch total count
+        count_query = base_count_template.format(table=table_mapping[inventory_type])
+        cursor.execute(count_query, (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
         total_items = cursor.fetchone().get('count', 0)
 
         # Calculate pagination details
         total_pages = (total_items + per_page - 1) // per_page
         offset = (current_page - 1) * per_page
 
-       
-        cursor.execute(query_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
+        # Fetch paginated data with ordering
+        query = base_query_template.format(
+            table=table_mapping[inventory_type],
+            order_clause=order_clause
+        )
+        cursor.execute(query, (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
         inventory_data = cursor.fetchall()
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
-    except KeyError as e:
-        return f"<p class='text-danger'>Erro: Campo de pesquisa '{str(e)}' não encontrado. Verifique os filtros fornecidos.</p>", 400
     except Exception as e:
         return f"<p class='text-danger'>Erro inesperado: {str(e)}</p>", 500
     finally:
