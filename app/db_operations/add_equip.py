@@ -13,7 +13,7 @@ def get_marcas():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM marcas")
+        cursor.execute("SELECT nome FROM marcas ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -31,7 +31,7 @@ def get_modelos():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM modelos")
+        cursor.execute("SELECT nome FROM modelos ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -49,7 +49,7 @@ def get_processadores():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM processadores")
+        cursor.execute("SELECT nome FROM processadores ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -67,7 +67,7 @@ def get_rams():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM rams")
+        cursor.execute("SELECT nome FROM rams ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -85,7 +85,7 @@ def get_discos():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM discos")
+        cursor.execute("SELECT nome FROM discos ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -103,7 +103,7 @@ def get_tipo_monitores():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM tipo_monitor")
+        cursor.execute("SELECT nome FROM tipo_monitor ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -121,7 +121,7 @@ def get_polegadas():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM polegadas")
+        cursor.execute("SELECT nome FROM polegadas ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -139,7 +139,7 @@ def get_tipo_voips():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM tipo_voip")
+        cursor.execute("SELECT nome FROM tipo_voip ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -157,7 +157,7 @@ def get_sistemas_operativos():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM sistema_operativo")
+        cursor.execute("SELECT nome FROM sistema_operativo ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -175,7 +175,7 @@ def get_offices():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM office")
+        cursor.execute("SELECT nome FROM office ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -193,7 +193,7 @@ def get_firmas():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM firma")
+        cursor.execute("SELECT nome FROM firma ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -211,7 +211,7 @@ def get_garantias():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM garantia")
+        cursor.execute("SELECT nome FROM garantia ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -229,7 +229,7 @@ def get_tipos_camera():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM tipo_camera")
+        cursor.execute("SELECT nome FROM tipo_camera ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names
@@ -247,7 +247,7 @@ def get_tipos_headset():
     
     try:
         # Execute the query to fetch school names
-        cursor.execute("SELECT nome FROM tipo_headset")
+        cursor.execute("SELECT nome FROM tipo_headset ORDER BY nome ASC")
         # Fetch all results
         escolas = cursor.fetchall()
         # Return list of school names

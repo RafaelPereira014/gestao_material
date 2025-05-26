@@ -1120,6 +1120,7 @@ def add_equipment(category=None):
     tipos_headset = get_tipos_headset()
     users = get_atribuidos_a()
     diversos = get_diversos()
+    dominios = get_dominios()
     
     if request.method == 'POST':
         form_data = request.form.to_dict()  # Get all form data as a dictionary
@@ -1189,7 +1190,8 @@ def add_equipment(category=None):
         tipos_headset=tipos_headset,
         discos = discos,
         users=users,
-        diversos=diversos)
+        diversos=diversos,
+        dominios = dominios)
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():
@@ -1315,7 +1317,6 @@ def edit_item(category, item_id):
     users = get_atribuidos_a()
     diversos = get_diversos()
     dominios = get_dominios()
-    print(dominios)
     
     
     if request.method == 'POST':
