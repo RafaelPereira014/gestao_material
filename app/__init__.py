@@ -489,9 +489,9 @@ def fetch_inventory():
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
         # Prepare search terms with wildcards
-        search_term = f"%{search_query}%"
+        search_term = f"{search_query}%"
         estado_term = estado_query if estado_query else ""
-        cod_nit_term = f"%{cod_nit_query}%" if cod_nit_query else ""
+        cod_nit_term = f"{cod_nit_query}%" if cod_nit_query else ""
 
         
         cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
