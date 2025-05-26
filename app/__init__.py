@@ -425,7 +425,7 @@ def fetch_inventory():
                            WHERE atribuido_a LIKE %s 
                            AND (%s = '' OR estado = %s)
                            AND (%s = '' OR cod_nit LIKE %s)
-                           ORDER BY atribuido_a LIMIT %s OFFSET %s """,
+                           ORDER BY nome_ad LIMIT %s OFFSET %s """,
         "monitores": """SELECT * FROM monitores 
                         WHERE atribuido_a LIKE %s 
                         AND (%s = '' OR estado = %s)
@@ -490,6 +490,7 @@ def fetch_inventory():
 
         # Prepare search terms with wildcards
         search_term = f"{search_query.strip()}%"  # Remove unnecessary spaces
+        print(search_term)
         estado_term = estado_query.strip()
         cod_nit_term = f"{cod_nit_query.strip()}%"
 
