@@ -414,8 +414,7 @@ def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
     search_query = request.args.get('search', '').strip()  # Search term
     estado_query = request.args.get('estado', '').strip()  # Estado filter
-    so_query = request.args.get('so', '').strip()  # SO filter (only for computadores)
-    modelo_query = request.args.get('modelo', '').strip()  # Marca/Modelo filter (only for computadores)
+    
     cod_nit_query = request.args.get('cod_nit', '').strip()  # cod_nit filter
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
@@ -425,8 +424,6 @@ def fetch_inventory():
         "computadores": """SELECT * FROM computadores 
                            WHERE atribuido_a LIKE %s 
                            AND (%s = '' OR estado = %s)
-                           AND (%s = '' OR so LIKE %s)
-                           AND (%s = '' OR modelo LIKE %s)
                            AND (%s = '' OR cod_nit LIKE %s)
                            ORDER BY atribuido_a LIMIT %s OFFSET %s """,
         "monitores": """SELECT * FROM monitores 
@@ -460,8 +457,6 @@ def fetch_inventory():
         "computadores": """SELECT COUNT(*) AS count FROM computadores 
                            WHERE atribuido_a LIKE %s 
                            AND (%s = '' OR estado = %s)
-                           AND (%s = '' OR so LIKE %s)
-                           AND (%s = '' OR modelo LIKE %s)
                            AND (%s = '' OR cod_nit LIKE %s)""",
         "monitores": """SELECT COUNT(*) AS count FROM monitores 
                         WHERE atribuido_a LIKE %s 
@@ -496,15 +491,13 @@ def fetch_inventory():
         # Prepare search terms with wildcards
         search_term = f"%{search_query}%"
         estado_term = estado_query if estado_query else ""
-        so_term = f"%{so_query}%" if so_query else ""
-        modelo_term = f"%{modelo_query}%" if modelo_query else ""
         cod_nit_term = f"%{cod_nit_query}%" if cod_nit_query else ""
 
         # Fetch the total count of items for pagination
         if inventory_type == "computadores":
             cursor.execute(
                 count_templates[inventory_type],
-                (search_term, estado_term, estado_term, so_query, so_term, modelo_query, modelo_term, cod_nit_query, cod_nit_term),
+                (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term),
             )
         else:
             cursor.execute(count_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
@@ -518,7 +511,7 @@ def fetch_inventory():
         if inventory_type == "computadores":
             cursor.execute(
                 query_templates[inventory_type],
-                (search_term, estado_term, estado_term, so_query, so_term, modelo_query, modelo_term, cod_nit_query, cod_nit_term, per_page, offset),
+                (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset),
             )
         else:
             cursor.execute(query_templates[inventory_type], (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
