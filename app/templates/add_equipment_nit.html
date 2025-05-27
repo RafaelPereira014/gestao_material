@@ -522,35 +522,41 @@
         });
     </script>
     <script>
-        // Add a listener for cod_nit validation
-        document.getElementById("cod_nit").addEventListener("input", function () {
-            const codNitInput = this;
-            const feedback = document.getElementById("cod_nit_feedback");
-            const codNit = codNitInput.value.trim();
-            const category = document.getElementById("category").value; // Get the selected category
+        document.addEventListener("DOMContentLoaded", function () {
+            // Add event listeners to all cod_nit inputs within category fieldsets
+            const codNitInputs = document.querySelectorAll("input[id='cod_nit']");
 
-            if (!codNit || !category) {
-                feedback.classList.add("d-none");
-                return; // Skip validation if cod_nit or category is empty
-            }
-
-            fetch(`/check_cod_nit?cod_nit=${encodeURIComponent(codNit)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        feedback.textContent = "Este código NIT já existe.";
-                        feedback.classList.remove("d-none");
-                        codNitInput.classList.add("is-invalid");
-                    } else {
+            codNitInputs.forEach(codNitInput => {
+                codNitInput.addEventListener("input", function () {
+                    const feedback = this.nextElementSibling; // Feedback is the next sibling
+                    const codNit = this.value.trim();
+                    const activeCategoryFields = document.querySelector(".category-fields:not([style*='display: none'])");
+                    
+                    if (!codNit || !activeCategoryFields) {
                         feedback.classList.add("d-none");
-                        codNitInput.classList.remove("is-invalid");
+                        this.classList.remove("is-invalid");
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error("Erro ao verificar o código NIT:", error);
-                    feedback.textContent = "Erro ao verificar o código NIT. Tente novamente.";
-                    feedback.classList.remove("d-none");
+
+                    fetch(`/check_cod_nit?cod_nit=${encodeURIComponent(codNit)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                feedback.textContent = "Este código NIT já existe.";
+                                feedback.classList.remove("d-none");
+                                this.classList.add("is-invalid");
+                            } else {
+                                feedback.classList.add("d-none");
+                                this.classList.remove("is-invalid");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Erro ao verificar o código NIT:", error);
+                            feedback.textContent = "Erro ao verificar o código NIT. Tente novamente.";
+                            feedback.classList.remove("d-none");
+                        });
                 });
+            });
         });
     </script>
     

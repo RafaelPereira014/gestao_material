@@ -1090,36 +1090,6 @@ def add_equipment(category=None):
             connection = connect_to_database()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             
-            # Check for existing n_serie or cod_nit
-            n_serie = form_data.get('n_serie')
-            cod_nit = form_data.get('cod_nit')
-            if n_serie or cod_nit:
-                check_query = f"SELECT 1 FROM {category} WHERE n_serie = %s OR cod_nit = %s LIMIT 1"
-                cursor.execute(check_query, (n_serie, cod_nit))
-                existing = cursor.fetchone()
-                if existing:
-                    flash("Nº Série ou Código NIT já existem na base de dados", "error")
-                    return render_template(
-                        'add_equipment_nit.html', 
-                        category=category,
-                        is_admin=is_admin(session['user_id']),
-                        marcas=marcas,
-                        modelos=modelos,
-                        processadores=processadores,
-                        rams=rams,
-                        tipos_monitor=tipos_monitor,
-                        polegadas=polegadas,
-                        voips=voips,
-                        sistemas_operativos=sistemas_operativos,
-                        offices=offices,
-                        firmas=firmas,
-                        garantias=garantias,
-                        tipos_camera=tipos_camera,
-                        tipos_headset=tipos_headset,
-                        discos=discos,
-                        users=users,
-                        diversos=diversos,
-                        dominios=dominios) 
             
             
             cursor.execute(f"DESCRIBE {category}")
