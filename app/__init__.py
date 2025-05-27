@@ -418,7 +418,7 @@ def fetch_inventory():
     current_page = int(request.args.get('page', 1))  # Current page
     per_page = 10  # Items per page
     ordenacao = request.args.get('ordenacao', '')  # Sorting column
-    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq']  # Define allowed columns
+    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq','cod_nit']  # Define allowed columns
     valid_directions = ['ASC', 'DESC']  # Allowed directions
 
     # Split and validate the sorting parameter
