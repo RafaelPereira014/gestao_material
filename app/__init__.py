@@ -426,8 +426,12 @@ def fetch_inventory():
         parts = ordenacao.split()
         print(parts)
         if len(parts) == 1 and parts[0] in valid_sort_columns:
-            # Always use ASC, no need to check for direction
-            order_clause = f"{parts[0]}"
+            if parts[0] == 'cod_nit':
+                # Use CAST for cod_nit sorting
+                order_clause = "CAST(cod_nit AS UNSIGNED)"
+            else:
+                # Use the column name directly for other valid columns
+                order_clause = f"{parts[0]}"
         else:
             return "<p class='text-danger'>Parâmetro de ordenação inválido.</p>", 400
     else:
