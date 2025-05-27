@@ -465,7 +465,7 @@ def fetch_inventory():
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
         # Prepare search terms with wildcards
-        search_term = f"{search_query.strip()}%"  # Remove unnecessary spaces
+        search_term = f"%{search_query.strip()}%"  # Remove unnecessary spaces
         estado_term = estado_query.strip()
         cod_nit_term = f"{cod_nit_query.strip()}%"
 
@@ -1119,14 +1119,12 @@ def add_equipment(category=None):
                         discos=discos,
                         users=users,
                         diversos=diversos,
-                        dominios=dominios) # Pass the error message to the template
+                        dominios=dominios) 
             
-            # Step 1: Get the list of columns for the selected category table
+            
             cursor.execute(f"DESCRIBE {category}")
             
             table_columns = [column['Field'] for column in cursor.fetchall()]
-            print(table_columns)
-            # Step 2: Filter the form data to include only the fields that exist in the table
             filtered_form_data = {key: value for key, value in form_data.items() if key in table_columns}
 
             if 'atribuido_a' in filtered_form_data:
@@ -1147,9 +1145,8 @@ def add_equipment(category=None):
 
             # Step 3: Prepare the SQL query dynamically based on filtered form data
             fields = ', '.join([f"{key} = %s" for key in filtered_form_data.keys()])
-            print(fields)
             query = f"INSERT INTO {category} SET {fields}"
-            print(query)
+            
 
             # Step 4: Execute the query with the filtered form values
             cursor.execute(query, list(filtered_form_data.values()))
@@ -1185,6 +1182,36 @@ def add_equipment(category=None):
         users=users,
         diversos=diversos,
         dominios = dominios)
+    
+@app.route('/check_cod_nit', methods=['GET'])
+def check_cod_nit():
+    cod_nit = request.args.get('cod_nit', '').strip()
+
+    if not cod_nit:
+        return {"exists": False}, 400  # Invalid request if `cod_nit` is empty
+
+    # List of valid categories (tables)
+    valid_categories = ['computadores', 'monitores', 'cameras', 'voip', 'headset', 'outros']
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        # Check `cod_nit` in each category
+        for category in valid_categories:
+            query = f"SELECT 1 FROM {category} WHERE cod_nit = %s LIMIT 1"
+            cursor.execute(query, (cod_nit,))
+            if cursor.fetchone():  # If a match is found
+                return {"exists": True, "category": category}
+
+        # If no match is found
+        return {"exists": False}
+
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        if connection:
+            connection.close()
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():

@@ -139,7 +139,6 @@
                 </a>
             </li>
 
-            <!-- Loop to show pages in groups of 5 -->
             {% set start_page = ((current_page - 1) // 5) * 5 + 1 %}
             {% set end_page = start_page + 4 %}
             {% if end_page > total_pages %}
@@ -156,7 +155,6 @@
                 </li>
             {% endfor %}
 
-            <!-- Next Group Button -->
             <li class="page-item {% if current_page +1 > total_pages %}disabled{% endif %}">
                 <a class="page-link" href="#" 
                 data-page="{{ current_page + 1 if current_page + 1 <= total_pages else total_pages }}" 
@@ -166,7 +164,6 @@
                 </a>
             </li>
 
-            <!-- Last Page Button -->
             <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
                 <a class="page-link" href="#" 
                 data-page="{{ total_pages }}" 
