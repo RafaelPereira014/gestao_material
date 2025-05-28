@@ -1117,12 +1117,9 @@ def add_equipment(category=None):
             if not filtered_form_data:
                 return "No valid data to insert.", 400  # Handle the case where no valid data is present
 
-            # Step 3: Prepare the SQL query dynamically based on filtered form data
             fields = ', '.join([f"{key} = %s" for key in filtered_form_data.keys()])
             query = f"INSERT INTO {category} SET {fields}"
             
-
-            # Step 4: Execute the query with the filtered form values
             cursor.execute(query, list(filtered_form_data.values()))
             connection.commit()
         except pymysql.MySQLError as e:
@@ -1186,6 +1183,37 @@ def check_cod_nit():
     finally:
         if connection:
             connection.close()
+            
+@app.route('/check_nserie', methods=['GET'])
+def check_nserie():
+    n_serie = request.args.get('n_serie', '').strip()
+
+    if not n_serie:
+        return {"exists": False}, 400  # Invalid request if `cod_nit` is empty
+
+    # List of valid categories (tables)
+    valid_categories = ['computadores', 'monitores', 'cameras', 'voip', 'headset', 'outros']
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        # Check `cod_nit` in each category
+        for category in valid_categories:
+            query = f"SELECT 1 FROM {category} WHERE n_serie = %s LIMIT 1"
+            cursor.execute(query, (n_serie,))
+            if cursor.fetchone():  # If a match is found
+                return {"exists": True, "category": category}
+
+        # If no match is found
+        return {"exists": False}
+
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        if connection:
+            connection.close()
+
 
 @app.route('/editar_equipamento', methods=['GET', 'POST'])
 def edit_equip():

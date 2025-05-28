@@ -214,6 +214,8 @@
                     <div class="form-group">
                         <label for="n_serie">Nº Série</label>
                         <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
+                        <small id="n_serie_feedback" class="form-text text-danger d-none">Este NºSérie já existe.</small>
+
                     </div>
                     <div class="form-group">
                         <label for="cod_nit">Código NIT</label>
@@ -291,6 +293,8 @@
                     <div class="form-group">
                         <label for="n_serie">Nº Série</label>
                         <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
+                        <small id="n_serie_feedback" class="form-text text-danger d-none">Este NºSérie já existe.</small>
+
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
@@ -376,6 +380,8 @@
                     <div class="form-group">
                         <label for="n_serie">Nº Série</label>
                         <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
+                        <small id="n_serie_feedback" class="form-text text-danger d-none">Este NºSérie já existe.</small>
+
                     </div>
                     
                     <div class="form-group">
@@ -440,6 +446,8 @@
                     <div class="form-group">
                         <label for="n_serie">Nº Série</label>
                         <input type="text" class="form-control" id="n_serie" name="n_serie" placeholder="Ex: SN123455">
+                        <small id="n_serie_feedback" class="form-text text-danger d-none">Este NºSérie já existe.</small>
+
                     </div>
                     <div class="form-group">
                         <label for="data_aq">Data aquisição</label>
@@ -554,6 +562,45 @@
                         .catch(error => {
                             console.error("Erro ao verificar o código NIT:", error);
                             feedback.textContent = "Erro ao verificar o código NIT. Tente novamente.";
+                            feedback.classList.remove("d-none");
+                        });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Add event listeners to all cod_nit inputs within category fieldsets
+            const codNitInputs = document.querySelectorAll("input[id='n_serie']");
+
+            codNitInputs.forEach(codNitInput => {
+                codNitInput.addEventListener("input", function () {
+                    const feedback = this.nextElementSibling; // Feedback is the next sibling
+                    const nserie = this.value.trim();
+                    const activeCategoryFields = document.querySelector(".category-fields:not([style*='display: none'])");
+                    
+                    if (!nserie || !activeCategoryFields) {
+                        feedback.classList.add("d-none");
+                        this.classList.remove("is-invalid");
+                        return;
+                    }
+
+                    fetch(`/check_nserie?n_serie=${encodeURIComponent(nserie)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                feedback.textContent = "Este Nºsérie já existe.";
+                                feedback.classList.remove("d-none");
+                                this.classList.add("is-invalid");
+                            } else {
+                                feedback.classList.add("d-none");
+                                this.classList.remove("is-invalid");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Erro ao verificar o Nºsérie:", error);
+                            feedback.textContent = "Erro ao verificar o Nºsérie. Tente novamente.";
                             feedback.classList.remove("d-none");
                         });
                 });
