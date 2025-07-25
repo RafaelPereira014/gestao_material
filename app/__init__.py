@@ -1,15 +1,16 @@
 import csv
-from datetime import datetime
-from io import BytesIO, StringIO, TextIOWrapper
+import cryptography
 import random
 import string
-from fpdf import FPDF
+import pymysql
 import os
-from urllib.parse import unquote
 import bcrypt
+from fpdf import FPDF
+from urllib.parse import unquote
 from flask import Flask, Response, flash, jsonify, make_response, render_template, redirect, send_file, send_from_directory, session, url_for, request
 from flask_limiter import Limiter
-import pymysql
+from datetime import datetime
+from io import BytesIO, StringIO, TextIOWrapper
 from app.db_operations.edit_equip import *
 from app.db_operations.inventory import *
 from app.db_operations.profile import *
@@ -1206,7 +1207,7 @@ def check_nserie():
                 return {"exists": True, "category": category}
 
         # If no match is found
-        return {"exists": False}
+        return {"exists": False}    
 
     except Exception as e:
         return {"error": str(e)}, 500

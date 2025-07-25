@@ -190,7 +190,7 @@ def get_all_requisicoes_ativas():
 def get_cameras():
     connection = connect_to_database() 
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,cod_nit FROM cameras WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo,cod_nit FROM cameras WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()
     cameras = [{'id': row[0],'marca_modelo': row[1], 'cod_nit': row[2]} for row in result]
     cursor.close()
@@ -203,7 +203,7 @@ def get_computadores():
     cursor = connection.cursor()
     
     # Execute SQL query to fetch both modelo and n_serie
-    cursor.execute("SELECT id,nome_ad, n_serie,cod_nit FROM computadores WHERE estado = 'Disponivel'")
+    cursor.execute("SELECT id,nome_ad, n_serie,cod_nit FROM computadores WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()  # List of tuples with (modelo, n_serie)
     
     # Convert the result into a list of dictionaries
@@ -217,7 +217,7 @@ def get_computadores():
 def get_headset():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,cod_nit FROM headset WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo,cod_nit FROM headset WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()
     headsets = [{'id': row[0],'marca_modelo': row[1], 'cod_nit': row[2]} for row in result]
     cursor.close()
@@ -228,7 +228,7 @@ def get_headset():
 def get_voip():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,cod_nit FROM voip WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo,cod_nit FROM voip WHERE estado = 'Disponivel' ORDER BY cod_nit ")
     result = cursor.fetchall()
     voips = [{'id': row[0],'marca_modelo': row[1], 'cod_nit': row[2]} for row in result]
     cursor.close()
@@ -239,7 +239,7 @@ def get_voip():
 def get_monitores():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,n_serie FROM monitores WHERE estado = 'Disponivel' ")
+    cursor.execute("SELECT id,marca_modelo,n_serie FROM monitores WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()
     monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2]} for row in result]
     cursor.close()
@@ -256,7 +256,8 @@ def get_outros(equipment_name):
         SELECT id, diversos, cod_nit, n_serie 
         FROM outros 
         WHERE estado = 'Disponivel' 
-        AND diversos LIKE %s COLLATE utf8mb4_general_ci
+        AND diversos LIKE %s COLLATE utf8mb4_general_ci 
+        ORDER BY cod_nit
     """
     cursor.execute(query, ('%' + equipment_name + '%',))  # % is used for partial matching
     result = cursor.fetchall()
