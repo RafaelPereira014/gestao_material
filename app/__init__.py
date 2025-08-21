@@ -420,7 +420,7 @@ def fetch_inventory():
     per_page = 10                                              # Items per page
     ordenacao = request.args.get('ordenacao', '')              # Sorting column
 
-    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq','cod_nit']  # Allowed columns
+    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq', 'cod_nit']  # Allowed columns
 
     # Determine ORDER BY clause
     if ordenacao:
@@ -449,18 +449,18 @@ def fetch_inventory():
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-        # Build WHERE dynamically
+        # Build WHERE dynamically, using COLLATE latin1_general_ci for string comparisons
         where_clauses = []
         params = []
 
         if search_query:
-            where_clauses.append("atribuido_a LIKE %s")
+            where_clauses.append("atribuido_a LIKE %s COLLATE latin1_general_ci")
             params.append(f"%{search_query}%")
         if estado_query:
-            where_clauses.append("estado = %s")
+            where_clauses.append("estado = %s COLLATE latin1_general_ci")
             params.append(estado_query)
         if cod_nit_query:
-            where_clauses.append("cod_nit LIKE %s")
+            where_clauses.append("cod_nit LIKE %s COLLATE latin1_general_ci")
             params.append(f"{cod_nit_query}%")
 
         where_sql = " AND ".join(where_clauses) if where_clauses else "1"
