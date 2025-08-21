@@ -413,43 +413,24 @@ def fetch_tabelas():
 @app.route('/fetch_inventory')
 def fetch_inventory():
     inventory_type = request.args.get('type', 'computadores')  # Default category
-    search_query = request.args.get('search', '').strip()  # Search term
-    estado_query = request.args.get('estado', '').strip()  # Estado filter    
-    cod_nit_query = request.args.get('cod_nit', '').strip()  # cod_nit filter
-    current_page = int(request.args.get('page', 1))  # Current page
-    per_page = 10  # Items per page
-    ordenacao = request.args.get('ordenacao', '')  # Sorting column
-    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq','cod_nit']  # Define allowed columns
-    valid_directions = ['ASC', 'DESC']  # Allowed directions
+    search_query = request.args.get('search', '').strip()      # Search term
+    estado_query = request.args.get('estado', '').strip()      # Estado filter    
+    cod_nit_query = request.args.get('cod_nit', '').strip()    # cod_nit filter
+    current_page = int(request.args.get('page', 1))            # Current page
+    per_page = 10                                              # Items per page
+    ordenacao = request.args.get('ordenacao', '')              # Sorting column
 
-    # Split and validate the sorting parameter
+    valid_sort_columns = ['nome_ad', 'atribuido_a', 'dominio', 'data_aq','cod_nit']  # Allowed columns
+
+    # Determine ORDER BY clause
     if ordenacao:
         parts = ordenacao.split()
-        print(parts)
         if len(parts) == 1 and parts[0] in valid_sort_columns:
-            if parts[0] == 'cod_nit':
-                # Use CAST for cod_nit sorting
-                order_clause = "CAST(cod_nit AS UNSIGNED)"
-            else:
-                # Use the column name directly for other valid columns
-                order_clause = f"{parts[0]}"
+            order_clause = f"CAST(cod_nit AS UNSIGNED)" if parts[0] == 'cod_nit' else parts[0]
         else:
             return "<p class='text-danger'>Parâmetro de ordenação inválido.</p>", 400
     else:
-        # Default order clause if no ordenacao provided
         order_clause = "atribuido_a"
-
-    # Query templates for counting and fetching data
-    base_query_template = """SELECT DISTINCT * FROM {table}
-                             WHERE atribuido_a LIKE %s
-                             AND (%s = '' OR estado = %s)
-                             AND (%s = '' OR cod_nit LIKE %s)
-                             ORDER BY {order_clause} LIMIT %s OFFSET %s"""
-
-    base_count_template = """SELECT COUNT(*) AS count FROM {table}
-                             WHERE atribuido_a LIKE %s
-                             AND (%s = '' OR estado = %s)
-                             AND (%s = '' OR cod_nit LIKE %s)"""
 
     # Map inventory types to their table names
     table_mapping = {
@@ -461,7 +442,6 @@ def fetch_inventory():
         "outros": "outros",
     }
 
-    # Validate the inventory type
     if inventory_type not in table_mapping:
         return "<p class='text-danger'>Categoria inválida.</p>", 400
 
@@ -469,27 +449,36 @@ def fetch_inventory():
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-        # Prepare search terms with wildcards
-        search_term = f"%{search_query.strip()}%"  # Remove unnecessary spaces
-        estado_term = estado_query.strip()
-        cod_nit_term = f"{cod_nit_query.strip()}%"
+        # Build WHERE dynamically
+        where_clauses = []
+        params = []
 
-        # Fetch total count
-        count_query = base_count_template.format(table=table_mapping[inventory_type])
-        cursor.execute(count_query, (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term))
+        if search_query:
+            where_clauses.append("atribuido_a LIKE %s")
+            params.append(f"%{search_query}%")
+        if estado_query:
+            where_clauses.append("estado = %s")
+            params.append(estado_query)
+        if cod_nit_query:
+            where_clauses.append("cod_nit LIKE %s")
+            params.append(f"{cod_nit_query}%")
+
+        where_sql = " AND ".join(where_clauses) if where_clauses else "1"
+
+        # Count query
+        count_query = f"SELECT COUNT(*) AS count FROM {table_mapping[inventory_type]} WHERE {where_sql}"
+        cursor.execute(count_query, tuple(params))
         total_items = cursor.fetchone().get('count', 0)
 
-        # Calculate pagination details
+        # Pagination
         total_pages = (total_items + per_page - 1) // per_page
         offset = (current_page - 1) * per_page
 
-        # Fetch paginated data with ordering
-        query = base_query_template.format(
-            table=table_mapping[inventory_type],
-            order_clause=order_clause
-        )
-        cursor.execute(query, (search_term, estado_term, estado_term, cod_nit_query, cod_nit_term, per_page, offset))
+        # Data query
+        query = f"SELECT * FROM {table_mapping[inventory_type]} WHERE {where_sql} ORDER BY {order_clause} LIMIT %s OFFSET %s"
+        cursor.execute(query, tuple(params) + (per_page, offset))
         inventory_data = cursor.fetchall()
+
     except pymysql.MySQLError as e:
         return f"<p class='text-danger'>Erro ao carregar {inventory_type}: {str(e)}</p>", 500
     except Exception as e:
@@ -498,7 +487,6 @@ def fetch_inventory():
         if connection:
             connection.close()
 
-    # Render the inventory table
     return render_template(
         'inventory_table.html',
         items=inventory_data,
