@@ -449,18 +449,18 @@ def fetch_inventory():
         connection = connect_to_database()
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-        # Build WHERE dynamically, using COLLATE latin1_general_ci for string comparisons
+        # Build WHERE dynamically, using COLLATE utf8mb4_general_ci for string comparisons
         where_clauses = []
         params = []
 
         if search_query:
-            where_clauses.append("atribuido_a LIKE %s COLLATE latin1_general_ci")
+            where_clauses.append("atribuido_a LIKE %s COLLATE utf8mb4_general_ci")
             params.append(f"%{search_query}%")
         if estado_query:
-            where_clauses.append("estado = %s COLLATE latin1_general_ci")
+            where_clauses.append("estado = %s COLLATE utf8mb4_general_ci")
             params.append(estado_query)
         if cod_nit_query:
-            where_clauses.append("cod_nit LIKE %s COLLATE latin1_general_ci")
+            where_clauses.append("cod_nit LIKE %s COLLATE utf8mb4_general_ci")
             params.append(f"{cod_nit_query}%")
 
         where_sql = " AND ".join(where_clauses) if where_clauses else "1"
@@ -494,6 +494,8 @@ def fetch_inventory():
         total_pages=total_pages,
         inventory_type=inventory_type,
     )
+
+
 @app.route('/requisicoes')
 def requisicoes():
     user_id = session.get('user_id')  # Get the user_id from session
