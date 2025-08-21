@@ -440,7 +440,7 @@ def fetch_inventory():
         order_clause = "atribuido_a"
 
     # Query templates for counting and fetching data
-    base_query_template = """SELECT * FROM {table}
+    base_query_template = """SELECT DISTINCT * FROM {table}
                              WHERE atribuido_a LIKE %s
                              AND (%s = '' OR estado = %s)
                              AND (%s = '' OR cod_nit LIKE %s)
@@ -524,7 +524,6 @@ def requisicoes():
     available_equipments['Headset'] = get_headset()
     available_equipments['Voip'] = get_voip()
     available_equipments['Leitor de cartoes'] = get_outros('Leitor cartoes')
-    print(available_equipments['Leitor de cartoes'])
     available_equipments['Pen'] = get_outros('Pen')
     
     return render_template('requisicoes.html', is_admin=is_admin(session['user_id']), 
@@ -1391,6 +1390,7 @@ def edit_item(category, item_id):
         
         # Fetch item details
         query = f"SELECT * FROM {category} WHERE id = %s"
+        print(query)
         cursor.execute(query, (item_id,))
         item = cursor.fetchone()
 
