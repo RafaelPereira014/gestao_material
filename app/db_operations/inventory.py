@@ -239,7 +239,7 @@ def get_voip():
 def get_monitores():
     connection = connect_to_database()  
     cursor = connection.cursor()
-    cursor.execute("SELECT id,marca_modelo,n_serie FROM monitores WHERE estado = 'Disponivel' ORDER BY cod_nit")
+    cursor.execute("SELECT id,marca_modelo,n_serie,cod_nit FROM monitores WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()
     monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2]} for row in result]
     cursor.close()
