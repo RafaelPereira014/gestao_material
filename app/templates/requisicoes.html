@@ -163,7 +163,7 @@
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Monitor' %}
                                     {% for equipamento in available_equipments['Monitor'] %}
-                                        <option value="{{ equipamento.id }}">{{ equipamento.marca_modelo }} - {{ equipamento.n_serie }}</option>
+                                        <option value="{{ equipamento.id }}">{{ equipamento.cod_nit }} - {{ equipamento.marca_modelo }} - {{ equipamento.n_serie }}</option>
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Headset' %}
                                     {% for equipamento in available_equipments['Headset'] %}
