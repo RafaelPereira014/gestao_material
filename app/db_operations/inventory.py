@@ -241,7 +241,7 @@ def get_monitores():
     cursor = connection.cursor()
     cursor.execute("SELECT id,marca_modelo,n_serie,cod_nit FROM monitores WHERE estado = 'Disponivel' ORDER BY cod_nit")
     result = cursor.fetchall()
-    monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2]} for row in result]
+    monitores = [{'id': row[0],'marca_modelo': row[1], 'n_serie': row[2], 'cod_nit': row[3]} for row in result]
     cursor.close()
     connection.close()
     
