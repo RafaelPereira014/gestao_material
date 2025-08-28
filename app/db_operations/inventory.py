@@ -441,6 +441,10 @@ def update_requisicao_data_fim(requisicao_id, new_data_fim,equipment_id):
 def update_estado_requisicao(requisicao_id, estado,equipment_id,cod_nit):
     connection = connect_to_database()
     cursor = connection.cursor()
+    print(requisicao_id)
+    print(estado)
+    print(equipment_id)
+    print(cod_nit)
 
     # Ensure estado is a valid value
     cursor.execute(

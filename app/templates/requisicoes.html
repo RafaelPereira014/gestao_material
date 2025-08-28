@@ -163,7 +163,9 @@
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Monitor' %}
                                     {% for equipamento in available_equipments['Monitor'] %}
-                                        <option value="{{ equipamento.id }}">{{ equipamento.cod_nit }} - {{ equipamento.marca_modelo }} - {{ equipamento.n_serie }}</option>
+                                        <option value="{{ equipamento.id }}" data-cod-nit="{{ equipamento.cod_nit }}">
+                                            {{ equipamento.cod_nit }} - {{ equipamento.marca_modelo }} - {{ equipamento.n_serie }}
+                                        </option>
                                     {% endfor %}
                                 {% elif requisicao.tipo_equipamento == 'Headset' %}
                                     {% for equipamento in available_equipments['Headset'] %}
@@ -370,17 +372,10 @@
     <script>
         // Function to handle equipment assignment
         function assignEquipment(requisicao_id) {
-            // Get the select element
             var selectElement = document.getElementById('equipamento_' + requisicao_id);
-            
-            // Get the selected equipment ID
-            var equipamento_id = selectElement.value;
-    
-            // Get the selected option's text (to extract cod_nit)
-            var selectedText = selectElement.options[selectElement.selectedIndex].text;
-    
-            // Extract cod_nit from the selected option's text (assuming it's after the last "- ")
-            var cod_nit = selectedText.split(" - ").pop();
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var equipamento_id = selectedOption.value;
+            var cod_nit = selectedOption.getAttribute("data-cod-nit");
     
             if (!equipamento_id) {
                 alert('Selecione um equipamento!');
