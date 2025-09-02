@@ -557,4 +557,6 @@ def remove_requisition(requisition_id):
     connection.commit()
     cursor.close()
     
+    return 0
+    
     

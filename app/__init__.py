@@ -754,7 +754,7 @@ def assign_equipment():
     material_type = requisicao[3]
     ticket_id = requisicao[10]
     
-    print(cod_nit)
+    
     
 
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
@@ -766,7 +766,9 @@ def assign_equipment():
     recipients=[user_email]
     recipients_admin = ['srec.nit.edu@azores.gov.pt']
 
+    logging.debug("sending normal email")
     send_email_on_material_assign(ticket_id,user_name,recipients,material_type,material_name,material_link)
+    logging.debug("sending admin email")
     send_email_on_material_assign_admin(ticket_id,user_name,recipients_admin,material_type,material_name)
     
     return jsonify({"status": "success"}), 200
