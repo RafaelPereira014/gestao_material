@@ -754,7 +754,7 @@ def assign_equipment():
     material_type = requisicao[3]
     ticket_id = requisicao[10]
     
-    
+    print(cod_nit)
     
 
     update_equipment_atributo_a(requisicao_id,nome_requisicao, equipamento_id)
